@@ -1,0 +1,93 @@
+#line 1 "../sources/refining.mod"
+int Crefining::model()
+#line 2 "../sources/refining.mod"
+{
+#line 3 "../sources/refining.mod"
+	VAR HeavyCrude(this,"Heavy Crude",REAL_GE),
+#line 4 "../sources/refining.mod"
+		LightCrude(this,"Light Crude",REAL_GE),
+#line 5 "../sources/refining.mod"
+		LightNaphthas(this,"Light Naphthas",REAL_GE),
+#line 6 "../sources/refining.mod"
+		HeavyNaphthas(this,"Heavy Naphthas",REAL_GE),
+#line 7 "../sources/refining.mod"
+		Oils(this,"Oils",REAL_GE),
+#line 8 "../sources/refining.mod"
+		HeavyOils(this,"Heavy Oils",REAL_GE),
+#line 9 "../sources/refining.mod"
+		Residium(this,"Residium",REAL_GE),
+#line 10 "../sources/refining.mod"
+		CrackedGasolines(this,"Cracked Gasolines",REAL_GE),
+#line 11 "../sources/refining.mod"
+		CrackedOils(this,"Cracked Oils",REAL_GE),
+#line 12 "../sources/refining.mod"
+		AviationGasoline(this,"Aviation Gasoline",REAL_GE),
+#line 13 "../sources/refining.mod"
+		MotorFuel(this,"Motor Fuel",REAL_GE),
+#line 14 "../sources/refining.mod"
+		JetFuel(this,"Jet Fuel",REAL_GE),
+#line 15 "../sources/refining.mod"
+		FuelOils(this,"Fuel Oils",REAL_GE),
+#line 16 "../sources/refining.mod"
+		LubeOils(this,"Lube Oils",REAL_GE);
+#line 17 "../sources/refining.mod"
+
+#line 18 "../sources/refining.mod"
+	   
+#line 19 "../sources/refining.mod"
+		    
+#line 20 "../sources/refining.mod"
+		   
+#line 21 "../sources/refining.mod"
+		     
+#line 22 "../sources/refining.mod"
+		   
+#line 23 "../sources/refining.mod"
+		   maximize(6.5*AviationGasoline+4.6*MotorFuel+3.5*JetFuel+2.5*FuelOils+0.8*LubeOils-1.5*HeavyCrude-1.7*LightCrude-0.4*LightNaphthas-0.4*HeavyNaphthas-0.9*Oils-0.3*HeavyOils-0.3*Residium-0.4*CrackedGasolines-0.3*CrackedOils);
+#line 24 "../sources/refining.mod"
+
+#line 25 "../sources/refining.mod"
+	   addCtr(LightCrude <= 10); 
+#line 26 "../sources/refining.mod"
+	    addCtr(HeavyCrude+LightCrude <= 25).setName("Dist. capacity");
+#line 27 "../sources/refining.mod"
+	   addCtr(Oils <= 8); 
+#line 28 "../sources/refining.mod"
+	    addCtr(LightNaphthas == 0.12*HeavyCrude+0.17*LightCrude).setName("Dist->LightNaphthas");
+#line 29 "../sources/refining.mod"
+	    addCtr(HeavyNaphthas == 0.23*HeavyCrude+0.28*LightCrude).setName("Dist->HevyNaphthas");
+#line 30 "../sources/refining.mod"
+	      addCtr(Oils+HeavyOils == 0.41*HeavyCrude+0.34*LightCrude).setName("Dist->Oils");
+#line 31 "../sources/refining.mod"
+	      addCtr(Residium+LubeOils == 0.24*HeavyCrude+0.21*LightCrude).setName("Dist->Residium");
+#line 32 "../sources/refining.mod"
+	  addCtr(CrackedGasolines == 0.65*Oils).setName("Cracking->Gasoline");
+#line 33 "../sources/refining.mod"
+	  addCtr(CrackedOils == 0.35*Oils).setName("Cracking->Oils");
+#line 34 "../sources/refining.mod"
+	   
+#line 35 "../sources/refining.mod"
+	    addCtr(AviationGasoline+MotorFuel == LightNaphthas+HeavyNaphthas+CrackedGasolines).setName("Gasoline blending");
+#line 36 "../sources/refining.mod"
+	        addCtr(JetFuel+FuelOils <= HeavyOils+Residium+CrackedOils).setName("Fuel-oil blending");
+#line 37 "../sources/refining.mod"
+	  addCtr(AviationGasoline <= 1.5*LightNaphthas).setName("Quality");
+#line 38 "../sources/refining.mod"
+	    addCtr(AviationGasoline <= 1.2*LightNaphthas+0.3*HeavyNaphthas).setName("Octane number");
+#line 39 "../sources/refining.mod"
+	  addCtr(AviationGasoline <= 0.5*MotorFuel).setName("Sales limit (av.gas)");
+#line 40 "../sources/refining.mod"
+	  addCtr(JetFuel <= 4); 
+#line 41 "../sources/refining.mod"
+
+#line 42 "../sources/refining.mod"
+	preprocoff();
+#line 43 "../sources/refining.mod"
+	optimize();
+#line 44 "../sources/refining.mod"
+	printsol("refining.sol");
+#line 45 "../sources/refining.mod"
+} 
+#line 46 "../sources/refining.mod"
+
+#line 47 "../sources/refining.mod"

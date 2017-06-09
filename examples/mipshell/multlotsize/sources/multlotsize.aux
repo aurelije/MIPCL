@@ -1,0 +1,137 @@
+#line 1 "../sources/multlotsize.mod"
+#define s0(j) m_ipInitStock[j]
+#line 2 "../sources/multlotsize.mod"
+#define sf(j) m_ipFinalStock[j]
+#line 3 "../sources/multlotsize.mod"
+#define u(j) m_ipStockCap[j]
+#line 4 "../sources/multlotsize.mod"
+#define m(i,t) m_ipMachNum[t*m+i]
+#line 5 "../sources/multlotsize.mod"
+#define f(i,t) m_dpFixedCost[t*m+i]
+#line 6 "../sources/multlotsize.mod"
+#define c(j,t) m_dpCost[t*n+j]
+#line 7 "../sources/multlotsize.mod"
+#define h(j,t) m_dpHoldingCost[t*n+j]
+#line 8 "../sources/multlotsize.mod"
+#define d(j,t) m_ipDemand[t*n+j]
+#line 9 "../sources/multlotsize.mod"
+#define l(t) m_ipDur[t]
+#line 10 "../sources/multlotsize.mod"
+#define tau(i,j) m_dpTau[i*n+j]
+#line 11 "../sources/multlotsize.mod"
+#define rho(j,k) m_dpRho[j*n+k]
+#line 12 "../sources/multlotsize.mod"
+
+#line 13 "../sources/multlotsize.mod"
+int Cmultlotsize::model()
+#line 14 "../sources/multlotsize.mod"
+{
+#line 15 "../sources/multlotsize.mod"
+	int i,j,k,t, m,n,T;
+#line 16 "../sources/multlotsize.mod"
+	m=m_iMachTypeNum; n=m_iProdNum; T=m_iT;
+#line 17 "../sources/multlotsize.mod"
+	VAR_VECTOR s(this,"s",REAL_GE,n,T), x(this,"x",INT_GE,n,T), y(this,"y",INTEGER,m,T);
+#line 18 "../sources/multlotsize.mod"
+
+#line 19 "../sources/multlotsize.mod"
+	
+#line 20 "../sources/multlotsize.mod"
+	  	      
+#line 21 "../sources/multlotsize.mod"
+	  #line 21
+getSum(0).reset();
+#line 21
+for (t=0; t < T; ++t)
+#line 20
+for (j=0; j < n; ++j) getSum(0)+=(c(j,t)*x(j,t));
+       
+#line 22 "../sources/multlotsize.mod"
+	  #line 22
+getSum(1).reset();
+#line 22
+for (t=0; t < T; ++t)
+#line 21
+for (j=0; j < n; ++j) getSum(1)+=(h(j,t)*s(j,t));
+       
+#line 23 "../sources/multlotsize.mod"
+	  #line 23
+getSum(2).reset();
+#line 23
+for (i=0; i < m; ++i)
+#line 22
+for (t=0; t < T; ++t) getSum(2)+=(f(i,t)*y(i,t));
+minimize(getSum(0)+getSum(1)+getSum(2));
+#line 24 "../sources/multlotsize.mod"
+	  
+#line 25 "../sources/multlotsize.mod"
+	  for (j=0; j < n; ++j)
+#line 26 "../sources/multlotsize.mod"
+		    
+#line 27 "../sources/multlotsize.mod"
+			       {
+#line 27
+getSum(3).reset();
+#line 27
+for (k=0; k < n; ++k) getSum(3)+=(rho(j,k)*x(k,0));
+addCtr(s0(j)+x(j,0) == d(j,0)+s(j,0)+getSum(3));
+}
+#line 28 "../sources/multlotsize.mod"
+		
+#line 29 "../sources/multlotsize.mod"
+	     for (t=1; t < T; ++t)
+#line 29
+for (j=0; j < n; ++j)
+#line 30 "../sources/multlotsize.mod"
+		    
+#line 31 "../sources/multlotsize.mod"
+			       {
+#line 31
+getSum(4).reset();
+#line 31
+for (k=0; k < n; ++k) getSum(4)+=(rho(j,k)*x(k,t));
+addCtr(s(j,t-1)+x(j,t) == d(j,t)+s(j,t)+getSum(4));
+}
+#line 32 "../sources/multlotsize.mod"
+	
+#line 33 "../sources/multlotsize.mod"
+	     for (i=0; i < m; ++i)
+#line 33
+for (t=0; t < T; ++t) {
+#line 34 "../sources/multlotsize.mod"
+		    {
+#line 34
+getSum(5).reset();
+#line 34
+for (j=0; j < n; ++j) getSum(5)+=(tau(i,j)*x(j,t));
+ addCtr(getSum(5) <= l(t)*y(i,t));
+}
+#line 35 "../sources/multlotsize.mod"
+		  addCtr(y(i,t) <= m(i,t));
+#line 36 "../sources/multlotsize.mod"
+	}
+#line 37 "../sources/multlotsize.mod"
+		
+#line 38 "../sources/multlotsize.mod"
+	  for (j=0; j < n; ++j) {
+#line 39 "../sources/multlotsize.mod"
+		  for (t=0; t < T; ++t)
+#line 40 "../sources/multlotsize.mod"
+			  addCtr(s(j,t) <= u(j));
+#line 41 "../sources/multlotsize.mod"
+		  addCtr(s(j,T-1) == sf(j));
+#line 42 "../sources/multlotsize.mod"
+	}
+#line 43 "../sources/multlotsize.mod"
+		
+#line 44 "../sources/multlotsize.mod"
+	optimize();
+#line 45 "../sources/multlotsize.mod"
+	printsol();
+#line 46 "../sources/multlotsize.mod"
+	return 0;
+#line 47 "../sources/multlotsize.mod"
+} // end of Cmultlotsize::model
+#line 48 "../sources/multlotsize.mod"
+
+#line 49 "../sources/multlotsize.mod"

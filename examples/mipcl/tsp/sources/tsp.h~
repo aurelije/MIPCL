@@ -1,0 +1,91 @@
+// tsp.h: interface for the Ctsp class.
+//////////////////////////////////////////////////
+#ifndef __TSP__H
+#define __TSP__H
+
+#include <cmip.h>
+
+#include "FlowNet.h"
+
+//class CFlowNet<double>;
+
+class CTspPool;
+
+enum EDGE_WEIGHT_TYPE {ATT,GEO,EUC_2D};
+
+class CTsp: public CMIP  
+{
+	CFlowNet<double> *m_pNet;
+
+	EDGE_WEIGHT_TYPE m_enType; // specifies how distances are computed
+	int m_iPointNum;	// number of points;
+	double* m_dpCoordX; // x-coordinates
+	double* m_dpCoordY; // y-coordinates
+	double m_dMaxDist; // max distance between two point
+	double m_dTourLength;
+	int *m_ipNextOnTour; // best tour
+
+	CTspPool *m_pTspPool; // pool for storing cuts
+
+public:
+	CTsp(char* Name); // constructor
+	#ifdef __THREADS_
+	// Clone constructor needed for multithreading
+		CTsp(const CTsp &other, int thread);
+		CMIP* clone(const CMIP *pMip, int thread);
+	#endif
+		
+	virtual ~CTsp(); // destructor
+
+	void solve();
+	void printSolution(const char* fileName=0);
+
+private:
+///////////////////////////////////////////////////
+// I M P L E M E N T A T I O N
+//////////////////////////////
+	double dist(int i, int j);
+// computes the distance between points i and j
+
+	void allocMemForCoords();
+
+	void readPoints(char* FileName);
+	void buildActiveGraph();
+	void setMIP();
+
+// overloaded function of base classes CLP and CMIP
+	void changeRecord(double dObjVal,
+		int n, const double* dpX, const tagHANDLE* ipHd);
+	bool separate(int n, const double* dpX, const tagHANDLE* ipColHd, bool GenFlag);
+	bool generateColumns(int m, const tagHANDLE* ipRowHd, const double* dpY);
+
+    bool getRow(tagHANDLE hd, int n, const tagHANDLE* ipColHd,
+                        int& type, double& b1, double& b2,
+                        int& sz, double* dpVal, int* ipCol, bool &bScaled);
+
+    bool getColumn(tagHANDLE hd, int m, const tagHANDLE* ipRowHd,
+                int& type, double& cost, double& d1, double& d2,
+                int& sz, double* dpVal, int* ipRow);
+	
+	void lockCtr(tagHANDLE hd);
+	void unlockCtr(tagHANDLE hd);
+
+	double goToNearest(int s, int* tau); // builds initial feasible solution
+	void approximate();
+// calls GoToNearest in turns with any node as a starting position
+
+// Separation routines
+	void buildSupportGraph(int n, const double* dpX, const tagHANDLE* ipColHd);
+	void buildGraph();
+
+	bool BLOSSOM_Separate(int n, const double* dpX, const tagHANDLE* ipColHd);
+	void addCombCut(int b, int* ipComb,
+		int n, const double* dpX, const tagHANDLE* ipColHd);
+
+	bool cutSeparate(int varNum, const double* dpX, const tagHANDLE* ipColHd, bool GenFlag);
+
+	bool separateFromPool(int n, const double* dpX, const int* ipColHd,
+								bool bGenFlag);
+};
+
+#endif // #ifndef __TSP__H

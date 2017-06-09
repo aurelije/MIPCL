@@ -1,0 +1,59 @@
+#line 1 "../sources/genassign.mod"
+int Cgenassign::model()
+#line 2 "../sources/genassign.mod"
+{
+#line 3 "../sources/genassign.mod"
+	int i, j, m=c.getSize(0), n=c.getSize(1);
+#line 4 "../sources/genassign.mod"
+
+#line 5 "../sources/genassign.mod"
+	VAR_VECTOR x(this,"x",BIN,m,n);
+#line 6 "../sources/genassign.mod"
+
+#line 7 "../sources/genassign.mod"
+	      #line 7
+getSum(0).reset();
+#line 7
+for (i=0; i < m; ++i)
+#line 7
+for (j=0; j < n; ++j) getSum(0)+=(c(i,j)*x(i,j));
+minimize(getSum(0));
+#line 8 "../sources/genassign.mod"
+
+#line 9 "../sources/genassign.mod"
+	  for (i=0; i < m; ++i)
+#line 10 "../sources/genassign.mod"
+		    {
+#line 10
+getSum(1).reset();
+#line 10
+for (j=0; j < n; ++j) getSum(1)+=(x(i,j));
+ addCtr(getSum(1) == 1);
+}
+#line 11 "../sources/genassign.mod"
+
+#line 12 "../sources/genassign.mod"
+	  for (j=0; j < n; ++j)
+#line 13 "../sources/genassign.mod"
+		    {
+#line 13
+getSum(2).reset();
+#line 13
+for (i=0; i < m; ++i) getSum(2)+=(p(i,j)*x(i,j));
+ addCtr(getSum(2) <= l(j));
+}
+#line 14 "../sources/genassign.mod"
+	
+#line 15 "../sources/genassign.mod"
+	optimize();
+#line 16 "../sources/genassign.mod"
+	printsol();
+#line 17 "../sources/genassign.mod"
+	
+#line 18 "../sources/genassign.mod"
+	return 0;
+#line 19 "../sources/genassign.mod"
+} // end of Cgenassign::model
+#line 20 "../sources/genassign.mod"
+
+#line 21 "../sources/genassign.mod"

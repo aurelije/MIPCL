@@ -1,0 +1,13 @@
+CLP::reallocMemForEntries: old size 8760, new size 13168
+CLP::reallocMemForEntries: old size 8760, new size 13159
+CLU: Reallocating memory for matrix entries; old size = 3194, new size = 12776
+CLP::reallocMemForEntries: old size 8760, new size 13302
+CLP::reallocMemForEntries: old size 8760, new size 13146
+CLP::reallocMemForEntries: old size 8760, new size 13146
+CLP::reallocMemForEntries: old size 8760, new size 13186
+CLP::reallocMemForEntries: old size 8760, new size 13147
+CLP::reallocMemForEntries: old size 8760, new size 13158
+CLP::reallocMemForEntries: old size 13147, new size 19843
+CLU: Reallocating memory for matrix entries; old size = 3194, new size = 12776
+CLP::reallocMemForEntries: old size 13186, new size 19786
+CLU: Reallocating memory for matrix entries; old size = 3194, new size = 12776

@@ -1,0 +1,125 @@
+#line 1 "../sources/optportfolio.mod"
+#define l(j) m_dpL[j] 
+#line 2 "../sources/optportfolio.mod"
+#define mu(j) m_dpMu[j] 
+#line 3 "../sources/optportfolio.mod"
+#define a(j,t) m_dpRet[j*T+t]
+#line 4 "../sources/optportfolio.mod"
+#define p(t) m_dpP[t]
+#line 5 "../sources/optportfolio.mod"
+#define yv(t) m_dpArray[t]
+#line 6 "../sources/optportfolio.mod"
+
+#line 7 "../sources/optportfolio.mod"
+int Coptportfolio::model()
+#line 8 "../sources/optportfolio.mod"
+{
+#line 9 "../sources/optportfolio.mod"
+	int j,t, n=m_iN, T=m_iT, q=m_iQ;
+#line 10 "../sources/optportfolio.mod"
+	VAR_VECTOR x(this,"x",REAL_GE,n), v(this,"v",BIN,n), y(this,"y",REAL,T);
+#line 11 "../sources/optportfolio.mod"
+	m_pY = &y;
+#line 12 "../sources/optportfolio.mod"
+
+#line 13 "../sources/optportfolio.mod"
+	   #line 13
+getSum(0).reset();
+#line 13
+for (j=0; j < n; ++j) getSum(0)+=(mu(j)*x(j));
+maximize(getSum(0));
+#line 14 "../sources/optportfolio.mod"
+
+#line 15 "../sources/optportfolio.mod"
+	    {
+#line 15
+getSum(1).reset();
+#line 15
+for (j=0; j < n; ++j) getSum(1)+=(x(j));
+ addCtr(getSum(1) == 1);
+}
+#line 16 "../sources/optportfolio.mod"
+	    {
+#line 16
+getSum(2).reset();
+#line 16
+for (j=0; j < n; ++j) getSum(2)+=(v(j));
+ addCtr(getSum(2) <= q);
+}
+#line 17 "../sources/optportfolio.mod"
+
+#line 18 "../sources/optportfolio.mod"
+	  for (t=0; t < T; ++t)
+#line 19 "../sources/optportfolio.mod"
+		     {
+#line 19
+getSum(3).reset();
+#line 19
+for (j=0; j < n; ++j) getSum(3)+=(a(j,t)*x(j));
+addCtr(y(t) == getSum(3));
+}
+#line 20 "../sources/optportfolio.mod"
+		
+#line 21 "../sources/optportfolio.mod"
+	   for (j=0; j < n; ++j)
+#line 22 "../sources/optportfolio.mod"
+		  addCtr(x(j) >= l(j)*v(j));
+#line 23 "../sources/optportfolio.mod"
+	
+#line 24 "../sources/optportfolio.mod"
+	preprocoff(); 
+#line 25 "../sources/optportfolio.mod"
+	optimize();
+#line 26 "../sources/optportfolio.mod"
+	printsol();
+#line 27 "../sources/optportfolio.mod"
+	return 0;
+#line 28 "../sources/optportfolio.mod"
+} // end of Coptportfolio::model
+#line 29 "../sources/optportfolio.mod"
+
+#line 30 "../sources/optportfolio.mod"
+bool Coptportfolio::separate()
+#line 31 "../sources/optportfolio.mod"
+{
+#line 32 "../sources/optportfolio.mod"
+	double b,d=0.0, V=m_dV, zero=m_dZero;
+#line 33 "../sources/optportfolio.mod"
+	VAR_VECTOR &y=*m_pY;
+#line 34 "../sources/optportfolio.mod"
+	int T=m_iT;
+#line 35 "../sources/optportfolio.mod"
+	bool flag=false;
+#line 36 "../sources/optportfolio.mod"
+	
+#line 37 "../sources/optportfolio.mod"
+	   for (int t=0; t < T; ++t) {
+#line 38 "../sources/optportfolio.mod"
+		yv(t)=getval(y(t));
+#line 39 "../sources/optportfolio.mod"
+		d+=p(t)*yv(t)*yv(t);
+#line 40 "../sources/optportfolio.mod"
+	}
+#line 41 "../sources/optportfolio.mod"
+	b=sqrt(d*V);
+#line 42 "../sources/optportfolio.mod"
+	   if (d > b+m_dTol) {
+#line 43 "../sources/optportfolio.mod"
+		flag=true;
+#line 44 "../sources/optportfolio.mod"
+		        {
+#line 44
+getSum(4).reset();
+#line 44
+for (int t=0; t < T; ++t)
+#line 44
+	if (fabs(yv(t)) > zero) getSum(4)+=((p(t)*yv(t))*y(t));
+ addCtr(getSum(4) <= b);
+}
+#line 45 "../sources/optportfolio.mod"
+	}
+#line 46 "../sources/optportfolio.mod"
+	return flag;
+#line 47 "../sources/optportfolio.mod"
+} // end of Coptportfolio::separate()
+#line 48 "../sources/optportfolio.mod"

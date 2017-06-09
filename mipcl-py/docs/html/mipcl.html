@@ -1,0 +1,603 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Module mipcl &#8212; mipcl-py 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="mipcl-py 2 documentation" href="index.html" />
+    <link rel="next" title="List of example models" href="models.html" />
+    <link rel="prev" title="Class Problem" href="problem.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-mipcl">
+<h1>Module mipcl<a class="headerlink" href="#module-mipcl" title="Permalink to this headline">¶</a></h1>
+<p>Module <code class="docutils literal"><span class="pre">mipcl</span></code>
+is a shared MIPCL-library <code class="docutils literal"><span class="pre">mipcl.so</span></code> (<code class="docutils literal"><span class="pre">mipcl.pyd</span></code> on windows computers)
+with an additional interface for calling it in Python programs.</p>
+<blockquote>
+<div><dl class="class">
+<dt id="CLP">
+<em class="property">class </em><code class="descname">CLP</code><a class="headerlink" href="#CLP" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class has been designed for solving Linear Programs (LPs).</p>
+<dl class="method">
+<dt id="CLP.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>self</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; problem name.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.openMatrix">
+<code class="descname">openMatrix</code><span class="sig-paren">(</span><em>self</em>, <em>m</em>, <em>n</em>, <em>nz</em>, <em>bRowGen</em>, <em>bColGen</em>, <em>mMax = 0</em>, <em>nMax = 0</em>, <em>nzMax = 0</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.openMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocates memory for an LP problem of the required  size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<em>int</em>) &#8211; number of rows;</li>
+<li><strong>n</strong> (<em>int</em>) &#8211; number of columns;</li>
+<li><strong>nz</strong> (<em>int</em>) &#8211; number of non-zeroes in the matrix;</li>
+<li><strong>bRowGen</strong> (<em>bool</em>) &#8211; True if generation of rows is assumed;</li>
+<li><strong>bColGen</strong> (<em>bool</em>) &#8211; True if generation of columns is assumed;</li>
+<li><strong>mMax</strong> (<em>int</em>) &#8211; maximum number of rows;</li>
+<li><strong>nMax</strong> (<em>int</em>) &#8211; maximum number of columns;</li>
+<li><strong>nzMax</strong> (<em>int</em>) &#8211; maximum number of non-zeroes in the matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>CMemoryException</strong> &#8211; lack of memory.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body"><p class="first last">If <code class="docutils literal"><span class="pre">bRowGen=True</span></code> and <code class="docutils literal"><span class="pre">mMax=0</span></code>, <code class="docutils literal"><span class="pre">openMatrix</span></code> will estimate <code class="docutils literal"><span class="pre">mMax</span></code>;
+if <code class="docutils literal"><span class="pre">bColGen=True</span></code> and <code class="docutils literal"><span class="pre">nMax=0</span></code>, <code class="docutils literal"><span class="pre">openMatrix</span></code> will estimate <code class="docutils literal"><span class="pre">nMax</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.closeMatrix">
+<code class="descname">closeMatrix</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.closeMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does necessary preparations for solving the problem: allocates memory, does preprocessing, scales the matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.addVar">
+<code class="descname">addVar</code><span class="sig-paren">(</span><em>self</em>, <em>hd</em>, <em>type</em>, <em>cost</em>, <em>l</em>, <em>u</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.addVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function adds a variable (empty column) to the matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hd</strong> (<em>int</em>) &#8211; handle of variable;</li>
+<li><strong>type</strong> (<em>int</em>) &#8211; type of variable;</li>
+<li><strong>cost</strong> (<em>float</em>) &#8211; objective coefficient;</li>
+<li><strong>l</strong> (<em>float</em>) &#8211; lower bound of variable;</li>
+<li><strong>u</strong> (<em>float</em>) &#8211; upper bound of variable.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">index of added variable.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Throws CMemoryException:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">lack of memory.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.addCtr">
+<code class="descname">addCtr</code><span class="sig-paren">(</span><em>self</em>, <em>hd</em>, <em>type</em>, <em>lhs</em>, <em>rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.addCtr" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function adds a constraint (empty row) to the matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hd</strong> (<em>int</em>) &#8211; handle of the constraint;</li>
+<li><strong>type</strong> (<em>int</em>) &#8211; type of the constraint;</li>
+<li><strong>lhs</strong> (<em>float</em>) &#8211; left (LHS) hand sides of constraint;</li>
+<li><strong>rhs</strong> (<em>float</em>) &#8211; left (RHS) hand sides of constraint.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">index of added constraint.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Throws CMemoryException:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">lack of memory.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.addEntry">
+<code class="descname">addEntry</code><span class="sig-paren">(</span><em>self</em>, <em>val</em>, <em>i</em>, <em>j</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.addEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function adds to the matrix a new entry.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>val</strong> (<em>float</em>) &#8211; entry value;</li>
+<li><strong>i</strong> (<em>int</em>) &#8211; row index;</li>
+<li><strong>j</strong> (<em>int</em>) &#8211; column index.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Throws CMemoryException:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">lack of memory.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.setObjCoeff">
+<code class="descname">setObjCoeff</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.setObjCoeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function sets (or changes) the cost of a variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>val</strong> (<em>float</em>) &#8211; new cost of variable <code class="docutils literal"><span class="pre">j</span></code>;</li>
+<li><strong>j</strong> (<em>int</em>) &#8211; column index.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Throws CMemoryException:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">lack of memory.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.setObjSense">
+<code class="descname">setObjSense</code><span class="sig-paren">(</span><em>self</em>, <em>sense</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.setObjSense" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sense</strong> (<em>bool</em>) &#8211; if True, the goal is to <em>maximize</em> the objective function; otherwise, to <em>minimize</em>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.beSilent">
+<code class="descname">beSilent</code><span class="sig-paren">(</span><em>self</em>, <em>flag</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.beSilent" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>flag</strong> (<em>bool</em>) &#8211; if set to True, all run time messages are blocked.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.preprocOff">
+<code class="descname">preprocOff</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.preprocOff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this function to switch off all preprocessing actions, excluding scaling the matrix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.optimize">
+<code class="descname">optimize</code><span class="sig-paren">(</span><em>self</em>, <em>timeLimit=1000000l</em>, <em>gap=0.0</em>, <em>solFileName=None</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>The procedure solves LPs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>timeLimit</strong> (<em>int</em>) &#8211; limit on solution time (in seconds);</li>
+<li><strong>gap</strong> (<em>float</em>) &#8211; integrality gap (absolute value);</li>
+<li><strong>solFileName</strong> (<em>str</em>) &#8211; file name for storing intermediate solutions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Note:</th><td class="field-body"><p class="first">When solving LPs, input parameters are not used.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#CMIP.optimize" title="CMIP.optimize"><code class="xref py py-meth docutils literal"><span class="pre">CMIP.optimize()</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.isSolution">
+<code class="descname">isSolution</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.isSolution" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if LP in the memory has been solved and an optimal solution found.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.setSolution">
+<code class="descname">setSolution</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.setSolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>To make communication between <strong>Python</strong> and <strong>MIPCL</strong> easier,
+<code class="docutils literal"><span class="pre">setSolution</span></code> lists components of the prime and dual solutions
+in order of their handles (initial indices).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.setCertificate">
+<code class="descname">setCertificate</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.setCertificate" title="Permalink to this definition">¶</a></dt>
+<dd><p>When the problem has been proven to be inconsistent,
+this procedure is called to set an <em>inconsistency certificate</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.getObjVal">
+<code class="descname">getObjVal</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.getObjVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is usually called when the problem has been solved already.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">optimal objective value of solved LP.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.getOptVarValue">
+<code class="descname">getOptVarValue</code><span class="sig-paren">(</span><em>self</em>, <em>ind</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.getOptVarValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the value of a given variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ind</strong> (<em>int</em>) &#8211; index (handle) of variable.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value of variable indexed by <code class="docutils literal"><span class="pre">ind</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Warning:</th><td class="field-body">This function must be called only after calling <a class="reference internal" href="#CLP.setSolution" title="CLP.setSolution"><code class="xref py py-meth docutils literal"><span class="pre">setSolution()</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CLP.getShadowPrice">
+<code class="descname">getShadowPrice</code><span class="sig-paren">(</span><em>self</em>, <em>ind</em><span class="sig-paren">)</span><a class="headerlink" href="#CLP.getShadowPrice" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the shadow price of a given constraint.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ind</strong> (<em>int</em>) &#8211; constraint index.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">shadow price of constraint indexed by <code class="docutils literal"><span class="pre">ind</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Warning:</th><td class="field-body">This function must be called only after calling <a class="reference internal" href="#CLP.setSolution" title="CLP.setSolution"><code class="xref py py-meth docutils literal"><span class="pre">setSolution()</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="CMIP">
+<em class="property">class </em><code class="descname">CMIP</code><span class="sig-paren">(</span><em>CLP</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class has been designed for solving Mixed Integer Programs (MIPs).</p>
+<dl class="method">
+<dt id="CMIP.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>self</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; problem name.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.openMatrix">
+<code class="descname">openMatrix</code><span class="sig-paren">(</span><em>self</em>, <em>m</em>, <em>n</em>, <em>nz</em>, <em>bRowGen</em>, <em>bColGen</em>, <em>mMax = 0</em>, <em>nMax = 0</em>, <em>nzMax = 0</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.openMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function overloads the function of the base class <a class="reference internal" href="#CLP" title="CLP"><code class="xref py py-class docutils literal"><span class="pre">CLP</span></code></a>.
+It allocates memory for a MPP problem of the required  size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>m</strong> (<em>int</em>) &#8211; number of rows;</li>
+<li><strong>n</strong> (<em>int</em>) &#8211; number of columns;</li>
+<li><strong>nz</strong> (<em>int</em>) &#8211; number of non-zeroes in the matrix;</li>
+<li><strong>bRowGen</strong> (<em>bool</em>) &#8211; True if generation of rows is assumed;</li>
+<li><strong>bColGen</strong> (<em>bool</em>) &#8211; True if generation of columns is assumed;</li>
+<li><strong>mMax</strong> (<em>int</em>) &#8211; maximum number of rows;</li>
+<li><strong>nMax</strong> (<em>int</em>) &#8211; maximum number of columns;</li>
+<li><strong>nzMax</strong> (<em>int</em>) &#8211; maximum number of non-zeroes in the matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>CMemoryException</strong> &#8211; lack of memory.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Note:</th><td class="field-body"><p class="first">If <code class="docutils literal"><span class="pre">bRowGen=True</span></code> and <code class="docutils literal"><span class="pre">mMax=0</span></code>, <code class="docutils literal"><span class="pre">openMatrix</span></code> will estimate <code class="docutils literal"><span class="pre">mMax</span></code>;
+if <code class="docutils literal"><span class="pre">bColGen=True</span></code> and <code class="docutils literal"><span class="pre">nMax=0</span></code>, <code class="docutils literal"><span class="pre">openMatrix</span></code> will estimate <code class="docutils literal"><span class="pre">nMax</span></code>.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#CLP.openMatrix" title="CLP.openMatrix"><code class="xref py py-meth docutils literal"><span class="pre">CLP.openMatrix()</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.closeMatrix">
+<code class="descname">closeMatrix</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.closeMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function overloads the function of the base class <a class="reference internal" href="#CLP" title="CLP"><code class="xref py py-class docutils literal"><span class="pre">CLP</span></code></a>.
+It does necessary preparations for solving the problem: allocates memory, does preprocessing, scales the matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><a class="reference internal" href="#CLP.closeMatrix" title="CLP.closeMatrix"><code class="xref py py-meth docutils literal"><span class="pre">CLP.closeMatrix()</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.optimize">
+<code class="descname">optimize</code><span class="sig-paren">(</span><em>self</em>, <em>timeLimit=1000000l</em>, <em>gap=0.0</em>, <em>solFileName=None</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>The procedure solves the MIPs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>timeLimit</strong> (<em>int</em>) &#8211; limit on solution time (in seconds);</li>
+<li><strong>gap</strong> (<em>float</em>) &#8211; integrality gap (absolute value);</li>
+<li><strong>solFileName</strong> (<em>str</em>) &#8211; file name for storing intermediate solutions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">See also:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#CLP.optimize" title="CLP.optimize"><code class="xref py py-meth docutils literal"><span class="pre">CLP.optimize()</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.isSolution">
+<code class="descname">isSolution</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.isSolution" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True, if at least one feasible solution has been found so far.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><a class="reference internal" href="#CLP.isSolution" title="CLP.isSolution"><code class="xref py py-meth docutils literal"><span class="pre">CLP.isSolution()</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.getObjVal">
+<code class="descname">getObjVal</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.getObjVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is usually called when the problem has been solved already.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">objective value of the best MIP solution found.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.setSolution">
+<code class="descname">setSolution</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.setSolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>To make communication between <strong>Python</strong> and <strong>MIPCL</strong>
+easier, <code class="docutils literal"><span class="pre">setSolution()</span></code> lists solution components in order of their handles (initial indices).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><a class="reference internal" href="#CLP.setSolution" title="CLP.setSolution"><code class="xref py py-meth docutils literal"><span class="pre">CLP.setSolution()</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.getOptVarValue">
+<code class="descname">getOptVarValue</code><span class="sig-paren">(</span><em>self</em>, <em>ind</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.getOptVarValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the value of a given variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>hd</strong> (<em>int</em>) &#8211; index (= handle) of variable.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value of variable indexed by <code class="docutils literal"><span class="pre">ind</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Warning:</th><td class="field-body">This function must be called only after calling <a class="reference internal" href="#CMIP.setSolution" title="CMIP.setSolution"><code class="xref py py-meth docutils literal"><span class="pre">setSolution()</span></code></a>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">See also:</th><td class="field-body"><a class="reference internal" href="#CLP.getOptVarValue" title="CLP.getOptVarValue"><code class="xref py py-meth docutils literal"><span class="pre">CLP.getOptVarValue()</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.setVarPriority">
+<code class="descname">setVarPriority</code><span class="sig-paren">(</span><em>self</em>, <em>j</em>, <em>pr</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.setVarPriority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integer variables can be assigned priorities, i.e., integer numbers
+from <a class="reference internal" href="shglobals.html#mipshell.PRIO_MIN" title="mipshell.PRIO_MIN"><code class="xref py py-data docutils literal"><span class="pre">mipshell.PRIO_MIN</span></code></a> to <a class="reference internal" href="shglobals.html#mipshell.PRIO_MAX" title="mipshell.PRIO_MAX"><code class="xref py py-data docutils literal"><span class="pre">mipshell.PRIO_MAX</span></code></a>,
+which are used when selecting a variable for branching.
+The higher priority the more chances for a fractional variable to be chosen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>j</strong> (<em>int</em>) &#8211; index of variable which priority to be changed;</li>
+<li><strong>pr</strong> (<em>int</em>) &#8211; new priority.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="CMIP.setAutoCutPattern">
+<code class="descname">setAutoCutPattern</code><span class="sig-paren">(</span><em>self</em>, <em>nodeNum</em>, <em>height</em><span class="sig-paren">)</span><a class="headerlink" href="#CMIP.setAutoCutPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>The solver will automatically generates cuts for first <code class="docutils literal"><span class="pre">nodeNum</span></code> processed nodes,
+and also for nodes of height less or equal than <code class="docutils literal"><span class="pre">height</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nodeNum</strong> (<em>int</em>) &#8211; number of nodes for which cuts are generated;</li>
+<li><strong>height</strong> (<em>int</em>) &#8211; cuts are generated for nodes of height <code class="docutils literal"><span class="pre">&lt;=</span> <span class="pre">height</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/MIPCLlogo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is MIPCL-PY</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mipshell.html">Module mipshell</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Module mipcl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">List of example models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Example of usage</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Nicolai N. Pisaruk.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

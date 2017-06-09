@@ -1,0 +1,55 @@
+#line 1 "../sources/lotsize.mod"
+#define p(t) m_ipPrice[t]
+#line 2 "../sources/lotsize.mod"
+#define h(t) m_ipHoldCost[t]
+#line 3 "../sources/lotsize.mod"
+#define f(t) m_ipFixedCost[t]
+#line 4 "../sources/lotsize.mod"
+#define d(t) m_ipDemand[t]
+#line 5 "../sources/lotsize.mod"
+#define c(t) m_ipCapacity[t]
+#line 6 "../sources/lotsize.mod"
+
+#line 7 "../sources/lotsize.mod"
+int Clotsize::model()
+#line 8 "../sources/lotsize.mod"
+{
+#line 9 "../sources/lotsize.mod"
+	int t, T=m_iT, s0=m_iInitStock;
+#line 10 "../sources/lotsize.mod"
+	VAR_VECTOR x(this,"x",REAL_GE,T), s(this,"s",REAL_GE,T), y(this,"y",BIN,T);
+#line 11 "../sources/lotsize.mod"
+
+#line 12 "../sources/lotsize.mod"
+	       #line 12
+getSum(0).reset();
+#line 12
+for (t=0; t < T; ++t) getSum(0)+=((p(t)*x(t)+h(t)*s(t)+f(t)*y(t)));
+minimize(getSum(0));
+#line 13 "../sources/lotsize.mod"
+
+#line 14 "../sources/lotsize.mod"
+	      addCtr(s0+x(0) == d(0)+s(0));
+#line 15 "../sources/lotsize.mod"
+	  addCtr(x(0) <= c(0)*y(0));
+#line 16 "../sources/lotsize.mod"
+	  for (t=1; t < T; ++t) {
+#line 17 "../sources/lotsize.mod"
+		      addCtr(s(t-1)+x(t) == d(t)+s(t));
+#line 18 "../sources/lotsize.mod"
+		  addCtr(x(t) <= c(t)*y(t));
+#line 19 "../sources/lotsize.mod"
+	}
+#line 20 "../sources/lotsize.mod"
+
+#line 21 "../sources/lotsize.mod"
+	optimize();
+#line 22 "../sources/lotsize.mod"
+	printSol(x,s);
+#line 23 "../sources/lotsize.mod"
+	return 0;
+#line 24 "../sources/lotsize.mod"
+} // end of Clotsize::model
+#line 25 "../sources/lotsize.mod"
+
+#line 26 "../sources/lotsize.mod"

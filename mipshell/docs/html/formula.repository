@@ -1,0 +1,195 @@
+\form#0:\[ \sum_{i\in S,\: i < j } a(i,j)\cdot x(i,j) = b(i). \]
+\form#1:$y\approx x^2$
+\form#2:$G=(V,E)$
+\form#3:$v\in V$
+\form#4:$d_v$
+\form#5:$d_v > 0$
+\form#6:$d_v < 0$
+\form#7:$d_v=0$
+\form#8:$\sum_{v\in V} d_v = 0$
+\form#9:$e\in E$
+\form#10:$u_e > 0$
+\form#11:$x_e > 0$
+\form#12:$f_e + c_e x_e$
+\form#13:$x_e=0$
+\form#14:$e=(i,j)$
+\form#15:$e_1=(i,j)\text{ and } e_2=(j,i)$
+\form#16:$u_e=3$
+\form#17:$f_e=1$
+\form#18:$c_e=0$
+\form#19:$u_e=4$
+\form#20:$f_e=2$
+\form#21:$x_e$
+\form#22:$y_e=1$
+\form#23:$x_e > $
+\form#24:$e$
+\form#25:$y_e=0$
+\form#26:\begin{align} \sum_{e\in E} (f_e y_e + c_e x_e) \to \min,& \tag{1.a} \\ \sum_{e\in E(V,v)} x_e - \sum_{e\in E(v,V)} x_e = d_v,&\quad v\in V,\tag{1.b}\\ 0\le x_e \le u_e y_e,&\quad e\in E,\tag{1.c}\\ y_e \in \{0,1\},&\quad e\in E.\tag{1.d} \end{align}
+\form#27:$\mathcal{T}=\{1,\dots,n\}$
+\form#28:$t_j$
+\form#29:$j\in {\cal T}$
+\form#30:$G = ({\cal T},E)$
+\form#31:$(j_1,j_2) \in E$
+\form#32:$j_1$
+\form#33:$j_2$
+\form#34:$y_i=1$
+\form#35:$y_i=0$
+\form#36:$x_{ij}$
+\form#37:$x_{ij}=0$
+\form#38:$z_j=i$
+\form#39:\begin{align} \sum_{i=1}^m y_i &\to \min \tag{3.a}\\ \sum_{i=1}^m x_{ij} &= 1,\quad j=1,\dots,n, \tag{1.b}\\ \sum_{j=1}^n t_j x_{ij} &\le Cy_i,\quad i=1,\dots,m, \tag{1.c}\\ \sum_{i=1}^m i\,x_{ij} &= z_j,\quad j=1,\dots,n, \tag{1.d}\\ z_{j_1} &\le z_{j_2},\quad (j_1,j_2)\in E, \tag{1.e}\\ y_{i-1} &\ge y_i,\quad i=2,\dots,m, \tag{1.f}\\ x_{ij} &\le y_i,\quad j=1,\dots,n;\; i=1,\dots,m,\tag{1.g} \label{eq:LBstationPrec2}\\ x_{ij} &\in \{0,1\},\quad i=1,\dots,m;\; j=1,\dots,n,\tag{1.h}\\ y_i&\in \{0,1\},\quad i=1,\dots,m,\tag{1.i}\\ z_j &\ge 0,\quad j=1,\dots,n.\tag{1.j} \label{eq:LBz} \end{align}
+\form#40:$(j_1,j_2)\in E$
+\form#41:$N=\{1,\dots,n\}$
+\form#42:$b_j$
+\form#43:$j\in N$
+\form#44:$M=\{1,\dots,m\}$
+\form#45:$f_i$
+\form#46:$a_i$
+\form#47:$c_{ij}$
+\form#48:\begin{align} &\sum_{i=1}^m \sum_{j=1}^n c_{ij} x_{ij} + \sum_{i=1}^m f_i y_i \to \min \tag{1.a}\\ &\sum_{i=1}^m x_{ij} = b_j,\quad j=1,\ldots,n, \tag{1.b}\\ &\sum_{j=1}^n x_{ij} \le a_i y_i,\quad i=1,\ldots,m. \tag{1.c}\\ &x_{ij}\le \min\{a_i,b_j\} y_i ,\quad i=1,\ldots,m,\; j=1,\ldots,n, \tag{1.d}\\ &y_i \in \{0,1\},\quad i=1,\ldots,m, \tag{1.e}\\ &x_{ij}\in \mathbb{Z}_+,\quad i=1,\ldots,m,\; j=1,\ldots,n. \tag{1.f} \end{align}
+\form#49:$c_{ij}=0$
+\form#50:$f_i=1$
+\form#51:$l_t$
+\form#52:$m_{it}$
+\form#53:$f_{it}$
+\form#54:$T^{\mathrm{min}}_{i}, T^{\mathrm{max}}_{i}$
+\form#55:$c_{jt}$
+\form#56:$h_{jt}$
+\form#57:$d_{jt}$
+\form#58:$\rho_{jk}$
+\form#59:$\tau_{ij}$
+\form#60:$s^i_j$
+\form#61:$s^f_j$
+\form#62:$x_{jt}$
+\form#63:$s_{jt}$
+\form#64:$y_{it}$
+\form#65:\begin{align} & \sum_{t=1}^T\sum_{j=1}^n \left(h_{jt}\, s_{jt} + c_{jt}\, x_{jt}\right) + \sum_{t=1}^T\sum_{i=1}^m f_{it}\, y_{it} \to \min, \tag{1.a}\\ & s^i_j + x_{j1} = d_{j1} + s_{j1} + \sum_{k=1}^n \rho_{jk}\, x_{k,1},\quad j=1,\dots,n, \tag{1.b}\\ & s_{j,t-1} + x_{jt} = d_{jt} + s_{jt} + \sum_{k=1}^n \rho_{jk}\, x_{k,t}, \notag \\ & \phantom{xxxxxxxxxxxxxxxxxxxxx} j=1,\dots,n;\; t=2,\dots,T, \tag{1.c}\\ & \sum_{j=1}^n \tau_{ij}\, x_{jt} \le l_t y_{it},\quad i=1,\dots,m;\; t=1,\dots,T, \tag{1.d}\\ & s_{jT} = s^f_j,\quad j=1,\dots,n,\tag{1.e}\\ & 0\le s_{jt}\le u_j,\; x_{jt}\ge 0,\quad j=1,\dots,n;\; t=1,\dots,T, \tag{1.f}\\ & 0\le y_{it}\le m_{it},\; y_{it} \in \mathbb{Z},\quad i=1,\dots,m;\; t=1,\dots,T. \tag{1.g} \end{align}
+\form#66:$y_{it}=0$
+\form#67:$x_{jt}=0$
+\form#68:$p_{is}$
+\form#69:$p_{is}=0$
+\form#70:$c_{ijsr}$
+\form#71:$p_{ii}=0$
+\form#72:$p_{is}=200$
+\form#73:$x_{is}=1$
+\form#74:$s\in S_i$
+\form#75:$x_{is}=0$
+\form#76:$y_{ijsr}=1$
+\form#77:$x_{is}=x_{jr}=1$
+\form#78:$y_{ijsr}=0$
+\form#79:\begin{align} &\sum_{i=1}^n\sum_{s=1}^m p_{is} x_{is} + \sum_{i=1}^{n-1}\sum_{j=i+1}^n\sum_{s=1}^m\sum_{r=1}^m c_{ijsr} y_{ijsr} \to \min,\tag{1.a}\\ &\sum_{s=1}^m x_{is} = 1,\quad i=1,\dots,n,\tag{1.b}\\ &\sum_{i=1}^n x_{is} \le 1,\quad s=1,\dots,n,\tag{1.c}\\ &2 y_{ijsr} \le x_{is} + x_{jr},\quad s,r=1,\dots,m,\; j=i+1,\dots,n,\; i=1,\dots,n-1,\tag{1.d}\\ &\sum_{s=1}^m\sum_{r=1}^m y_{ijsr} = 1,\quad j=i+1,\dots,n,\; i=1,\dots,n-1,\tag{1.e}\\ &x_{ij} \in \{0,1\},\quad j=i+1,\dots,n,\; i=1,\dots,n-1,\tag{1.f}\\ &y_{ijsr} \in \{0,1\},\quad s,r=1,\dots,m,\; j=i+1,\dots,n,\; i=1,\dots,n-1.\tag{1.g} \end{align}
+\form#80:$p_{is}\text{ and } c_{ijsr}$
+\form#81:$d_t$
+\form#82:$l_i, u_i$
+\form#83:$r^1_i,r^2_i$
+\form#84:$r^1_i$
+\form#85:$r^2_i$
+\form#86:$g_i$
+\form#87:$f_i, p_i$
+\form#88:$f_i+p_i v$
+\form#89:$x_{it}=1$
+\form#90:$x_{it}=0$
+\form#91:$z_{it}=1$
+\form#92:$z_{it}=0$
+\form#93:\begin{align} \sum_{i=1}^n \sum_{t=1}^T (g_i z_{it} + f_i x_{it} &+ p_i y_{it}) \to \min \tag{1.a}\\ \sum_{i=1}^n y_{it} = d_t,\quad & t=1,\ldots,T, \tag{1.b}\\ \sum_{i=1}^n u_i x_{it} \ge q\,d_t,\quad & t=1,\ldots,T, \tag{1.c}\\ l_i x_{it}\le y_{it}\le u_i x_{it},\quad & i=1,\ldots,n;\; t=1,\ldots,T, \tag{1.d}\\ -r^1_i \le y_{it} - y_{i,((t-2+T)\bmod{T})+1} \le r^2_i,\quad & i=1,\ldots,n;\; t=1,\ldots,T,\tag{1.e}\\ x_{it} - x_{i,((t-2+T)\bmod{T})+1} \le z_{it},\quad & i=1,\ldots,n;\; t=1,\ldots,T, \tag{1.f}\\ z_{it}\le x_{it},,\quad & i=1,\ldots,n;\; t=1,\ldots,T, \tag{1.g}\\ x_{it}, z_{it} \in \{0,1\},\quad & i=1,\ldots,n;\; t=1,\ldots,T, \tag{1.h}\\ y_{it}\in \mathbb{R}_+,\quad & i=1,\ldots,n;\; t=1,\ldots,T. \tag{1.i} \end{align}
+\form#94:$z_{it}=1\quad\Rightarrow\quad x_{i,t-1}=0\text{ and } x_{it}=1$
+\form#95:$r^1_5=15,\; r^2_5=20$
+\form#96:$r^1_i=r^2_i=u_i$
+\form#97:$U_i$
+\form#98:$S^{\mathrm{in}}_i$
+\form#99:$S^{\mathrm{out}}_i$
+\form#100:$\rho^{\mathrm{in}}_{is}$
+\form#101:$s\in S^{\mathrm{in}}_i\,;\; \sum_{s\in S^{\mathrm{in}}_i} \rho^{\mathrm{in}}_{is} =1$
+\form#102:$\rho^{\mathrm{out}}_{is}$
+\form#103:$s\in S^{\mathrm{out}}_i\,;\; \sum_{s\in S^{\mathrm{out}}_i} \rho^{\mathrm{out}}_{is} =1$
+\form#104:$s\in S^{\mathrm{out}}_i$
+\form#105:$d_i$
+\form#106:$d_i =\max_{s\in S^{\mathrm{out}}_i} p_{is}$
+\form#107:$T^{\mathrm{out}}_s$
+\form#108:$T^{\mathrm{in}}_s$
+\form#109:$z^0_s$
+\form#110:$u_s$
+\form#111:$c^{\mathrm{P}}_{s}$
+\form#112:$c^{\mathrm{S}}_{s}$
+\form#113:$I_j$
+\form#114:$V^{\max}_{ij}, V^{\min}_{ij}$
+\form#115:$x_{ijt}=1$
+\form#116:$x_{ijt}=0$
+\form#117:$y_{ijt}$
+\form#118:$z_{st}$
+\form#119:\begin{align} \sum_{s=1}^q c^{\mathrm{P}}_s z_{s,H+1} - \sum_{s=1}^q\sum_{t=1}^H c^{\mathrm{S}}_{s} z_{st} \to \max,\tag{1.a}\\ \sum_{i\in I_j} x_{ijt} \le 1, \quad j=1,\ldots,m;\; t=1,\ldots,H,\tag{1.b}\\ \sum_{l\in I_j} \sum_{\tau=t}^{t+d_i-1} x_{lj\tau} \le 1 + M(1-x_{ijt}), \quad j=1,\ldots,m;\; i\in I_j;\notag\\ t=1,\ldots,H,\tag{1.c}\\ V^{\min}_{ij} x_{ijt} \le y_{ijt}\le V^{\min}_{ij} x_{ijt}, \quad j=1,\ldots,m;\; i \in I_j;\notag\\ t=1,\ldots,H,\tag{1.d}\\ 0\le z_{st} \le u_s, \quad s=1,\ldots,q;\; t=1,\ldots,H,\tag{1.e}\\ z_{s,t-1} + \sum_{i\in T^{\mathrm{out}}_s:\: t > p_{is}} \rho^{\mathrm{out}}_{is} \sum_{j\in U_i}y_{ij,t-p_{is}} = z_{st} + \sum_{i\in T^{\mathrm{in}}_s} \rho^{\mathrm{in}}_{is} \sum_{j\in U_i}y_{ijt}, \notag\\ s=1,\ldots,q; \; t=1,\ldots,H,\tag{1.f}\\ z_{s,H} + \sum_{i\in T^{\mathrm{out}}_s:\: t > p_{is}} \rho^{\mathrm{out}}_{is} \sum_{j\in U_i}y_{ij,H-p_{is}} = z_{s,H+1}, \quad s=1,\ldots,q,\tag{1.g}\\ x_{ijt} = 0, \quad t > H-d_i,\; j=1,\dots,m;\; i \in I_j,\tag{1.h}\\ x_{ijt}\in \{0,1\},\; y_{ijt}\in \mathbb{R}_+, \quad j=1,\ldots,m;\; i \in I_j; t=1,\ldots,H,\tag{1.i}\\ z_{st}\in \mathbb{R}_+, \quad s=1,\ldots,q;\; t=1,\dots,H + 1.\tag{1.j} \end{align}
+\form#120:$z_{s0}$
+\form#121:$x_j$
+\form#122:$j,\; x_j \ge 0,\; \sum_{j=1}^n x_j=1$
+\form#123:$R_j$
+\form#124:\[ R =\sum_{i=1}^n x_j R_j. \]
+\form#125:\[ E(R) = \sum_{j=1}^n x_j E(R_j), \]
+\form#126:$E(R_j)$
+\form#127:\begin{align*} \mathrm{var}(R) &= E((R-E(R))^2) = E((\sum_{j=1}^n x_j(R_j-E(R_j)))^2)\\ &= E((\sum_{j=1}^n x_j \bar{R}_j)^2). \end{align*}
+\form#128:$\bar{R}_j= R_j-E(R_j)$
+\form#129:\begin{align*} \sum_{j=1}^n E(R_j) x_j &\to \max,\\ \sum_{j=1}^n x_j &= 1,\\ E((\sum_{j=1}^n x_j \bar{R}_j)^2) &\le V,\\ x_j &\ge 0,\quad j=1,\ldots,n. \end{align*}
+\form#130:\[ E_1(R_j) = \frac{1}{T}\sum_{t=1}^T R_{jt}.\qquad\qquad (1)\]
+\form#131:\[ E_2(R_j) = \frac{\sum_{t=1}^T p^{T-t}R_{jt}}{\sum_{t=1}^T p^{T-t}},\qquad\qquad (2)\]
+\form#132:$0 < p < 1$
+\form#133:\[E_3(R_j) = \exp\left(\frac{\sum_{t=1}^T p^{T-t}\log R_{jt}}{\sum_{t=1}^T p^{T-t}}\right).\qquad\qquad (3) \]
+\form#134:\begin{equation} \renewcommand{\theequation}{4} \begin{aligned} \sum_{j=1}^n E_3(R_j) x_j &\to \max,\\ \sum_{j=1}^n x_j &= 1,\\ E_2\left(\left(\sum_{j=1}^n x_j \bar{R}_j\right)^2\right) &\le V,\\ x_j &\ge 0,\quad j=1,\dots,n. \end{aligned} \end{equation}
+\form#135:\[ p_t = \frac{p^{T-t}}{\sum_{\tau=1}^T p^{T-\tau}},\quad t=1,\dots,T, \]
+\form#136:\[ \tilde{R}_{jt} = R_{jt} - \sum_{\tau=1}^T p_{\tau} R_{j\tau},\quad j=1,\dots,n,\; t=1,\dots,T, \]
+\form#137:\[ E_2\left(\left(\sum_{j=1}^n x_j \bar{R}_j\right)^2\right) = \sum_{t=1}^T p_t\left(\sum_{j=1}^n x_j\tilde{R}_{jt}\right)^2, \]
+\form#138:$E_3(R_j)$
+\form#139:$\mu_j$
+\form#140:\[ y_t = \sum_{j=1}^n \tilde{R}_{jt} x_j,\quad t=1,\dots,T, \]
+\form#141:\begin{align} \sum_{j=1}^n \mu_j x_j &\to \max,\tag{$5$}\\ \sum_{j=1}^n x_j &= 1,\tag{$6$}\\ \sum_{j=1}^n \tilde{R}_{jt} x_j &= y_t,\quad t=1,\dots,T,\tag{$7$}\\ \sum_{t=1}^T p_t y_t^2 &\le V,\tag{$8$}\\ x_j &\ge 0,\quad j=1,\dots,n.\tag{$9$} \end{align}
+\form#142:$l_j$
+\form#143:$v_j\; (j=1,\dots,n)$
+\form#144:$v_j=1$
+\form#145:$x_j > 0$
+\form#146:$v_j=0$
+\form#147:\begin{align} \sum_{j=1}^n v_j &\le q,\tag{$10$}\\ x_j &\le v_j,\quad j=1,\dots,n.\tag{$11$} \end{align}
+\form#148:$\bar{y}\in\mathbb{R}^T$
+\form#149:\[ \delta=\sum_{t=1}^T p_t \bar{y}_t^2, \]
+\form#150:$\delta > V$
+\form#151:$\bar{y}$
+\form#152:\[ \sum_{t=1}^T (p_t\bar{y}_t) y_t \le \sqrt{V\delta}.\]
+\form#153:$\tilde{y}\in\mathbb{R}^T$
+\form#154:$\epsilon=\sum_{t=1}^T p_t \tilde{y}_t^2 \le V$
+\form#155:\begin{align*} \sum_{t=1}^T (p_t\bar{y}_t) \tilde{y}_t &= \sum_{t=1}^T (\sqrt{p_t}\,\bar{y}_t) (\sqrt{p_t}\,\tilde{y}_t) \le \sqrt{\sum_{t=1}^T p_t\bar{y}_t^2} \times \sqrt{\sum_{t=1}^T p_t\tilde{y}_t^2}\\ &= \sqrt{\delta \epsilon} \le \sqrt{\delta V}. \end{align*}
+\form#156:$\frac{p^{T-t}}{\sum_{t=1}^T p^{T-t}},\; t=1,\dots,T$
+\form#157:$y_t$
+\form#158:$p_t$
+\form#159:$\tilde{R}_{jt}$
+\form#160:$s_k$
+\form#161:$f_k$
+\form#162:$q_{1k}$
+\form#163:$q_{2k}$
+\form#164:$q_{3k}$
+\form#165:$r_i$
+\form#166:$c_{tio}$
+\form#167:$p_{ts}$
+\form#168:$\sum_{s=1}^{S} p_{ts} = 1$
+\form#169:$d_{tsio}$
+\form#170:$n+1=\sum_{t=0}^{T} S^t$
+\form#171:$V_t$
+\form#172:$S^t$
+\form#173:$V_0=\{0\}$
+\form#174:$j\in V_t$
+\form#175:$(s_1,s_2,\dots,s_t)$
+\form#176:$s_{\tau}\in \{1,\dots,S_{\tau}\}$
+\form#177:$\tau$
+\form#178:$\bar{p}_j\stackrel{\mathrm{def}}{=} \prod_{\tau=1}^t p_{\tau,s_{\tau}}$
+\form#179:$\bar{d}_{jio}\stackrel{\mathrm{def}}{=} d_{t,s_t,i,o}$
+\form#180:$\bar{c}_{jio}\stackrel{\mathrm{def}}{=} \bar{p}_j c_{tio}$
+\form#181:$parent(j)$
+\form#182:$V_{t-1}$
+\form#183:$(s_1,s_2,\dots,s_{t-1})$
+\form#184:$V_1$
+\form#185:$v_k$
+\form#186:$j\in V\setminus V_T$
+\form#187:$x_{jio}$
+\form#188:$y_{jio}=1$
+\form#189:$y_{jio}=0$
+\form#190:$j\in V$
+\form#191:$z_{ji}$
+\form#192:\begin{align} -\sum_{k=1}^K f_k v_k &+ \sum_{j\in V\setminus V_T} \sum_{o=1}^{O} \sum_{i=1}^3 \bar{c}_{jio} x_{jio} \to \max, \tag{1.a}\\ \sum_{o=1}^{O} &y_{jio} = 1,\quad j\in V\setminus V_T,\; i=1,2,3,\tag{1.b}\\ x_{jio} &\le \bar{d}_{jio} y_{jio},\quad j\in V\setminus V_T,\; i=1,2,3,\; o=1,\dots,O, \tag{1.c}\\ z_{ji} &= z_{parent(j),i} + \sum_{o=1}^{O} x_{parent(j),i,o}\,,\quad j\in V\setminus \{0\},\; i=1,2,3, \tag{1.d}\\ z_{j1} &\le \sum_{k=1}^K (q_{1k} + \lfloor r_{2k} q_{2k}/100\rfloor)\, v_k,\quad j\in V_T,\tag{1.e}\\ z_{j2} &\le \sum_{k=1}^K (q_{2k} + \lfloor (r_{1k} q_{1k} + r_{3k} q_{3k})/100\rfloor)\, v_k,\quad j\in V_T,\tag{1.f}\\ z_{j3} &\le \sum_{k=1}^K (q_{3k} + \lfloor r_{2k} q_{2k}/100\rfloor)\, v_k,\quad j\in V_T,\tag{1.g}\\ z_{j1} &+ z_{j3} \le \sum_{k=1}^K (q_{1k}+q_{3k} + \lfloor r_{2k} q_{2k}/100\rfloor)\, v_k,\quad j\in V_T,\tag{1.h}\\ z_{j1} &+ z_{j2} + z_{j3} \le \sum_{k=1}^K (q_{1k}+q_{2k} + q_{3k})\, v_k,\quad j\in V_T,\tag{1.i}\\ x_{jio} &\in \mathbb{Z}_+,\quad j\in V\setminus V_T,\; i=1,2,3,\; o=1,\dots, O,\tag{1.j}\\ y_{jio} &\in \{0,1\},\quad j\in V\setminus V_T,\; i=1,2,3,\; o=1,\dots, O,\tag{1.k}\\ z_{ji} &\in \mathbb{Z}_+,\quad j\in V,\; i=1,2,3,\tag{1.l}\\ z_{0i} &= 0,\quad i=1,2,3,\tag{1.m}\\ v_k &\in\mathbb{Z}_+\,,\; v_k \le s_k,\quad k=1,\dots,K.\tag{1.n} \end{align}
+\form#193:$x_{0io}$
+\form#194:\begin{align*} &T=3,\; K=1,\; s_1=6,\; f_1=\$75000,\; q_{11}=35,\\ &r_{11}=10,\; q_{12}=40,\; r_{12}=10,\; q_{13}=60,\; r_{13}=10. \end{align*}

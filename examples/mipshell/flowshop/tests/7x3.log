@@ -1,0 +1,41 @@
+CLU: Reallocate memory for matrix (2); old size = 50, new size = 66
+CLU: Reallocate memory for matrix (2); old size = 66, new size = 88
+CLU: Reallocate memory for matrix (2); old size = 88, new size = 117
+CLU: Reallocate memory for matrix (2); old size = 117, new size = 156
+CLU: Reallocate memory for partition (2); old size = 50, new size = 66
+CLU: Reallocate memory for partition (2); old size = 66, new size = 88
+CLU: Reallocate memory for matrix (2); old size = 156, new size = 208
+CLU: Reallocate memory for matrix (2); old size = 208, new size = 277
+CLU: Reallocate memory for matrix (2); old size = 277, new size = 369
+CLU: Reallocate memory for matrix (2); old size = 369, new size = 492
+CLU: Reallocate memory for partition (2); old size = 88, new size = 117
+CLU: Reallocate memory for partition (2); old size = 117, new size = 156
+CLU: Reallocate memory for matrix (2); old size = 492, new size = 656
+CLU: Reallocate memory for matrix (2); old size = 656, new size = 874
+CLU: Reallocate memory for partition (2); old size = 156, new size = 208
+CLU: Reallocate memory for partition (2); old size = 208, new size = 277
+CLU: Reallocate memory for matrix (2); old size = 874, new size = 1165
+CLU: Reallocate memory for matrix (2); old size = 1165, new size = 1553
+CLU: Reallocate memory for partition (2); old size = 277, new size = 369
+CLU: Reallocate memory for matrix (2); old size = 1553, new size = 2070
+Tree: Reallocate memory for nodes; old size 64, new size 114
+Tree: Reallocate memory for nodes; old size 114, new size 164
+Tree: Reallocate memory for nodes; old size 164, new size 218
+Tree: Reallocate memory for nodes; old size 218, new size 290
+Tree: Reallocate memory for nodes; old size 290, new size 386
+Tree: Reallocate memory for buffer; old size 39808, new size 53077
+Tree: Reallocate memory for nodes; old size 386, new size 514
+Tree: Reallocate memory for buffer; old size 53077, new size 70769
+Tree: Reallocate memory for nodes; old size 514, new size 685
+Tree: Reallocate memory for buffer; old size 70769, new size 94358
+Tree: Reallocate memory for nodes; old size 685, new size 913
+Tree: Reallocate memory for buffer; old size 94358, new size 125810
+Tree: Reallocate memory for nodes; old size 913, new size 1217
+Tree: Reallocate memory for buffer; old size 125810, new size 167746
+Tree: Reallocate memory for nodes; old size 1217, new size 1622
+Tree: Reallocate memory for buffer; old size 167746, new size 223661
+Tree: Reallocate memory for nodes; old size 1622, new size 2162
+Tree: Reallocate memory for buffer; old size 223661, new size 298214
+Tree: Reallocate memory for nodes; old size 2162, new size 2882
+Tree: Reallocate memory for buffer; old size 298214, new size 397618
+Tree: Reallocate memory for nodes; old size 2882, new size 3842

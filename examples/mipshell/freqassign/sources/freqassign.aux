@@ -1,0 +1,61 @@
+#line 1 "../sources/freqassign.mod"
+#define k m_iK
+#line 2 "../sources/freqassign.mod"
+#define n m_iN
+#line 3 "../sources/freqassign.mod"
+#define m m_iM
+#line 4 "../sources/freqassign.mod"
+#define s1(e) m_ipStation1[e] 
+#line 5 "../sources/freqassign.mod"
+#define s2(e) m_ipStation2[e] 
+#line 6 "../sources/freqassign.mod"
+#define p(e)  m_ipInterference[e] 
+#line 7 "../sources/freqassign.mod"
+
+#line 8 "../sources/freqassign.mod"
+int Cfreqassign::model()
+#line 9 "../sources/freqassign.mod"
+{
+#line 10 "../sources/freqassign.mod"
+	VAR x(this,"max_frequency",REAL_GE);
+#line 11 "../sources/freqassign.mod"
+	VAR_VECTOR f(this,"frequency",INT_GE,n), delta(this,"dj",BIN,m);
+#line 12 "../sources/freqassign.mod"
+
+#line 13 "../sources/freqassign.mod"
+	minimize(x);
+#line 14 "../sources/freqassign.mod"
+	
+#line 15 "../sources/freqassign.mod"
+	   for (int e=0; e < m; ++e) {
+#line 16 "../sources/freqassign.mod"
+		      addCtr(f(s1(e))-f(s2(e)) >= p(e)-(k+p(e))*delta(e));
+#line 17 "../sources/freqassign.mod"
+		      addCtr(f(s2(e))-f(s1(e)) >= p(e)-(k+p(e))*(1-delta(e)));
+#line 18 "../sources/freqassign.mod"
+	}
+#line 19 "../sources/freqassign.mod"
+	
+#line 20 "../sources/freqassign.mod"
+	   for (int i=0; i < n; ++i) {
+#line 21 "../sources/freqassign.mod"
+		  addCtr(f(i) >= 1);
+#line 22 "../sources/freqassign.mod"
+		  addCtr(f(i) <= x);
+#line 23 "../sources/freqassign.mod"
+	}
+#line 24 "../sources/freqassign.mod"
+	    addCtr(1 <= x <= k);
+#line 25 "../sources/freqassign.mod"
+	
+#line 26 "../sources/freqassign.mod"
+	optimize();
+#line 27 "../sources/freqassign.mod"
+	printSol(f);
+#line 28 "../sources/freqassign.mod"
+	return 0;
+#line 29 "../sources/freqassign.mod"
+} // end of Cfreqassign::model
+#line 30 "../sources/freqassign.mod"
+
+#line 31 "../sources/freqassign.mod"

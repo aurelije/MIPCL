@@ -1,0 +1,89 @@
+#line 1 "../sources/fl.mod"
+#define f(i) m_ipFixedCost[i]
+#line 2 "../sources/fl.mod"
+#define a(i) m_ipCapacity[i]
+#line 3 "../sources/fl.mod"
+#define b(j) m_ipPopulation[j]
+#line 4 "../sources/fl.mod"
+#define c(i,j) m_ipCost[i*n+j]
+#line 5 "../sources/fl.mod"
+#define min(a,b) ((a < b)? a: b)
+#line 6 "../sources/fl.mod"
+
+#line 7 "../sources/fl.mod"
+int Cfl::model()
+#line 8 "../sources/fl.mod"
+{
+#line 9 "../sources/fl.mod"
+	int i,j, m=m_iSiteNum, n=m_iLocationNum, q=m_iQ; 
+#line 10 "../sources/fl.mod"
+	VAR_VECTOR y(this,"y",BIN,m), x(this,"x",INT_GE,m,n);
+#line 11 "../sources/fl.mod"
+	
+#line 12 "../sources/fl.mod"
+	    #line 12
+getSum(0).reset();
+#line 12
+for (i=0; i < m; ++i) getSum(0)+=(f(i)*y(i));
+       #line 12
+getSum(1).reset();
+#line 12
+for (i=0; i < m; ++i)
+#line 12
+for (j=0; j < n; ++j) getSum(1)+=(c(i,j)*x(i,j));
+minimize(getSum(0)+getSum(1));
+#line 13 "../sources/fl.mod"
+	
+#line 14 "../sources/fl.mod"
+	    {
+#line 14
+getSum(2).reset();
+#line 14
+for (i=0; i < m; ++i) getSum(2)+=(y(i));
+ addCtr(getSum(2) <= q);
+}
+#line 15 "../sources/fl.mod"
+	
+#line 16 "../sources/fl.mod"
+	  for (j=0; j < n; ++j)
+#line 17 "../sources/fl.mod"
+		    {
+#line 17
+getSum(3).reset();
+#line 17
+for (i=0; i < m; ++i) getSum(3)+=(x(i,j));
+ addCtr(getSum(3) == b(j));
+}
+#line 18 "../sources/fl.mod"
+
+#line 19 "../sources/fl.mod"
+	  for (i=0; i < m; ++i)
+#line 20 "../sources/fl.mod"
+		    {
+#line 20
+getSum(4).reset();
+#line 20
+for (j=0; j < n; ++j) getSum(4)+=(x(i,j));
+ addCtr(getSum(4) <= a(i)*y(i));
+}
+#line 21 "../sources/fl.mod"
+
+#line 22 "../sources/fl.mod"
+	     for (i=0; i < m; ++i)
+#line 22
+for (j=0; j < n; ++j)
+#line 23 "../sources/fl.mod"
+		  addCtr(x(i,j) <= min(a(i),b(j))*y(i));
+#line 24 "../sources/fl.mod"
+
+#line 25 "../sources/fl.mod"
+	optimize();
+#line 26 "../sources/fl.mod"
+	printSol(x,y);
+#line 27 "../sources/fl.mod"
+	return 0;
+#line 28 "../sources/fl.mod"
+} // end of Cfl::model
+#line 29 "../sources/fl.mod"
+
+#line 30 "../sources/fl.mod"

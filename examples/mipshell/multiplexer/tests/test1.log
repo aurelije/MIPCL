@@ -1,0 +1,21 @@
+CLU: Reallocate memory for matrix (2); old size = 145, new size = 193
+CLU: Reallocate memory for matrix (2); old size = 193, new size = 257
+CLU: Reallocate memory for matrix (2); old size = 257, new size = 342
+CLU: Reallocate memory for matrix (2); old size = 342, new size = 456
+CLU: Reallocate memory for matrix (2); old size = 456, new size = 608
+CLU: Reallocate memory for matrix (2); old size = 608, new size = 810
+CLU: Reallocate memory for matrix (2); old size = 810, new size = 1080
+CLU: Reallocate memory for matrix (2); old size = 1080, new size = 1440
+CLU: Reallocate memory for matrix (2); old size = 1440, new size = 1920
+CLU: Reallocate memory for matrix (2); old size = 1920, new size = 2560
+CLU: Reallocate memory for partition (2); old size = 145, new size = 193
+CLU: Reallocate memory for partition (2); old size = 193, new size = 257
+CLU: Reallocate memory for partition (2); old size = 257, new size = 342
+CLU: Reallocate memory for partition (2); old size = 342, new size = 456
+CLP::ReallocMemForEntries: old size 1552, new size 2552
+CLU: Reallocate memory for matrix (2); old size = 2560, new size = 3413
+CLU: Reallocate memory for partition (2); old size = 456, new size = 608
+CLU: Reallocate memory for partition (2); old size = 608, new size = 810
+Pool: Reallocate memory for constraints; old size 734, new size 734
+Pool: Reallocate memory for buffer; old size 5510, new size 7348
+Pool: Reallocate memory for constraints; old size 978, new size 978

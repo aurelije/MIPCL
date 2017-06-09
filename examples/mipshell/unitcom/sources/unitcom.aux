@@ -1,0 +1,89 @@
+#line 1 "../sources/unitcom.mod"
+#define d(t) m_ipDemand[t]
+#line 2 "../sources/unitcom.mod"
+#define u(i) m_ipUpCapacity[i]
+#line 3 "../sources/unitcom.mod"
+#define l(i) m_ipLoCapacity[i]
+#line 4 "../sources/unitcom.mod"
+#define r1(i) m_ipRminus[i]
+#line 5 "../sources/unitcom.mod"
+#define r2(i) m_ipRPlus[i]
+#line 6 "../sources/unitcom.mod"
+#define g(i) m_ipStartUpCost[i]
+#line 7 "../sources/unitcom.mod"
+#define f(i) m_ipFixedCost[i]
+#line 8 "../sources/unitcom.mod"
+#define p(i) m_ipUnitCost[i]
+#line 9 "../sources/unitcom.mod"
+
+#line 10 "../sources/unitcom.mod"
+int Cunitcom::model()
+#line 11 "../sources/unitcom.mod"
+{
+#line 12 "../sources/unitcom.mod"
+	double q=m_dQ;
+#line 13 "../sources/unitcom.mod"
+	int i,t, n, T;
+#line 14 "../sources/unitcom.mod"
+	n=m_iGenNum; T=m_iT;
+#line 15 "../sources/unitcom.mod"
+	VAR_VECTOR x(this,"x",BIN,n,T), y(this,"y",REAL_GE,n,T), z(this,"z",BIN,n,T); 
+#line 16 "../sources/unitcom.mod"
+	
+#line 17 "../sources/unitcom.mod"
+	            #line 17
+getSum(0).reset();
+#line 17
+for (i=0; i < n; ++i)
+#line 17
+for (t=0; t < T; ++t) getSum(0)+=((g(i)*z(i,t)+f(i)*x(i,t)+p(i)*y(i,t)));
+minimize(getSum(0));
+#line 18 "../sources/unitcom.mod"
+	  for (t=0; t < T; ++t) {
+#line 19 "../sources/unitcom.mod"
+		    {
+#line 19
+getSum(1).reset();
+#line 19
+for (i=0; i < n; ++i) getSum(1)+=(y(i,t));
+ addCtr(getSum(1) == d(t));
+}
+#line 20 "../sources/unitcom.mod"
+		    {
+#line 20
+getSum(2).reset();
+#line 20
+for (i=0; i < n; ++i) getSum(2)+=(u(i)*x(i,t));
+ addCtr(getSum(2) >= q*d(t));
+}
+#line 21 "../sources/unitcom.mod"
+	}
+#line 22 "../sources/unitcom.mod"
+	     for (i=0; i < n; ++i)
+#line 22
+for (t=0; t < T; ++t) {
+#line 23 "../sources/unitcom.mod"
+		  addCtr(l(i)*x(i,t) <= y(i,t));
+#line 24 "../sources/unitcom.mod"
+		  addCtr(y(i,t) <= u(i)*x(i,t));
+#line 25 "../sources/unitcom.mod"
+		        addCtr(-r1(i) <= y(i,t)-y(i,(t-1+T)%T) <= r2(i));
+#line 26 "../sources/unitcom.mod"
+		      addCtr(x(i,t)-x(i,(t-1+T)%T) <= z(i,t));
+#line 27 "../sources/unitcom.mod"
+		  addCtr(z(i,t) <= x(i,t));
+#line 28 "../sources/unitcom.mod"
+	}
+#line 29 "../sources/unitcom.mod"
+
+#line 30 "../sources/unitcom.mod"
+	optimize();
+#line 31 "../sources/unitcom.mod"
+	printSol(y);
+#line 32 "../sources/unitcom.mod"
+	return 0;
+#line 33 "../sources/unitcom.mod"
+} // end of Cunitcom::model
+#line 34 "../sources/unitcom.mod"
+
+#line 35 "../sources/unitcom.mod"

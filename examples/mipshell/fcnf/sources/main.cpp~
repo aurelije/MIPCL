@@ -1,0 +1,68 @@
+#include <iostream>
+#include "fcnf.h"
+
+#include <iostream>
+#include <fstream>
+#include "fcnf.h"
+
+void readNet(const char* fileName,
+			int &n, int &m, int* &tail, int* &head, 
+			int* &capacity, int* &fixedCost, int* &cost,
+			 int* &demand)
+{
+	std::ifstream fin(fileName);
+	if (!fin.is_open()) {
+		char msg[64];
+		strcpy(msg,"ReadNet: ");
+		strcat(msg,strFileOpenError);
+		throw CFileException(msg);
+	}
+	fin >> n >> m;
+	tail = new int[m];
+	head = new int[m];
+	capacity = new int[m];
+	fixedCost = new int[m];
+	cost = new int[m];
+	demand = new int[n];
+	if (!demand || !tail || !head || !capacity || !fixedCost || !cost) {
+		char msg[64];
+		strcpy(msg,"ReadNet: ");
+		strcat(msg,strMemError);
+		throw CMemoryException(msg);
+	}
+	int i;
+	for (i=0; i < n; i++) {
+		fin >> demand[i];
+	}
+	for (i=0; i < m; i++) {
+		fin >> tail[i] >> head[i] >> fixedCost[i] >> capacity[i] 
+			>> fixedCost[i] >> cost[i];
+	}
+	fin.close();
+}
+
+int main()
+{
+	int n,m,*tail,*head,*capacity,*fixedCost,*cost,*demand;
+	try {
+		readNet(argv[1],n,m,tail,head,capacity,fixedCost,cost,demand);
+		Cfcnf prob("fcnf")
+		prob.optimize();
+		prob.printsol();
+
+	}
+	catch(CException* pe) {
+		std::cerr << pe->GetErrorMessage() << std::endl;
+		delete pe;
+		return 1;
+	}
+	delete[] tail;
+	delete[] head;
+	delete[] capacity;
+	delete[] fixedCost;
+	delete[] cost;
+	delete[] demand;
+
+	return 0;
+}
+

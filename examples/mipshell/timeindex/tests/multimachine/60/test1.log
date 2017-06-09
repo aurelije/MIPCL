@@ -1,0 +1,7 @@
+Pool: Reallocate memory for constraints; old size 1485, new size 1485
+Tree: Reallocate memory for buffer; old size 1000000, new size 1333333
+Tree: Reallocate memory for buffer; old size 1333333, new size 1777777
+Tree: Reallocate memory for buffer; old size 1777777, new size 2370369
+Tree: Reallocate memory for buffer; old size 2370369, new size 3160492
+Tree: Reallocate memory for buffer; old size 3160492, new size 4213989
+Tree: Reallocate memory for buffer; old size 4213989, new size 5618652

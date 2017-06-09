@@ -1,0 +1,28 @@
+#define l(i) m_dpL[i] 
+#define mu(i) m_dpMu[i] 
+#define a(i,t) m_dpRet[i*T+t]
+
+int Coptportfolio::model()
+{
+	int i,t, n=m_iN, T=m_iT, q=m_iQ;
+	VAR_VECTOR x("x",REAL_GE,n), v("v",BIN,n), y("y",REAL,T);
+	p=dpP; T=iT; V=dV; m_dpY = &y;
+	u = new double[T];
+
+	maximize(sum(i in [0,n)) mu(i)*x(i));
+
+	sum(i in [0,n)) x(i) == 1;
+	sum(i in [0,n)) v(i) <= q;
+
+	forall(t in [0,T))
+		y(t) == sum(i in [0,n)) a(i,t)*x(i);
+		
+	for (i in [0,n))
+		x(i) >= l(i)*v(i);
+	
+	preprocoff(); // prevents elimination of y(t) variables
+	optimize();
+	printsol();
+	return 0;
+} // end of Coptportfolio::model
+

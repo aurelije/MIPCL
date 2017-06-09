@@ -1,0 +1,171 @@
+#line 1 "../sources/fcnf.mod"
+// macros for improving readability
+#line 2 "../sources/fcnf.mod"
+#define t(e) m_ipTail[e]
+#line 3 "../sources/fcnf.mod"
+#define h(e) m_ipHead[e]
+#line 4 "../sources/fcnf.mod"
+#define c(e) m_dpCost[e]
+#line 5 "../sources/fcnf.mod"
+#define f(e) m_dpFixedCost[e]
+#line 6 "../sources/fcnf.mod"
+#define u(e) m_dpCapacity[e]
+#line 7 "../sources/fcnf.mod"
+#define d(v) m_dpDemand[v]
+#line 8 "../sources/fcnf.mod"
+
+#line 9 "../sources/fcnf.mod"
+int Cfcnf::model()
+#line 10 "../sources/fcnf.mod"
+{
+#line 11 "../sources/fcnf.mod"
+	const double zero=0.000001;
+#line 12 "../sources/fcnf.mod"
+	bool suppl;
+#line 13 "../sources/fcnf.mod"
+	double z;
+#line 14 "../sources/fcnf.mod"
+	int v,e, n=m_iVertNum, m=m_iEdgeNum;
+#line 15 "../sources/fcnf.mod"
+	VAR_VECTOR x(this,"x",REAL_GE,m);
+#line 16 "../sources/fcnf.mod"
+	VAR_VECTOR y(this,"y",BIN,m);
+#line 17 "../sources/fcnf.mod"
+	
+#line 18 "../sources/fcnf.mod"
+	z=0.0;
+#line 19 "../sources/fcnf.mod"
+	  for (v=0; v < n; ++v)
+#line 20 "../sources/fcnf.mod"
+		z+=d(v);
+#line 21 "../sources/fcnf.mod"
+		
+#line 22 "../sources/fcnf.mod"
+	     suppl=(z < -zero)? true: false;
+#line 23 "../sources/fcnf.mod"
+
+#line 24 "../sources/fcnf.mod"
+	     #line 24
+getSum(0).reset();
+#line 24
+for (e=0; e < m; ++e) getSum(0)+=((f(e)*y(e)+c(e)*x(e)));
+minimize(getSum(0));
+#line 25 "../sources/fcnf.mod"
+	
+#line 26 "../sources/fcnf.mod"
+	 if (suppl) {
+#line 27 "../sources/fcnf.mod"
+		     for (v=0; v < n; ++v)
+#line 27
+	if (d(v) < -zero)
+#line 28 "../sources/fcnf.mod"
+			      {
+#line 28
+getSum(1).reset();
+#line 28
+for (e=0; e < m; ++e)
+#line 28
+	if (h(e) == v) getSum(1)+=(x(e));
+      #line 28
+getSum(2).reset();
+#line 28
+for (e=0; e < m; ++e)
+#line 28
+	if (t(e) == v) getSum(2)+=(x(e));
+ addCtr(getSum(1)-getSum(2) >= d(v));
+}
+#line 29 "../sources/fcnf.mod"
+		
+#line 30 "../sources/fcnf.mod"
+		     for (v=0; v < n; ++v)
+#line 30
+	if (d(v) >= -zero)
+#line 31 "../sources/fcnf.mod"
+			      {
+#line 31
+getSum(3).reset();
+#line 31
+for (e=0; e < m; ++e)
+#line 31
+	if (h(e) == v) getSum(3)+=(x(e));
+      #line 31
+getSum(4).reset();
+#line 31
+for (e=0; e < m; ++e)
+#line 31
+	if (t(e) == v) getSum(4)+=(x(e));
+ addCtr(getSum(3)-getSum(4) == d(v));
+}
+#line 32 "../sources/fcnf.mod"
+	}
+#line 33 "../sources/fcnf.mod"
+	else {
+#line 34 "../sources/fcnf.mod"
+		     for (v=0; v < n; ++v)
+#line 34
+	if (d(v) > zero)
+#line 35 "../sources/fcnf.mod"
+			      {
+#line 35
+getSum(5).reset();
+#line 35
+for (e=0; e < m; ++e)
+#line 35
+	if (h(e) == v) getSum(5)+=(x(e));
+      #line 35
+getSum(6).reset();
+#line 35
+for (e=0; e < m; ++e)
+#line 35
+	if (t(e) == v) getSum(6)+=(x(e));
+ addCtr(getSum(5)-getSum(6) <= d(v));
+}
+#line 36 "../sources/fcnf.mod"
+		
+#line 37 "../sources/fcnf.mod"
+		     for (v=0; v < n; ++v)
+#line 37
+	if (d(v) <= zero)
+#line 38 "../sources/fcnf.mod"
+			      {
+#line 38
+getSum(7).reset();
+#line 38
+for (e=0; e < m; ++e)
+#line 38
+	if (h(e) == v) getSum(7)+=(x(e));
+      #line 38
+getSum(8).reset();
+#line 38
+for (e=0; e < m; ++e)
+#line 38
+	if (t(e) == v) getSum(8)+=(x(e));
+ addCtr(getSum(7)-getSum(8) == d(v));
+}
+#line 39 "../sources/fcnf.mod"
+	}
+#line 40 "../sources/fcnf.mod"
+		
+#line 41 "../sources/fcnf.mod"
+	  for (e=0; e < m; ++e)
+#line 42 "../sources/fcnf.mod"
+		  addCtr(x(e) <= u(e)*y(e));
+#line 43 "../sources/fcnf.mod"
+		
+#line 44 "../sources/fcnf.mod"
+
+#line 45 "../sources/fcnf.mod"
+		
+#line 46 "../sources/fcnf.mod"
+	optimize();
+#line 47 "../sources/fcnf.mod"
+	printSolution(x);
+#line 48 "../sources/fcnf.mod"
+	
+#line 49 "../sources/fcnf.mod"
+	return 0;
+#line 50 "../sources/fcnf.mod"
+} // end of Cfcnf::model
+#line 51 "../sources/fcnf.mod"
+
+#line 52 "../sources/fcnf.mod"

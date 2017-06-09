@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example of usage &#8212; mipcl-py 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="mipcl-py 2 documentation" href="index.html" />
+    <link rel="prev" title="List of example models" href="models.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="example-of-usage">
+<h1>Example of usage<a class="headerlink" href="#example-of-usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="fixed-charge-network-flows">
+<h2>Fixed charge network flows<a class="headerlink" href="#fixed-charge-network-flows" title="Permalink to this headline">¶</a></h2>
+<p>Let us consider the following MIP</p>
+<div class="math">
+<p><img src="_images/math/19e5a588989f4ad9d8f651232f71cc88e5bae36d.png" alt="\begin{align*}
+   \sum_{e\in E} (f(e) y(e) + c(e) x(e)) \to \min,&amp; \\
+   \sum_{e\in E: t(e)=v} x(e) - \sum_{e\in E: h(e)=v} x(e) = d(v),&amp;\quad v\in V,\\
+   0\le x(e) \le u(e) y(e),&amp;\quad e\in E,\\
+   y(e) \in \{0,1\},&amp;\quad e\in E,
+\end{align*}"/></p>
+</div><p>which is a formulation of the <em>fixed charge network flow</em> (FCNF) problem.
+Here, <em>G=(V,E)</em> is a directed graph,
+<em>d(v)</em> is demand for some product at node <em>v</em> in <em>V</em>,
+and, for each <em>e=(v,w)</em> in <em>E</em>,  <em>t(e)=v</em> and <em>h(e)=w</em> are the tail and head nodes of arc <em>e</em>,
+<em>u(e)</em> is the capacity, and <em>f(e)+c(e)x(e)</em> is the the cost of shipping <em>x(e) &gt; 0</em>
+units of product along arc <em>e</em> (if <em>x(e)=0</em>, then nothing is paid).</p>
+<p>The FCNF problem appears as a subproblem in many practical applications such as
+design of transportation and telecommunication networks,
+production planning problems.</p>
+<p>An instance of FCNF problem is given in next Figure.</p>
+<div class="figure align-center" id="id1">
+<img alt="_images/gridgraph.png" src="_images/gridgraph.png" />
+<p class="caption"><span class="caption-text">Example of FCNF problem</span></p>
+</div>
+<p>Here the node numbers and demands are depicted in the upper and lower segments of the node circles.
+Any (undirected) edge <em>e=(i,j)</em> represents two (directed) arcs <em>e1=(i,j)</em> and <em>e2=(j,i)</em>.
+All horizontal arcs, <em>e</em>, have capacity <em>u(e)=3</em>,
+fixed cost  <em>f(e)=1</em> and per-unit cost <em>c(e)=0</em>,
+and all vertical arcs have capacity <em>u(e)=4</em>,
+fixed cost <em>f(e)=2</em> and per-unit cost <em>c(e)=0</em>.</p>
+<p>In Python, we represent this flow network by the following data structure.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s1">&#39;Demands&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+   <span class="s1">&#39;Edges&#39;</span><span class="p">:</span> <span class="p">[</span>
+       <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+       <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here each arc <code class="docutils literal"><span class="pre">e</span> <span class="pre">=</span> <span class="pre">G['Edges'][j]</span></code> is represented as a tuple of five integers:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">e[0]</span></code>: tail;</li>
+<li><code class="docutils literal"><span class="pre">e[1]</span></code>: head;</li>
+<li><code class="docutils literal"><span class="pre">e[2]</span></code>: capacity;</li>
+<li><code class="docutils literal"><span class="pre">e[3]</span></code>: fixed cost;</li>
+<li><code class="docutils literal"><span class="pre">e[4]</span></code>: cost.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="mipcl-py-implementation">
+<h2>MIPCL-PY implementation<a class="headerlink" href="#mipcl-py-implementation" title="Permalink to this headline">¶</a></h2>
+<p>A straightforward MIPshell implementation of the FCNF IP
+is given in the listing below.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mipshell</span>
+<span class="kn">from</span> <span class="nn">mipshell</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">t</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">h</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">u</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">c</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">e</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">e</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">Fcnf</span><span class="p">(</span><span class="n">Problem</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">G</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">G</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">E</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="s1">&#39;Demands&#39;</span><span class="p">],</span> <span class="n">G</span><span class="p">[</span><span class="s1">&#39;Edges&#39;</span><span class="p">]</span>
+        <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">VarVector</span><span class="p">([</span><span class="n">m</span><span class="p">],</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">VarVector</span><span class="p">([</span><span class="n">m</span><span class="p">],</span><span class="s2">&quot;y&quot;</span><span class="p">,</span><span class="n">BIN</span><span class="p">)</span>
+
+        <span class="n">minimize</span><span class="p">(</span><span class="n">sum_</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">E</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">sum_</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="k">if</span>  <span class="n">h</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">==</span><span class="n">v</span><span class="p">)</span>\
+          <span class="o">-</span> <span class="n">sum_</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="k">if</span>  <span class="n">t</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">==</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="n">d</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">E</span><span class="p">):</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">u</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Here, the function <code class="docutils literal"><span class="pre">model</span></code> translate the IP model into a <strong>MIPCL-PY</strong> model.</p>
+<p>When a solution has been found, we can print the result using the following procedure,
+which is a member of class <code class="docutils literal"><span class="pre">Fcnf</span></code>.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">printSolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">,</span> <span class="n">E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;Demands&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;Edges&#39;</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Flow cost = </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getObjVal</span><span class="p">()</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">E</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;flow(</span><span class="si">{:d}</span><span class="s1">,</span><span class="si">{:d}</span><span class="s1">) = </span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>\
+                                  <span class="n">t</span><span class="p">(</span><span class="n">e</span><span class="p">),</span><span class="n">h</span><span class="p">(</span><span class="n">e</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Problem has no solution!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please run optimize first&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="solution-of-the-example-fcnf-problem">
+<h2>Solution of the example FCNF problem<a class="headerlink" href="#solution-of-the-example-fcnf-problem" title="Permalink to this headline">¶</a></h2>
+<p>To test class <code class="docutils literal"><span class="pre">Fcnf</span></code>, we wrote the following program
+that solves our test example.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/python</span>
+<span class="kn">from</span> <span class="nn">fcnf</span> <span class="k">import</span> <span class="n">Fcnf</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="o">...</span> <span class="c1"># description (see above) of the grid network</span>
+<span class="p">}</span>
+
+<span class="n">prob</span> <span class="o">=</span> <span class="n">Fcnf</span><span class="p">(</span><span class="s2">&quot;gridNet&quot;</span><span class="p">)</span>
+<span class="n">prob</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">prob</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">prob</span><span class="o">.</span><span class="n">printSolution</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If we run this program, it prints the following result.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">Flow</span> <span class="n">cost</span> <span class="o">=</span> <span class="mi">34</span>
+
+<span class="n">flow</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="n">flow</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">11</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="n">flow</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">17</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span><span class="mi">18</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="n">flow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="n">flow</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">14</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="n">flow</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">17</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">flow</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">19</span><span class="p">)</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>A graphical representation of this result is given in the next figure.</p>
+<div class="figure align-center" id="id2">
+<img alt="_images/gridgraphSol.png" src="_images/gridgraphSol.png" />
+<p class="caption"><span class="caption-text">Solution to the example FCNF problem</span></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/MIPCLlogo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is MIPCL-PY</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mipshell.html">Module mipshell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mipcl.html">Module mipcl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">List of example models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example of usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fixed-charge-network-flows">Fixed charge network flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mipcl-py-implementation">MIPCL-PY implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solution-of-the-example-fcnf-problem">Solution of the example FCNF problem</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Nicolai N. Pisaruk.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

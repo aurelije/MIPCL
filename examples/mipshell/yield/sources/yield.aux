@@ -1,0 +1,175 @@
+#line 1 "../sources/yield.mod"
+#define c(j,i,o) (m_pNode[j].prob*m_dpCost[(m_pNode[j].period*3+o)*m+i])
+#line 2 "../sources/yield.mod"
+#define d(j,i,o) m_pNode[j].demand[o*m+i]
+#line 3 "../sources/yield.mod"
+#define parent(j) m_pNode[j].parent
+#line 4 "../sources/yield.mod"
+#define s(k) m_pPlane[k].num
+#line 5 "../sources/yield.mod"
+#define q1(k) m_pPlane[k].q1
+#line 6 "../sources/yield.mod"
+#define q2(k) m_pPlane[k].q2
+#line 7 "../sources/yield.mod"
+#define q3(k) m_pPlane[k].q3
+#line 8 "../sources/yield.mod"
+#define r1(k) m_pPlane[k].r1
+#line 9 "../sources/yield.mod"
+#define r2(k) m_pPlane[k].r2
+#line 10 "../sources/yield.mod"
+#define r3(k) m_pPlane[k].r3
+#line 11 "../sources/yield.mod"
+#define f(k)  m_pPlane[k].cost
+#line 12 "../sources/yield.mod"
+
+#line 13 "../sources/yield.mod"
+int Cyield::model()
+#line 14 "../sources/yield.mod"
+{
+#line 15 "../sources/yield.mod"
+	int i,j,k,o,t,
+#line 16 "../sources/yield.mod"
+		T=m_iT, n=m_iNodeNum,
+#line 17 "../sources/yield.mod"
+		n0=m_iNodeNum-m_iLeafNum,
+#line 18 "../sources/yield.mod"
+		m=m_iOptNum, I=3,
+#line 19 "../sources/yield.mod"
+		K=m_iPlaneTypeNum;
+#line 20 "../sources/yield.mod"
+	
+#line 21 "../sources/yield.mod"
+	VAR_VECTOR v(this,"v",INT_GE,K);
+#line 22 "../sources/yield.mod"
+	VAR_VECTOR x(this,"x",INT_GE,n,I,m), // x[0] is not used 
+#line 23 "../sources/yield.mod"
+ 	           y(this,"y",BIN,n0,m), z(this,"z",INT_GE,n,I);
+#line 24 "../sources/yield.mod"
+
+#line 25 "../sources/yield.mod"
+	
+#line 26 "../sources/yield.mod"
+	          
+#line 27 "../sources/yield.mod"
+	 #line 27
+getSum(0).reset();
+#line 27
+for (j=1; j < n; ++j)
+#line 26
+for (o=0; o < m; ++o)
+#line 26
+for (i=0; i < I; ++i) getSum(0)+=(c(j,i,o)*x(j,i,o));
+    
+#line 28 "../sources/yield.mod"
+	#line 28
+getSum(1).reset();
+#line 28
+for (k=0; k < K; ++k) getSum(1)+=(f(k)*v(k));
+maximize(getSum(0)-getSum(1));
+#line 29 "../sources/yield.mod"
+	
+#line 30 "../sources/yield.mod"
+	  for (j=0; j < n0; ++j)
+#line 31 "../sources/yield.mod"
+		    {
+#line 31
+getSum(2).reset();
+#line 31
+for (o=0; o < m; ++o) getSum(2)+=(y(j,o));
+ addCtr(getSum(2) == 1);
+}
+#line 32 "../sources/yield.mod"
+
+#line 33 "../sources/yield.mod"
+	        for (j=1; j < n; ++j)
+#line 33
+for (i=0; i < I; ++i)
+#line 33
+for (o=0; o < m; ++o)
+#line 34 "../sources/yield.mod"
+		  addCtr(x(j,i,o) <= d(j,i,o)*y(parent(j),o));
+#line 35 "../sources/yield.mod"
+		
+#line 36 "../sources/yield.mod"
+	  addCtr(z(0,0) == 0);
+#line 37 "../sources/yield.mod"
+	  addCtr(z(0,1) == 0);
+#line 38 "../sources/yield.mod"
+	  addCtr(z(0,2) == 0);
+#line 39 "../sources/yield.mod"
+	
+#line 40 "../sources/yield.mod"
+	     for (j=1; j < n; ++j)
+#line 40
+for (i=0; i < I; ++i)
+#line 41 "../sources/yield.mod"
+		       {
+#line 41
+getSum(3).reset();
+#line 41
+for (o=0; o < m; ++o) getSum(3)+=(x(j,i,o));
+addCtr(z(j,i) == z(parent(j),i)+getSum(3));
+}
+#line 42 "../sources/yield.mod"
+		
+#line 43 "../sources/yield.mod"
+	  for (j=n0; j < n; ++j) {
+#line 44 "../sources/yield.mod"
+		       {
+#line 44
+getSum(4).reset();
+#line 44
+for (k=0; k < K; ++k) getSum(4)+=((q1(k)+(r2(k)*q2(k))/100)*v(k));
+addCtr(z(j,0) <= getSum(4));
+}
+#line 45 "../sources/yield.mod"
+		       {
+#line 45
+getSum(5).reset();
+#line 45
+for (k=0; k < K; ++k) getSum(5)+=((q2(k)+(r1(k)*q1(k)+r3(k)*q3(k))/100)*v(k));
+addCtr(z(j,1) <= getSum(5));
+}
+#line 46 "../sources/yield.mod"
+		       {
+#line 46
+getSum(6).reset();
+#line 46
+for (k=0; k < K; ++k) getSum(6)+=((q3(k)+(r2(k)*q2(k))/100)*v(k));
+addCtr(z(j,2) <= getSum(6));
+}
+#line 47 "../sources/yield.mod"
+		       {
+#line 47
+getSum(7).reset();
+#line 47
+for (k=0; k < K; ++k) getSum(7)+=((q1(k)+q3(k)+(r2(k)*q2(k))/100)*v(k));
+addCtr(z(j,0)+z(j,2) <= getSum(7));
+}
+#line 48 "../sources/yield.mod"
+		         {
+#line 48
+getSum(8).reset();
+#line 48
+for (k=0; k < K; ++k) getSum(8)+=((q1(k)+q2(k)+q3(k))*v(k));
+addCtr(z(j,0)+z(j,1)+z(j,2) <= getSum(8));
+}
+#line 49 "../sources/yield.mod"
+	}
+#line 50 "../sources/yield.mod"
+	
+#line 51 "../sources/yield.mod"
+	  for (k=0; k < K; ++k)
+#line 52 "../sources/yield.mod"
+		  addCtr(v(k) <= s(k));
+#line 53 "../sources/yield.mod"
+			
+#line 54 "../sources/yield.mod"
+	optimize();
+#line 55 "../sources/yield.mod"
+	printsol();
+#line 56 "../sources/yield.mod"
+	return 0;
+#line 57 "../sources/yield.mod"
+} // end of Cyield::model
+#line 58 "../sources/yield.mod"

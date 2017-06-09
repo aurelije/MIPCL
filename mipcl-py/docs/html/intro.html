@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What is MIPCL-PY &#8212; mipcl-py 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="mipcl-py 2 documentation" href="index.html" />
+    <link rel="next" title="Module mipshell" href="mipshell.html" />
+    <link rel="prev" title="Welcome to MIPCL-PY’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="what-is-mipcl-py">
+<h1>What is MIPCL-PY<a class="headerlink" href="#what-is-mipcl-py" title="Permalink to this headline">¶</a></h1>
+<p><strong>MIPCL-PY</strong> is a <strong>Python</strong> module designed for rapid development of
+<strong>MIPCL</strong>-applications. Its functionality is very similar to that of <strong>MIPshell</strong>.</p>
+<p>Not everybody, who applies optimization in practice,
+knows <strong>C++</strong>. <strong>Python</strong> is easy for beginners, and therefore we believe that
+<strong>MIPCL-PY</strong> can be useful for writing application prototypes.</p>
+<p><strong>MIPCL-PY</strong> comprises:</p>
+<ul class="simple">
+<li>shared MIPCL-library <code class="docutils literal"><span class="pre">mipcl.so</span></code> (<code class="docutils literal"><span class="pre">mipcl.pyd</span></code> on windows computers)
+with an additional interface for calling it in <strong>Python</strong> programs;</li>
+<li>module <code class="docutils literal"><span class="pre">mipshell.py</span></code> with a collection of <strong>Python</strong> classes that represent variables, constraints, and optimization problems.</li>
+</ul>
+<p>Currently, <strong>MIPCL-PY</strong> implements only a part of functions available in <strong>MIPshell</strong>.
+In particular, <strong>MIPCL-PY</strong> does not allow us to develop applications
+that generate cuts because it is not efficient
+to implement such applications in script programming languages.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/MIPCLlogo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What is MIPCL-PY</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mipshell.html">Module mipshell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mipcl.html">Module mipcl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">List of example models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Example of usage</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Nicolai N. Pisaruk.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

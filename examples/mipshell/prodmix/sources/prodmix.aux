@@ -1,0 +1,25 @@
+#line 1 "../sources/prodmix.mod"
+int Cprodmix::model()
+#line 2 "../sources/prodmix.mod"
+{
+#line 3 "../sources/prodmix.mod"
+	VAR_VECTOR x(this,"x",INT_GE,5);
+#line 4 "../sources/prodmix.mod"
+	maximize(550*x(0)+600*x(1)+350*x(2)+400*x(3)+200*x(4));
+#line 5 "../sources/prodmix.mod"
+	          addCtr(12*x(0)+20*x(1)+25*x(3)+15*x(4) <= 288);
+#line 6 "../sources/prodmix.mod"
+	                   addCtr(10*x(0)+8*x(1)+16*x(2) <= 192);
+#line 7 "../sources/prodmix.mod"
+	  addCtr(20*x(0)+20*x(1)+20*x(2)+20*x(3)+20*x(4) <= 384);
+#line 8 "../sources/prodmix.mod"
+	optimize();
+#line 9 "../sources/prodmix.mod"
+	printsol("prodmix.sol");
+#line 10 "../sources/prodmix.mod"
+	return 0;
+#line 11 "../sources/prodmix.mod"
+} // end of Cprodmix::model
+#line 12 "../sources/prodmix.mod"
+
+#line 13 "../sources/prodmix.mod"
