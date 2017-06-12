@@ -1,6 +1,6 @@
 CC=g++
 ARC=-mfpmath=sse -msse2
-CFLAGS=-c -O3 $(ARC) -I$(HDR_MIPSHELL) -I$(HDR_MIPCL) -D__THREADS_=""
+CFLAGS=-c -std=c++17 -fno-rtti -O3 $(ARC) -I$(HDR_MIPSHELL) -I$(HDR_MIPCL)
 LDFLAGS=-shared-libgcc
 #
 INS=install

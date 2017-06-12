@@ -1,0 +1,27 @@
+#line 1 "../sources/primer.mod"
+int Cprimer::model()
+#line 2 "../sources/primer.mod"
+{
+#line 3 "../sources/primer.mod"
+	VAR_VECTOR x(this,"x",INT_GE,2);
+#line 4 "../sources/primer.mod"
+	  maximize(x(0)+2*x(1));
+#line 5 "../sources/primer.mod"
+	     addCtr(-2*x(0)+3*x(1) <= 4);
+#line 6 "../sources/primer.mod"
+	     addCtr(2*x(0)+2*x(1) <= 11);
+#line 7 "../sources/primer.mod"
+	     addCtr(1 <= x(0) <= 4);
+#line 8 "../sources/primer.mod"
+	     addCtr(1 <= x(1) <= 5);
+#line 9 "../sources/primer.mod"
+	optimize();
+#line 10 "../sources/primer.mod"
+	printsol("primer.sol");
+#line 11 "../sources/primer.mod"
+	return 0;
+#line 12 "../sources/primer.mod"
+} // end of Cprimer::model
+#line 13 "../sources/primer.mod"
+
+#line 14 "../sources/primer.mod"

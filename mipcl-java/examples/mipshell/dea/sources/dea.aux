@@ -1,0 +1,99 @@
+#line 1 "../sources/dea.mod"
+#define s(i,k) m_dpInOut[i*(m+l)+m+k]
+#line 2 "../sources/dea.mod"
+#define r(i,j) m_dpInOut[i*(m+l)+j]
+#line 3 "../sources/dea.mod"
+
+#line 4 "../sources/dea.mod"
+int Cdea::model(int i0, double &rating,
+#line 5 "../sources/dea.mod"
+	double *dpV, double *dpU, double *dpR, double *dpS)
+#line 6 "../sources/dea.mod"
+{
+#line 7 "../sources/dea.mod"
+	int i,j,k, n=m_iUnitNum, m=m_iResNum, l=m_iServiceNum;
+#line 8 "../sources/dea.mod"
+	VAR_VECTOR u(this,"u",REAL_GE,l), v(this,"v",REAL_GE,m);
+#line 9 "../sources/dea.mod"
+	
+#line 10 "../sources/dea.mod"
+	   #line 10
+getSum(0).reset();
+#line 10
+for (k=0; k < l; ++k) getSum(0)+=(s(i0,k)*u(k));
+maximize(getSum(0));
+#line 11 "../sources/dea.mod"
+	
+#line 12 "../sources/dea.mod"
+	    {
+#line 12
+getSum(1).reset();
+#line 12
+for (j=0; j < m; ++j) getSum(1)+=(r(i0,j)*v(j));
+ addCtr(getSum(1) == 1);
+}
+#line 13 "../sources/dea.mod"
+	
+#line 14 "../sources/dea.mod"
+	     for (i=0; i < n; ++i)
+#line 14
+	if (i != i0)
+#line 15 "../sources/dea.mod"
+		    {
+#line 15
+getSum(2).reset();
+#line 15
+for (k=0; k < l; ++k) getSum(2)+=(s(i,k)*u(k));
+    #line 15
+getSum(3).reset();
+#line 15
+for (j=0; j < m; ++j) getSum(3)+=(r(i,j)*v(j));
+addCtr(getSum(2) <= getSum(3));
+}
+#line 16 "../sources/dea.mod"
+
+#line 17 "../sources/dea.mod"
+	optimize();
+#line 18 "../sources/dea.mod"
+
+#line 19 "../sources/dea.mod"
+
+#line 20 "../sources/dea.mod"
+	rating=getobj();
+#line 21 "../sources/dea.mod"
+	   for (k=0; k < l; ++k)
+#line 22 "../sources/dea.mod"
+		dpU[k]=getval(u(k));
+#line 23 "../sources/dea.mod"
+		
+#line 24 "../sources/dea.mod"
+	  for (j=0; j < m; ++j)
+#line 25 "../sources/dea.mod"
+		dpV[j]=getval(v(j));
+#line 26 "../sources/dea.mod"
+		
+#line 27 "../sources/dea.mod"
+	  for (i=0; i < n; ++i) {
+#line 28 "../sources/dea.mod"
+		dpS[i]=dpR[i]=0.0;
+#line 29 "../sources/dea.mod"
+		  for (k=0; k < l; ++k)
+#line 30 "../sources/dea.mod"
+			dpS[i]+=s(i,k)*dpU[k];
+#line 31 "../sources/dea.mod"
+			
+#line 32 "../sources/dea.mod"
+		  for (j=0; j < m; ++j)
+#line 33 "../sources/dea.mod"
+			dpR[i]+=r(i,j)*dpV[j];
+#line 34 "../sources/dea.mod"
+	}
+#line 35 "../sources/dea.mod"
+
+#line 36 "../sources/dea.mod"
+	return 0;
+#line 37 "../sources/dea.mod"
+} // end of Cdea::model
+#line 38 "../sources/dea.mod"
+
+#line 39 "../sources/dea.mod"

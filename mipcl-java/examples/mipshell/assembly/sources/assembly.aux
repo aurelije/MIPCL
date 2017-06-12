@@ -1,0 +1,83 @@
+#line 1 "../sources/assembly.mod"
+#define prec(e) m_ipPrec[e]
+#line 2 "../sources/assembly.mod"
+#define succ(e) m_ipSucc[e]
+#line 3 "../sources/assembly.mod"
+#define t(j) m_ipTime[j]
+#line 4 "../sources/assembly.mod"
+
+#line 5 "../sources/assembly.mod"
+int Cassembly::model()
+#line 6 "../sources/assembly.mod"
+{
+#line 7 "../sources/assembly.mod"
+	int i,j, n=m_iOpNum, m=m_iStNum, q=m_iRelNum, C=m_iCycleTime;
+#line 8 "../sources/assembly.mod"
+	VAR_VECTOR x(this,"x",BIN,m,n), y(this,"y",BIN,m), z(this,"z",REAL_GE,n);
+#line 9 "../sources/assembly.mod"
+
+#line 10 "../sources/assembly.mod"
+	   #line 10
+getSum(0).reset();
+#line 10
+for (i=0; i < m; ++i) getSum(0)+=(y(i));
+minimize(getSum(0));
+#line 11 "../sources/assembly.mod"
+	  for (j=0; j < n; ++j) {
+#line 12 "../sources/assembly.mod"
+		    {
+#line 12
+getSum(1).reset();
+#line 12
+for (i=0; i < m; ++i) getSum(1)+=(x(i,j));
+ addCtr(getSum(1) == 1);
+}
+#line 13 "../sources/assembly.mod"
+		    {
+#line 13
+getSum(2).reset();
+#line 13
+for (i=0; i < m; ++i) getSum(2)+=((i+1)*x(i,j));
+ addCtr(getSum(2) == z(j));
+}
+#line 14 "../sources/assembly.mod"
+	}
+#line 15 "../sources/assembly.mod"
+	  for (i=0; i < m; ++i) {
+#line 16 "../sources/assembly.mod"
+		     {
+#line 16
+getSum(3).reset();
+#line 16
+for (j=0; j < n; ++j) getSum(3)+=(t(j)*x(i,j));
+ addCtr(getSum(3) <= C*y(i));
+}
+#line 17 "../sources/assembly.mod"
+		  for (j=0; j < n; ++j)
+#line 18 "../sources/assembly.mod"
+			  addCtr(x(i,j) <= y(i));
+#line 19 "../sources/assembly.mod"
+	}
+#line 20 "../sources/assembly.mod"
+	  for (i=0; i < q; ++i)
+#line 21 "../sources/assembly.mod"
+		  addCtr(z(prec(i)) <= z(succ(i)));
+#line 22 "../sources/assembly.mod"
+		
+#line 23 "../sources/assembly.mod"
+	  for (i=1; i < m; ++i)
+#line 24 "../sources/assembly.mod"
+		  addCtr(y(i-1) >= y(i));
+#line 25 "../sources/assembly.mod"
+
+#line 26 "../sources/assembly.mod"
+	optimize();
+#line 27 "../sources/assembly.mod"
+	printSol(x);
+#line 28 "../sources/assembly.mod"
+	return 0;
+#line 29 "../sources/assembly.mod"
+} // end of Cassembly::model()
+#line 30 "../sources/assembly.mod"
+
+#line 31 "../sources/assembly.mod"

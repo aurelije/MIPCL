@@ -42,35 +42,35 @@ CFunction::~CFunction()
 		delete m_dpPoint;
 }
 
-/// \cond NEWandDELoperators
-void* CFunction::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CFunction::operator new");
-	}
-	return p;
-}
-
-void CFunction::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-void* CFunction::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CFunction::operator new[]");
-	}
-	return p;
-}
-
-void CFunction::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CFunction::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CFunction::operator new");
+//	}
+//	return p;
+//}
+//
+//void CFunction::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//void* CFunction::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CFunction::operator new[]");
+//	}
+//	return p;
+//}
+//
+//void CFunction::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 /*
 double& CFunction::operator()(double arg)

@@ -36,15 +36,6 @@
 #endif
 #else
 #ifndef MIPSHELL_API
-/// WINDOWS specifics.
-/**
- * The following ifdef block is the standard way of creating macros which make exporting
- * from a DLL simpler. All files within this DLL are compiled with the MIP_EXPORTS
- * symbol defined on the command line. This symbol should not be defined on any project
- * that uses this DLL. This way any other project whose source files include this file see
- * MIP_API functions as being imported from a DLL, whereas this DLL sees symbols
- * defined with this macro as being exported.
- */
 #define MIPSHELL_API
 #endif
 #endif
@@ -205,19 +196,19 @@ public:
 	 */
 	template<typename T> friend std::ostream& operator<<(std::ostream& out, CArray<T>& arr);
 
-	/// \cond NEWandDELoperators
-	void* operator new(std::size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	void* operator new[](std::size_t iSize) throw(CMemoryException);
-	void operator delete[](void* pPtr) throw();
-	void* operator new(std::size_t , void* pPtr)
-		{return pPtr;}
-	void operator delete(void* pPtr, void*) {}
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(std::size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	void* operator new[](std::size_t iSize) throw(CMemoryException);
+//	void operator delete[](void* pPtr) throw();
+//	void* operator new(std::size_t , void* pPtr)
+//		{return pPtr;}
+//	void operator delete(void* pPtr, void*) {}
+//	/// \endcond
 
 // usefull functions
-	Tell& max(); ///< \return array element of maximum value (key).
-	Tell& min(); ///< \return array element of minimum value (key).
+//	Tell& max(); ///< \return array element of maximum value (key).
+//	Tell& min(); ///< \return array element of minimum value (key).
 private:
 	Tell& getZero(); ///< value of zero for `Tell`.
 };
@@ -333,16 +324,16 @@ protected:
 	 */
 	void add(void *pEll, const CIndex& ind0, const CIndex& ind1, const CIndex& ind2, const CIndex& ind3);
 
-	/// \cond NEWandDELoperators
-	void* operator new(std::size_t iSize);
-	void operator delete(void* pPtr);
-	void* operator new[](std::size_t iSize);
-	void operator delete[](void* pPtr);
-
-	void* operator new(std::size_t , void* pPtr)
-	{return pPtr;}
-	void operator delete(void* pPtr, void*) {}
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(std::size_t iSize);
+//	void operator delete(void* pPtr);
+//	void* operator new[](std::size_t iSize);
+//	void operator delete[](void* pPtr);
+//
+//	void* operator new(std::size_t , void* pPtr)
+//	{return pPtr;}
+//	void operator delete(void* pPtr, void*) {}
+//	/// \endcond
 };
 
 ////////////////////////////////////////////////////
@@ -470,20 +461,20 @@ public:
 	 */
 	template<typename T> friend std::ostream& operator<<(std::ostream& out, CArray<T*>& arr);
 
-	/// \cond NEWandDELoperators
-	void* operator new(std::size_t iSize);
-	void operator delete(void* pPtr);
-	void* operator new[](std::size_t iSize);
-	void operator delete[](void* pPtr);
-
-	void* operator new(std::size_t , void* pPtr)
-		{return pPtr;}
-	void operator delete(void* pPtr, void*) {}
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(std::size_t iSize);
+//	void operator delete(void* pPtr);
+//	void* operator new[](std::size_t iSize);
+//	void operator delete[](void* pPtr);
+//
+//	void* operator new(std::size_t , void* pPtr)
+//		{return pPtr;}
+//	void operator delete(void* pPtr, void*) {}
+//	/// \endcond
 
 // usefull functions
-	Tell& max(); ///< \return pointer to an element of maximum value.
-	Tell& min(); ///< \return pointer to an element of minimum value.
+//	Tell& max(); ///< \return pointer to an element of maximum value.
+//	Tell& min(); ///< \return pointer to an element of minimum value.
 private:
 	Tell& getZero(); ///< \return value of zero.
 };

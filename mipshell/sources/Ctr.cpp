@@ -189,21 +189,21 @@ void CTerm::print()
 //////////////////////////////////////////
 // class CLinSum
 //////////////////////////////////////////
-/// \cond NEWandDELoperators
-void* CLinSum::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CLinSum::operator new");
-	}
-	return p;
-}
-
-void CLinSum::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CLinSum::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CLinSum::operator new");
+//	}
+//	return p;
+//}
+//
+//void CLinSum::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 CLinSum::CLinSum(): m_bTemp(true), m_pLast(0)
 {}
@@ -620,35 +620,35 @@ void CLinSum::print()
 /////////////////////////////////////////
 // class CCtr
 /////////////////////////////////////////
-/// \cond NEWandDELoperators
-void* CCtr::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CCtr::operator new");
-	}
-	return p;
-}
-
-void CCtr::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-void* CCtr::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CCtr::operator new[]");
-	}
-	return p;
-}
-
-void CCtr::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CCtr::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CCtr::operator new");
+//	}
+//	return p;
+//}
+//
+//void CCtr::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//void* CCtr::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CCtr::operator new[]");
+//	}
+//	return p;
+//}
+//
+//void CCtr::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 void CCtr::init()
 {

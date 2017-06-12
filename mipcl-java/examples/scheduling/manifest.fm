@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Specification-Title: Scheduling application
+Specification-Version: 1.0
+Main-Class: scheduling.testSchedule
+Class-Path: ../../mipcl.jar ../gson.jar
+

@@ -28,7 +28,64 @@
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
+#ifdef _CPP_THREADS
+#include <thread>
+#include <mutex>
+#include <shared_mutex>
+
+typedef std::thread _THREAD;  ///< Alias for `pthread_t`.
+typedef std::mutex _MUTEX; ///< Alias for `pthread_mutex_t`.
+typedef std::shared_mutex _RWLOCK; ///< Alias for `pthread_rwlock_t`.
+
+#define _THREAD_CREATE(_thread,start_thread,param) \
+		_thread = std::thread(start_thread,param); ///< Creates a new thread with start function `start_thread()`, that gets `param` as an argument.
+#define _THREAD_JOIN(thread) \
+		thread.join(); ///< Attaches `thread` to the calling thread.
+#define _THREAD_CLOSE(thread) ///< Empty placeholder to be consistent with windows threads.
+
+#define _RWLOCK_INIT(rwLock) ///< Initializes the read-write lock pointed by `p_rwLock`.
+#define _RWLOCK_DESTROY(rwLock) ///< Destroys the read-write-lock pointed by `p_rwLock`.
+#define _RWLOCK_RDLOCK(rwLock) \
+		(rwLock)->lock_shared(); ///< Applies a read lock to the read-write lock pointed by `rwLock`.
+#define _RWLOCK_SAFE_RDLOCK(rwLock) \
+	if (rwLock) \
+		rwLock->lock_shared(); ///< A safer version of `_RWLOCK_RDLOCK()`.
+#define _RWLOCK_WRLOCK(rwLock) \
+		(rwLock)->lock(); ///< Applies a write lock to the read-write lock pointed by `rwLock`.
+#define _RWLOCK_SAFE_WRLOCK(rwLock) \
+	if (rwLock) \
+		rwLock->lock();  ///< A safer version of `_RWLOCK_WRLOCK()`.
+#define _RWLOCK_UNLOCK_RDLOCK(rwLock) \
+		(rwLock)->unlock_shared(); ///< Unlocks the read-write lock pointed by `rwLock`.
+#define _RWLOCK_UNLOCK_WRLOCK(rwLock) \
+		(rwLock)->unlock(); ///< Unlocks the read-write lock pointed by `rwLock`.
+#define _RWLOCK_SAFE_UNLOCK_RDLOCK(rwLock) \
+	if (rwLock) \
+		rwLock->unlock_shared();  ///< A safer version of `_RWLOCK_UNLOCK()`.
+#define _RWLOCK_SAFE_UNLOCK_WRLOCK(rwLock) \
+	if (rwLock) \
+		rwLock->unlock();  ///< A safer version of `_RWLOCK_UNLOCK()`.
+#define _RWLOCK_ASSIGN_P(plock,pvalue) \
+	plock=pvalue; ///< Assigns the value of `pvalue` to `_RWLOCK` pointer `plock`.
+
+#define _MUTEX_INIT(mutex) ///< Initializes the mutex represented by `mutex`.
+#define _MUTEX_DESTROY(mutex) ///< Destroys the mutex represented by `mutex`.
+#define _MUTEX_LOCK(pmutex) \
+	pmutex->lock(); ///< Locks the mutex  pointed by `pmutex`.
+#define _MUTEX_UNLOCK(pmutex) \
+	pmutex->unlock(); ///<Unlocks the mutex  pointed by `pmutex`
+#define _MUTEX_SAFE_LOCK(pmutex) \
+	if (pmutex) \
+		pmutex->lock();  ///< A safer version of `_MUTEX_LOCK()`.
+#define _MUTEX_SAFE_UNLOCK(pmutex) \
+	if (pmutex) \
+		pmutex->unlock(); ///< A safer version of `_MUTEX_UNLOCK()`.
+#define _MUTEX_ASSIGN_P(pmutex,value) \
+	pmutex=value; ///< Assigns the value of `value` to mutex pointer `pmutex`.
+
+///////////////////////////////// end for C++ 17 threads
+#else
 #ifdef _WINDOWS
 #include <windows.h>
 #include <process.h>
@@ -91,9 +148,6 @@ typedef SRWLOCK _RWLOCK; ///< Alias for `SRWLOCK`.
 #define _RWLOCK_ASSIGN_P(plock,pvalue) \
 	plock=pvalue; ///< Assigns the value of `pvalue` to `_RWLOCK` pointer `plock`.
 ///////////////////////////////// end for WINDOWS threads
-//#elif MACOS
-//#include <sys/param.h>
-//#include <sys/sysctl.h>
 #else
 #include <unistd.h>
 #include <pthread.h>
@@ -151,7 +205,8 @@ typedef pthread_rwlock_t _RWLOCK; ///< Alias for `pthread_rwlock_t`.
 		pthread_mutex_unlock(pmutex); ///< A safer version of `_MUTEX_UNLOCK()`.
 #define _MUTEX_ASSIGN_P(pmutex,value) \
 	pmutex=value; ///< Assigns the value of `value` to mutex pointer `pmutex`.
-#endif /* _WIN32 */
+#endif /* #elif _WINDOWS */
+#endif /* #ifdef _CPP_THREADFS */
 #else
 //#define __MAX_THREAD_NUM 1
 #define _RWLOCK_INIT(rwLock)
@@ -169,6 +224,6 @@ typedef pthread_rwlock_t _RWLOCK; ///< Alias for `pthread_rwlock_t`.
 #define _MUTEX_UNLOCK(pmutex)
 #define _MUTEX_SAFE_LOCK(pmutex)
 #define _MUTEX_SAFE_UNLOCK(pmutex)
-#endif /* ____THREADS_ */
+#endif /* #ifndef __ONE_THREAD_ */
 
 #endif /*_THREAD_H_*/

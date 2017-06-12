@@ -1,0 +1,87 @@
+#line 1 "../sources/bklotsize.mod"
+#define d(t) m_ipDemand[t]
+#line 2 "../sources/bklotsize.mod"
+#define u(t) m_ipCapacity[t]
+#line 3 "../sources/bklotsize.mod"
+#define f(t) m_ipFxCost[t]
+#line 4 "../sources/bklotsize.mod"
+#define c(tau,t) m_ipCost[tau*T+t]
+#line 5 "../sources/bklotsize.mod"
+
+#line 6 "../sources/bklotsize.mod"
+int Cbklotsize::model()
+#line 7 "../sources/bklotsize.mod"
+{
+#line 8 "../sources/bklotsize.mod"
+	int t, tau, T=m_iT, Tp=m_iTp;
+#line 9 "../sources/bklotsize.mod"
+	VAR_VECTOR x(this,"x",REAL_GE,Tp,T), y(this,"y",BIN,Tp);
+#line 10 "../sources/bklotsize.mod"
+		
+#line 11 "../sources/bklotsize.mod"
+	
+#line 12 "../sources/bklotsize.mod"
+		          #line 12
+getSum(0).reset();
+#line 12
+for (tau=0; tau < Tp; ++tau)
+#line 12
+for (t=0; t < T; ++t)
+#line 12
+	if (c(tau,t) >= 0) getSum(0)+=(c(tau,t)*x(tau,t));
+
+#line 13 "../sources/bklotsize.mod"
+		   
+#line 14 "../sources/bklotsize.mod"
+	#line 14
+getSum(1).reset();
+#line 14
+for (tau=0; tau < Tp; ++tau) getSum(1)+=(f(tau)*y(tau));
+minimize(getSum(0)+getSum(1));
+#line 15 "../sources/bklotsize.mod"
+	
+#line 16 "../sources/bklotsize.mod"
+	  for (t=0; t < T; ++t)
+#line 17 "../sources/bklotsize.mod"
+		    {
+#line 17
+getSum(2).reset();
+#line 17
+for (tau=0; tau < Tp; ++tau) getSum(2)+=(x(tau,t));
+ addCtr(getSum(2) == d(t));
+}
+#line 18 "../sources/bklotsize.mod"
+		
+#line 19 "../sources/bklotsize.mod"
+	  for (tau=0; tau < Tp; ++tau)
+#line 20 "../sources/bklotsize.mod"
+		    {
+#line 20
+getSum(3).reset();
+#line 20
+for (t=0; t < T; ++t) getSum(3)+=(x(tau,t));
+ addCtr(getSum(3) <= u(tau)*y(tau));
+}
+#line 21 "../sources/bklotsize.mod"
+
+#line 22 "../sources/bklotsize.mod"
+	        for (tau=0; tau < Tp; ++tau)
+#line 22
+for (t=0; t < T; ++t)
+#line 22
+	if (c(tau,t) < 0)
+#line 23 "../sources/bklotsize.mod"
+		  addCtr(x(tau,t) == 0);
+#line 24 "../sources/bklotsize.mod"
+	
+#line 25 "../sources/bklotsize.mod"
+	optimize();
+#line 26 "../sources/bklotsize.mod"
+	printSol(x,y);
+#line 27 "../sources/bklotsize.mod"
+	return 0;
+#line 28 "../sources/bklotsize.mod"
+} // end of Cbklotsize::model
+#line 29 "../sources/bklotsize.mod"
+
+#line 30 "../sources/bklotsize.mod"

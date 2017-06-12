@@ -132,8 +132,6 @@ public:
 		CTR_OBJ              = 0x20000000, ///< The constraint represents the objective, its lhs and rhs are lower and upper bounds on the optimal objective value.
         CTR_LB_UNBOUNDED     = 0x40000000, ///< The flag is _privately_ used in preprocessing subroutines.
     	CTR_UB_UNBOUNDED     = 0x80000000, ///<The flag is _privately_ used in preprocessing subroutines.
-		CTR_LOWER_BOUND_CHANGED = CTR_NOT_STABLE, ///< The flag is _privately_ used in preprocessing subroutines.
-		CTR_UPPER_BOUND_CHANGED = CTR_IN_POOL, ///< The flag is _privately_ used in preprocessing subroutines.
 		CTR_BINARY           = CTR_BINPACK | CTR_KNAPSACK | CTR_INV_KNAPSACK | CTR_PACKING | CTR_COVERING | CTR_CARDINALITY, ///< all variables are binaries.
 		CTR_WITH_INT_VARS    = CTR_INT_VARS | CTR_MX_01 | CTR_MX_INT | CTR_MX_KNAPSACK, ///The constraint includes integer variables.
 		CTR_MIR              = CTR_MX_INT|CTR_MX_01|CTR_MX_KNAPSACK|CTR_WITH_VAR_BOUNDS|CTR_01FLOW|CTR_WITH_UNIQUE|CTR_KNAPSACK|CTR_BINPACK, ///< Mixed Integer Rounding (MIR) constraint
@@ -156,7 +154,7 @@ public:
 		VAR_1_IN_VAR_CTR  = VAR_IN_VAR_UB, ///< If the binary variable is set to `1`, then some variable bound constraint becomes a restriction.
 		VAR_IN_VAR_CTR    = VAR_IN_VAR_UB | VAR_IN_VAR_LB, ///< The variable occurs in either lower, or upper variable bound constraint.  \sa CTR_VAR.
 		VAR_IN_GUB        = 0x00040000, ///< The variable occurs in _GUB_ constraints. \sa CTR_GUB.
-		VAR_IN_PACKING    = 0x00800000, ///< The variable occurs in _packing_ constraints. \sa CTR_BINPACK.
+		VAR_IN_PACKING    = 0x00800000, ///< The variable occurs in _packing_ constraints. \sa CTR_PACKING.
 		VAR_SOS2          = 0x00080000, ///< The variable occurs in _SOS2_ constraint. \sa CTR_SOS2.
 		VAR_UNIQUE        = 0x00100000, ///< The non-binary variable that occurs in constraints which all other variables are binary.
 		VAR_MON_UP        = 0x00200000, ///< The variable can be increased up to its upper bound without violating feasibility.
@@ -166,8 +164,8 @@ public:
 		VAR_IN_POOL       = 0x08000000, ///< The column corresponding to this variable is stored in the pool.
 //		VAR_DISJUNCTION   = 0x08000000, ///< The binary variable such that setting it to one of its bounds (`0` or `1`) makes _free_ at least one constraint. \sa CTR_DISJUNCTION1.
 		VAR_CLASSIFIED    = VAR_IN_VAR_CTR|VAR_IN_PACKING|VAR_IN_GUB|VAR_MONOTONE|VAR_UNIQUE|VAR_IN_POOL|VAR_BINPACK, ///< mask of automatically assigned flags.
-		VAR_PRI_MIN      = -50, ///< The priority of any variable is an integer from `VAR_PRI_MIN` to `VAR_PRI_MAX`.
-		VAR_PRI_MAX      = 50 ///< The priority of any variable is an integer from `VAR_MIN_PRI` to `VAR_MAX_PRI`.
+		VAR_PRI_MIN       = -50, ///< The priority of any variable is an integer from `VAR_PRI_MIN` to `VAR_PRI_MAX`.
+		VAR_PRI_MAX       = 50 ///< The priority of any variable is an integer from `VAR_MIN_PRI` to `VAR_MAX_PRI`.
 	};
 
 	/// Branching rules.
@@ -261,14 +259,11 @@ private:
     int m_iVarUbNum; ///< Number of variable upper bounds.
     int m_iIntNum;  ///< Number of integer variables.
     int m_iBinNum; ///< Number of binary variables.
-    int m_iFracNum; ///< Number of fractional components in the current basic solution.
+    int m_iFracVarNum; ///< Number of fractional components in the current basic solution.
     int m_iParityNum; ///< Number of parity constraints.
 
     int m_iProbingDepth; ///< Depth of probing search, default value is `PROBING_DEPTH`.
     int m_iProbingDepthAtNodes; ///< Default value `PROBING_DEPTH_AT_NODES`.
-    int m_iProbingMaxFixingsToStop; ///< Default value `PROBING_MAX_FIXINGS_TO_STOP`.
-    int m_iProbingMaxFixlessRounds; ///< Default value `PROBING_MAX_FIXLESS_ROUNDS`.
-    int m_iProbingMaxNoActionRounds; ///< Default value `PROBING_MAX_NO_ACTION_ROUNDS`.
 
     CImpl *m_pImpl; ///< Class that supports logical implications.
 ////////////////////////////////////////////////////
@@ -448,7 +443,7 @@ private:
     int m_iLastSOS2; ///< Starts list of SOS2 constraints.
 
 //////////////////////////////////////////////////
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 // Multithreading
     int m_iCoreNum; ///< Number of physical cores.
     int m_iThreadNum; ///< Thread number used when solving MIPs,; by default, `m_iThreadNum=m_iCoreNum`.
@@ -637,10 +632,10 @@ protected:
      * The functions extends the type of variable `j`
      *  by  bitwise ORing its current type with the flags stored in the parameter `type`.
      * \param[in] j index of variable;
-     * \param[in] type is bitwise OR of members of `enVarType` and `CMIP::enVarType`.
+     * \param[in] type bitwise OR of members of `enVarType` and `CMIP::enVarType`.
      * \sa CLP::enVarType, CMIP::enVarType, and `CLP::extendVarType()`.
      */
-    void extendVarType(int j, int type);
+    void extendVarType(int j, unsigned type);
 
 ///////////////////////////////////////////
 //   Overloaded matrix functions
@@ -680,7 +675,7 @@ public:
      * \throws CMemoryException lack of memory.
      *
      */
-    int addCut(tagHANDLE hd, int type, double b1, double b2,
+    int addCut(tagHANDLE hd, unsigned type, double b1, double b2,
              int sz, double* dpVal, int* ipCol,
              bool bVarScaled=true, int factor=NOT_SCALED, int n=0);
 
@@ -694,7 +689,7 @@ public:
      *           - if `hd == -1`, the constraint is added to the pool immediately;
      *           - if `hd < -1` (most common option), the constraint is added to the pool if
      *            it is tight (holds as equality) for an optimal LP solution;
-     * \param[in] type type of the constraint;
+     * \param[in] type inequality type (bitwise OR of `enVarType` members);
      * \param[in] b1,b2 left hand side (LHS) and right hand side (RHS), respectively;
      * \param[in] sz number of nonzero entries;
      * \param[in] dpVal,ipCol arrays of size `sz`, `dpVal[i]` is coefficient in column `ipCol[i]`;
@@ -707,7 +702,7 @@ public:
      * \throws CMemoryException lack of memory.
      * \sa addCut().
     */
-    int safeAddCut(tagHANDLE hd, int type, double b1, double b2,
+    int safeAddCut(tagHANDLE hd, unsigned type, double b1, double b2,
              int sz, double* &dpVal, int* &ipCol,
              bool bVarScaled=true, int factor=NOT_SCALED, int n=0);
 
@@ -716,13 +711,16 @@ private:
      * The function compute a hash value `(hash1,hash2)` for a given constraint
      *     `b1 <= sum(i in 0..sz-1) dpVal[i]*x(ipCol[i]) <= b2`.
      * This function is used to prevent adding identical cuts.
+     *
      * \param[in] sz number of entries;
      * \param[in] ipCol column indices, list of size 'sz';
      * \param[in] dpVal coefficients, list of size 'sz';
+     * \param[in] b1,b2 left and right hand sides;
+     * \param[in] factor input inequality is to be multiplied by `2^{factor}`.
      * \return 'true' if cut is new; otherwise, 'false'.
      * \remark 'm_dpW' is used to store hash values.
      */
-    bool isNewCut(int sz, const int* ipCol, const double* dpVal, double b1, double b2, int cutNum);
+    bool isNewCut(int sz, const int* ipCol, const double* dpVal, double b1, double b2, int factor=0);
 
 //////////////////////////////////////////////////////////////////////////
 //     C O N S T R U C T O R S / D E S T R U C T O R                    //
@@ -741,7 +739,7 @@ public:
      */
     CMIP(const char* name);
 
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
     /// Clone constructor.
 	/**
 	 * It is  used in multi-threaded applications.
@@ -1265,25 +1263,21 @@ private:
     ///< The function marks integer-valued variables with lower and upper bounds, respectively, `0` and `1` as _binary_.
     void selectBinaries();
 
-    /**
-     * \return `true`, if __GUB__-inequality indexed by `r` is __SOS1__-constraint.
-     * \remark the function has not the `const` attribute since it alters internal `MIPCL` arrays,.
-     */
-    bool isGubSOS1(int r);
-
-    /**
-     * The procedure detects SOS1-constraints.
-     *
-     * \return number of SOS1-constraints detected.
-     * \sa isGubSOS1().
-     */
-    int seekSOS1();
-
     ///< The procedure seeks for flow structures to classify flow variables as integer ones.
 	void seekFlowStructures();
 
     ///< The procedure looks for flow structures to classify flow variables as integer ones.
 	void checkTrFlowStructure();
+
+	/**
+	 * A task is defined to be a GUB such that, for each pair of its columns,
+	 * the column of bigger cost "uses more resources", i.e, has bigger or the same
+	 * coefficients in all rows (it is assumed the all constraints are `<=` inequalities).
+	 *
+	 * \return number of fixed variables.
+	 */
+	int seekMonotoneTasks();
+
 
 // next functions are used to remove symmetry
 	int seekParallelMachines(); ///< tries to find constrains describing capacities of parallel machines.
@@ -1306,15 +1300,16 @@ private:
     int seekSOS2();
 
     /**
+     * The functions verifies whether a given row (together with some other rows) represents a __SOS2__ constraint.
      * \param[in] r row index.
-     * \return `true` if row `r` represents __SOS2__ constraint.
-     * \remark the function has not the `const` attribute since it alters internal `MIPCL` arrays,.
+     * \return `true` if row `r` represents a __SOS2__ constraint.
+     * \remark the function has not the `const` attribute since it may alter internal `MIPCL` arrays.
      */
     bool isSOS2(int r);
 
     /**
      * \param[in] r row index.
-     * \return `true` if row `r` represents represents _parity_ constraint.
+     * \return `true` if row `r` represents a _parity_ constraint.
      */
     bool isParityCtr(int r) const;
 
@@ -1344,9 +1339,9 @@ private:
     /**
      * The procedure establishes additional properties of constraints that are not fully classified.
      * \param[in] constraint index.
-     * \return bitwise OR of some members of the enumeration `enProbState`.
+     * \return bitwise OR of `enVarType` members.
      */
-    int classifyCtrPlus(int ind);
+    unsigned classifyCtrPlus(int ind);
 
     /**
      * The function classifies constraint `row`.
@@ -1404,15 +1399,47 @@ private:
 	int classifyAndReduceCoeff(int &sz, double* dpVal, int* ipCol, double&  b,  bool side, bool makeIntCoeff=false);
 
 	/**
-	 * The function tries to make integral the coefficients of the cut given by first four arguments.
+	 * The function tries to make integral the coefficients of the cut given by first four arguments:
+	 *     `sum(i in 0..sz) dpVal[i]*x[ipCol[i]] <= (>=) b`.
+	 *
      * \param[in] size number of variables in constraint to be classified;
      * \param[in,out] dpVal,ipCol arrays of size `sz`, `dpVal[i]` is coefficient for variable `ipCol[i]`;
      * \param[in,out] b right hand side of constraint;
-     * \return constraint type.
+     * \param[in] side if `true`, the sign in of the input inequality is `<=`; otherwise, the sign is `>=`.
+     * \return constraint type (bitwise OR of `enVarType` members).
 	 */
-	int simplifyCut(int &size, double *dpVal, int *ipCol, double &b);
+	unsigned simplifyCut(int &size, double *dpVal, int *ipCol, double &b, bool side=true);
 
-// probing
+//////////////// P R O B I N G
+	/**
+	 * To speed up probing of binary variables, not all constraint
+	 * are processed at probing rounds. Usually, only constraints of small size
+	 * and some structured constraints - say, packing constraints - are useful
+	 * when probing binary variables.
+	 * \param[in] r row index;
+	 * \param[in] dpBd for row `r`, `dpBd[r<<1]` and `dpBd[(r<<1)+1]` are, respectively,
+	 *            lower and upper bounds on left-hand-side value of constraint `r`.
+	 * \return `true` is the constraint indexed by `r` is to be probed.
+	 */
+		bool isCtrUsedInProbing(int r, double * dpBd);
+
+	/**
+	 * When a binary variable is fixed, this procedure is called in probing subroutines
+	 * to derive implications from the implication matrix.
+	 *
+	 * \param[in] row row in implication matrix;
+	 * \param[in,out] last last constraint in list (queue) of active and non-processed constraints;
+	 * \param[in,out] ipCtrLst list of active and non-processed constraints;
+	 * \param[in,out] cpActiveCtr for row `r`, `cpActiveCtr[r]` is `true` if `r` is in `ipCtrLst`;
+	 * \param[in,out] dpBd for row `r`, `dpBd[r<<1]` and `dpBd[(r<<1)+1]` are, respectively,
+	 *            lower and upper bounds on left-hand-side value of constraint `r`;
+	 * \param[in,out] dpD, for column `j`, `dpD[j<<1]` and `dpD[(j<<1)+1]` are, respectively,
+	 *            lower and upper bounds for variable `j`;
+	 * \param[in] round probing round;
+	 * \param[in,out] cpRound for column `j`, `cpRound[j<<1]` and `cpRounf[(j<<1)+1]` are
+	 *       last probing rounds when, respectively, lower and upper bounds for variable `j` changed.
+	 * \return `false` if propagation results in any inconsistency; otherwise, `true`.
+	 */
 	bool propagateImplications(int row, int& last, int *ipCtrLst, char *cpActiveCtr,
 			double* dpBd, double* dpD, int round, unsigned char *cpRound);
 
@@ -1484,11 +1511,10 @@ private:
 	/**
 	 * This procedure is called after probing a binary variable to tighten constraints.
 	 * \param[in] c column index of binary variable having been probed;
-	 * \param[in] side if `true`, variable `c` was fixed to `1`; otherwise, to 0;
-	 * \param[in] newEntries if `true`, new entries can be added to matrix.
+	 * \param[in] side if `true`, variable `c` was fixed to `1`; otherwise, to `0`.
 	 * \return number of tightened constraints
 	 */
-	int tightenCtrs(int c, bool side, bool newEntries);
+	int tightenCtrs(int c, bool side);
 
 	/**
 	 * After probing a binary variable `c1`, the procedure adds a new lower variable bound, `x[c2]-a*x[c1] >= b`, on variable `c2`.
@@ -1510,19 +1536,22 @@ private:
 	 * This procedure adds to the matrix inequalities for implications derived when probing a binary variable.
 	 * \param[in] c column index of binary variable having been probed;
 	 * \param[in] side if `true`, variable `c` was fixed to `1`; otherwise, to `0`;
-	 * \return  number of variable bounds added.
+	 * \param[out] varBdAdded  number of variable bounds added to constraint matrix;
+	 * \param[out] implAdded number of implications generated.
 	 * \remark the procedure is used only in rare cases when storing implications in a `CImpl` object requires to much memory.
 	 */
-	int processImplications(int c, bool side);
+	void processImplications(int c, bool side, int &varBdAdded, int &implAdded);
 
 	/**
 	 * This procedure is called to further process implications derived when probing a binary variable.
 	 * \param[in] c column index of binary variable having been probed;
 	 * \param[in] side if `true`, variable `c` was fixed to `1`; otherwise, to `0`;
 	 * \param[in] impl pointer to `CImpl` object that stores implications.
+	 * \param[out] varBdAdded  number of variable bounds added to implication matrix;
+	 * \param[out] implAdded number of implications added to implication matrix.
 	 * \return  number of variable bounds added.
 	 */
-	int processImplications(int c, bool side, CImpl *impl);
+	void processImplications(int c, bool side, CImpl *impl, int &varBdAdded, int &implAdded);
 
 	/**
 	 * The procedure implements probing down or up a given variable.
@@ -1530,10 +1559,10 @@ private:
 	 * \param[in] side if `true`, variable `c` was fixed to `1`; otherwise, to `0`;
 	 * \param[out] varBdAdded number of variable bounds added;
 	 * \param[out] ctrTightened number of constraints having been tightened;
-	 * \param[in] newEntries if `true`, new entries can be added to matrix.
+	 * \param[out] implAdded number of implications added to implication matrix.
 	 * \return `false` if some inconsistencies were detected (constraints are infeasible); otherwise, `true`.
 	 */
-	bool probeVar(int c, bool side, int &varBdAdded, int &ctrTightened, bool newEntries);
+	bool probeVar(int c, bool side, int &varBdAdded, int &ctrTightened, int &implAdded);
 
 	/**
 	 * The procedure substitutes variable `x[k]` for the expression `a*x[j]+b`.
@@ -1549,24 +1578,23 @@ private:
 	 * \param[out] varFixed number of fixed variables;
      * \param[out] ctrTightened number of modified constraints;
      * \param[out] varBdAdded number of variable bounds added;
-     * \param[in] allowEarlyBreak if `true`, procedure may stop running without processing all variables to be probed.
+     * \param[out] implAdded number of implications added to implication matrix.
 	 * \return `false` if problem domain is empty.
      */
 	bool probeVars(int round,__LONG timeLimit, int &probeVarNum,
-			int &varFixed, int &ctrTightened, int &varBdAdded, bool allowEarlyBreak);
+			int &varFixed, int &ctrTightened, int &varBdAdded, int &implAdded);
 
 	/**
 	 * The procedure selects a list of variables to be probed.
 	 * \param[in] round current preprocessing iterate;
-	 * \param[out] ipVars list of `sz` variables to be preprocessed, where `sz` denotes return value;
-	 * \param[in,out] allBinVars if `true`, all binaries are to be included in `ipVars`;
+	 * \param[out] ipVars list of `sz` variables to be preprocessed, where `sz` denotes return value.
 	 * \return number of variables to be preprocessed.
 	 */
-	int selectVarsForProbing(int round, int *ipVars, bool &allBinVars);
+	int selectVarsForProbing(int round, int *ipVars);
 
+	bool probePackingCtr(int row, bool rowSide); ///< The procedure checks whether a given packing inequality can be turned into equality constraint.
 
-	bool probePackingCtr(int row, bool rowSide);
-	int probePackings();
+	int probePackings(); ///< The procedure calls `probePackingCtr()` for each packing inequality.
 
 	/**
 	 * The procedure calls `selectVarsForProbing()` to select a list of variables to be probed,
@@ -1620,11 +1648,14 @@ private:
 	 *      - sum(i in 0..ctrSize-1) dpVal[i]*x[ipCol[i]] <= b.
 	 * In other words, the input inequality is substitutes for a number of inequalities
 	 * that together imply the input inequality.
-	 * For example, the knapsack inequality
+	 *
+	 * For example, let us consider the knapsack inequality
 	 *     - x_1 + 3x_2 + 4x_3 + 2x_4 <= 8
-	 * is an implications of two knapsack inequalities
+	 * If we divide it by `k=2` (`k` must be a divider of `b=8`),
+	 * we see that the sum of fractional coefficients is not greater than `1`;
+	 * therefore, the input inequality is a convex combination of `k` valid constraints
 	 *     - x_1 + x_2 + 2x_3 + x_4 <= 4 and 2x_2 + 2x_3 + x_4 <= 4.
-	 * Further, the letter inequality is simplified to x_2 + x_3 + x_4 <= 2.
+	 * Further, the latter inequality is simplified to x_2 + x_3 + x_4 <= 2.
 	 *
 	 * \param[in] ctrSize number of entries in input inequality;
 	 * \param[in] dpVal,ipCol arrays of size `ctrSize`,
@@ -1638,13 +1669,6 @@ private:
 	 * \return number of _disaggregated_ knapsack constraints.
 	 */
 	int disaggregateKnapsacks();
-
-	/**
-	 * The procedure seeks logical relations involving a few binary variables.
-	 * For example, if `x3 = x1 & x2`, the solver, at least, will newer use variable `x3` for branching.
-	 * \warning It is assumed that an implication matrix has been generated, i.e., `m_pImpl != 0`.
-	 */
-	void seekBooleanRelations();
 
 	int roundToMakeStronger();
 
@@ -1715,21 +1739,36 @@ public:
     int getSolution(double* &dpX, int* &ipHd);
 
     /**
-     * \return `true`, if at least one feasible solution has been found so far.
+     * \return `true` if at least one feasible solution has been found so far.
      */
     bool isSolution() const;
+
+    /**
+     * First, `isSolution()` is called; if it returns `true`, then
+     * we can call this function to verify whether
+     * the solution found by __MIPCL__ is optimal.
+     * \return `true`, if an optimal solution has been found.
+     */
+    bool isSolutionOptimal() const
+	{return (m_iState & PROB_OPTIMAL)? true: false;}
+
+    /**
+     * \return `true` if this MIP is infeasible (has no solution).
+     */
+	bool isInfeasible() const
+	{return (m_iState & PROB_INFEASIBLE)? true: false;}
+
+    /**
+     * \return `true` if solution procedure stopped after exceeding given time limit.
+     */
+	bool timeLimitStop() const
+	{return (m_iState & PROB_TIME_LIMIT)? true: false;}
 
     /**
      * \return currently upper bound on the objective value defined to be
      * the largest value of the nodes LPs among all search tree leaves.
      */
     double getObjBound() const;
-
-    /**
-     * \return `true`, if the root node LP is feasible.
-     */
-	bool isRootLPfeasible() const
-	{return (m_iState & PROB_INFEASIBLE)? false: true;}
 
 	/**
 	 * The procedure writes MIP solutions into the file.
@@ -2143,14 +2182,6 @@ private:
      */
     bool dive(__LONG timeLimit);
 // end of D I V I N G ///////////////////////////////
-    /**
-     * Implements a feasibility pump prime-heuristic.
-     *  \param[in] timeLimit limit on running time (in seconds);
-     *  \param[in] maxRounds maximum number of iterates (rounds) to be performed;
-     *  \param[in] diveFollow if `true`, `dive()` is called when either time-limit or limit on number of iterates is reached.
-     * \return `false` if the node was proven to be infeasible; otherwise, `true`.
-     */
-    bool feasibilityPump(__LONG timeLimit, int maxRounds, bool diveFollow=true); // not proved to be efficient
 
 protected:
     /**
@@ -2270,7 +2301,7 @@ private:
     /**
      * \return number of fractional components in the LP solution of the currently processed node.
      */
-    int getFracNum() const;
+    int getFracVarNum() const;
 
     /**
      * The function does the same as `CLP:getPrimeSolution()` does, plus rounds off integer components.
@@ -2412,12 +2443,12 @@ private:
 	 * \param[in] dpX `dpX[j]` is value of variable `j`;
 	 * \param[in] bLocal if `true`, input inequality is local;
 	 * \param[out] rhs right hand side of returned inequality;
-	 * \param[out] type type of returned inequality;
+	 * \param[out] type type of returned inequality (bitwise OR of `enVarType` members);
 	 * \return size of generated cut (let us denote it by 'cutSize)`, or '0' if no cut has been found.
 	 * \remark The returned inequality (cut) is given as
 	 *     'sum(i in 0..cutSize-1) m_dpArray[i]*x(m_ipArray[i]) <= rhs'.
 	 */
-	int simpleLCI(int sz, double* dpA, int* ipCol, double* dpX, double b, bool bLocal, double &rhs, int &type);
+	int simpleLCI(int sz, double* dpA, int* ipCol, double* dpX, double b, bool bLocal, double &rhs, unsigned &type);
 
 	/**
 	 * The procedure builds LCI cut based on the mixed knapsack
@@ -2428,10 +2459,10 @@ private:
 	 * \param[in] dpX array of size `sz`, `dpX[i]` is value of variable `ipCol[i]`;
 	 * \param[in] bLocal 'true` if input constraint is local; otherwise, 'false';
 	 * \param[in,out] b right hand side value;
-	 * \param[out] type type of returned constraint;
+	 * \param[out] type type of returned constraint (bitwise OR of `enVarType` members).
 	 * \return cut size, or '0' if no cut has been found.
 	 */
-	int mxSimpleLCI(int sz, double* dpA, int* ipCol, double* dpX, bool bLocal, double &b, int &type);
+	int mxSimpleLCI(int sz, double* dpA, int* ipCol, double* dpX, bool bLocal, double &b, unsigned &type);
 
 	bool LGCI(int n, int n0, int n1, int nf,
 			double* A, double* X, double b, int &iBeta, int *ipAlpha);
@@ -2455,13 +2486,13 @@ private:
 	 * \param[in] side if `true`, right hand side inequality of constraint `i` is used; otherwise,
 	 * left hand side inequality is used;
 	 * \param[out] rhs right hand side of returned inequality;
-	 * \param[out] type type of returned inequality;
+	 * \param[out] type type of returned inequality (bitwise OR of `enVarType` members).
 	 * \return size of generated cut (let us denote it by 'cutSize)`, or '0' if no cut has been found.
 	 * \remark The returned inequality (cut) is given as
 	 *     'sum(i in 0..cutSize-1) m_dpArray[i]*x(m_ipArray[i]) <= rhs'.
 	 * \sa liftCover(), GUB_LCI().
 	 */
-	int LCI(int i, bool side, double &rhs, int &type);
+	int LCI(int i, bool side, double &rhs, unsigned &type);
 
 	/**
 	 * For a given constraint, the procedure builds a lifted GUB-cover inequality.
@@ -2478,13 +2509,13 @@ private:
 	 * \param[in] side if `true`, right hand side inequality of constraint `i` is used; otherwise,
 	 * left hand side inequality is used;
 	 * \param[out] rhs right hand side of returned inequality;
-	 * \param[out] type type of returned inequality;
+	 * \param[out] type type of returned inequality (bitwise OR of `enVarType` members).
 	 * \return size of generated cut (let us denote it by 'cutSize)`, or '0' if no cut has been found.
 	 * \remark The returned inequality (cut) is given as
 	 *     'sum(i in 0..cutSize-1) m_dpArray[i]*x(m_ipArray[i]) <= rhs'.
 	 * \sa LCI().
 	 */
-	int GUB_LCI(int i, bool side, double &rhs, int &type);
+	int GUB_LCI(int i, bool side, double &rhs, unsigned &type);
 
 	/**
 	 * The procedure implements an iterator through the list of knapsack constraints.
@@ -2523,11 +2554,11 @@ private:
      * \param[in] szA number of variables in template constraint;
      * \param[in] szP number of rows used to derive template constraint;
      * \param[in,out] rhs right-hand side of template constraint, or returned cut;
-     * \param[out] type type of cut inequality;
+     * \param[out] type type of cut inequality (bitwise OR of `enVarType` members);
      * \param[in] bLocal if `true`, template constraint is local; otherwise, it is global;
      * \return `true` size of cut, or '0' if no cut has been found.
      */
-    int mixedKnapsackCut(int szA, int szP, double &rhs, int &type, bool bLocal);
+    int mixedKnapsackCut(int szA, int szP, double &rhs, unsigned &type, bool bLocal);
 
 ////////////////////////////////
 /// Parity cuts
@@ -2554,18 +2585,18 @@ private:
      *  on output, type of cut generated.
      *  \return `true` if cut has been generated.
      */
-    bool parityIneq(int &parity, double gap, int sz, int *ipCol, double *dpVal, int &b);
+    bool parityIneq(unsigned &parity, double gap, int sz, int *ipCol, double *dpVal, int &b);
 
     /**
      * The procedure tries to produce a parity cut for a given parity inequality.
      * \param[in] sz size of arrays `ipCol` and `dpVal`;
      * \param[in,out] ipCol,dpVal represent left part of either input inequality or output cut:
      *  `sum(i=0,...,sz-1) dpVal[i]*x(ipCol[i]) <= rhs`;
-     * \param[in,out] rhs right-hand side of either input inequality or output cut.
-     * \param[out] cutType type of cut;
+     * \param[in,out] rhs right-hand side of either input inequality or output cut;
+     * \param[out] cutType type of returned inequality (bitwise OR of `enVarType` members).
      *  \return number of cuts generated.
      */
-    int parityCut(int sz, int *ipCol, double *dpVal, double &rhs, int &cutType);
+    int parityCut(int sz, int *ipCol, double *dpVal, double &rhs, unsigned &cutType);
 
 ////////////////////////////////////////////////////////////////////
 // Disjunctions
@@ -2617,22 +2648,22 @@ private:
      * \param[in] row constraint index;
      * \param[in] side if `true`, left hand side inequality is used to derive disjunction;
      * otherwise, right hand side inequality is used;
-     * \param[out] type type of returned cut;
+     * \param[out] type type of returned cut (bitwise OR of `enVarType` members);
      * \param[out] lhs left hand side of returned constraint.
      * \return cut size, or `0` if no cut has been found.
      */
-    int oneRowDisjunction(int row, bool side, int& type, double& lhs);
+    int oneRowDisjunction(int row, bool side, unsigned& type, double& lhs);
 
     /**
      * This procedure is similar to `oneRowDisjunction()` but uses variable bounds to strengthen cuts.
      * \param[in] row constraint index;
      * \param[in] side if `true`, left hand side inequality is used to derive disjunction;
      * otherwise, right hand side inequality is used.
-     * \param[out] type type of returned cut;
+     * \param[out] type type of returned cut (bitwise OR of `enVarType` members);
      * \param[out] lhs left hand side of returned constraint.
      * \return cut size, or `0` if no cut has been found.
      */
-    int oneRowDisjunctionForCtrWithVarBounds(int row, bool side, int& type, double& lhs);
+    int oneRowDisjunctionForCtrWithVarBounds(int row, bool side, unsigned& type, double& lhs);
 
     /*
      * The procedure calls `oneRowDisjunction()` or `oneRowDisjunctionForCtrWithVarBounds()`
@@ -2649,7 +2680,7 @@ private:
      * \param[in] row2 constraint index;
      * \param[in] side2 if `true` right hand side of constraint `row2` to be used;
      * \param[out] lhs left hand side of returned inequality;
-     * \param[out] type type of returned inequality.
+     * \param[out] type type of returned inequality (bitwise OR of `enVarType` members).
      * \return size (denote it by 'k') of the returned inequality, or '0' if no cut has been generated.
      * \remark 1) The following restriction `m_ipRowSize[row1]+m_ipRowSize[row2] <= m_iM+m_iN`
      *            on the row sizes must be valid.
@@ -2657,7 +2688,7 @@ private:
      *          `sum(i in 0..k-1) m_dpArray[i]*x(m_ipArray[i]) >= lhs`.
      *
      */
-    int twoRowDisjunction(int col, int row1, bool side1, int row2, bool side2, double &lhs, int &type);
+    int twoRowDisjunction(int col, int row1, bool side1, int row2, bool side2, double &lhs, unsigned &type);
 
     /**
      * The procedure selects rows (constraints) that are violated
@@ -2766,12 +2797,20 @@ private:
 
     /**
      * The procedure does some preparations for subsequent calls of 'mirCut()` and `mixedKnapsackCut()`.
-     *
+     * In particular, the procedure complements some variables,
+     * and then compute an array of factors; the inequality is multiplied, in turn,
+     * by each of these factors and the result is "mixes-integer rounded"
+     * \param[in] szA size of arrays `dpA` and `ipCol`;
+     * \param[in] dpA,ipCol `sum(i in 0..szA-1) dpA[i]*x[ipCol[i]] <= f0` is input inequality;
+     * \param[in,out] f0 on output, `f0` is right hand side of the inequality with some variables complemented;
+     * \param[in,out] bLocal if `true`, constraint is local.
+     * \param[out] dpQ array of factors.
+     * \return number of factors stored in `dpQ`.
      */
     int mirPrepareForCuts(int szA, double* dpA, int *ipCol, double &f0, bool &bLocal, double *dpQ);
     
     int buildDeltaMirCut(int szA, double* dpA, int* ipCol, int szP, double delta, double& beta,
-          double& violat, int &type, bool flag);
+          double& violat, unsigned &type, bool flag);
 
     void substituteVarBounds(int& szA, double* dpA, int *ipCol, double& b,
           int& szP, bool& bLocal, int m0, bool &bMxKnapsack);
@@ -2784,9 +2823,12 @@ private:
 	 * \param[in] bLocal if `true`, at least one local  inequality or bound for variable were used when deriving input inequality;
 	 * \param[out] cutType type of cut inequality;
 	 * \param[in] szP number of inequalities (other than variable bounds) mixed to get input inequality.
+	 * \param[in,out] rhs right hand side;
+	 * \param[out] cutType cut type (bitwise OR of `enVarType` members);
+	 * \param[in] bLocal if `true`, cut is local.
 	 * \return size of the cut, or '0` if no cut has been found.
 	 */
-    int mirCut(int szA, double* dpA, int* ipCol, int szP, double &rhs, int &cutType, bool bLocal);
+    int mirCut(int szA, double* dpA, int* ipCol, int szP, double &rhs, unsigned &cutType, bool bLocal);
 
     /**
      * The procedure tries to generate a _MIR_ cut starting from the inequality indexed by `row`.
@@ -2794,9 +2836,12 @@ private:
      * \param[in] side side of constraint `row`;
      * \param[in] m0 first `m0` rows of constraint matrix may be used as mixing inequalities;
      * \param[in] needCut if `needCut & 0x1`, _MIR_ cuts to be generated; if `needCut & 0x2`, _mixed knapsack_ cuts to be generated.
+     * \param[in,out] sz cut size;
+     * \param[out] cut type (bitwise OR of `enVarType` members);
+     * \param[in,out] rhs right hand side.
      * \return `1` if MIR cut was generated, `-1` if mixed knapsack cut was generated, and `0` otherwise.
      */
-    int mixedIntCut(int row, bool side, int m0, int needCut, int &sz, int &cutType, double &rhs);
+    int mixedIntCut(int row, bool side, int m0, int needCut, int &sz, unsigned &cutType, double &rhs);
 
     /**
      * The procedure calls MIR and mixed knapsack cut generators.
@@ -2821,14 +2866,14 @@ private:
      * \param[in] if 'true', input inequality is valid only for the currently processed node
      *   and all its possible ancestors; if 'false', input inequality is valid globally, i.e. for all nodes;
      * \param[out] rhs right hand side of returned inequality;
-     * \param[out] type type of returned inequality.
+     * \param[out] type type of returned inequality (bitwise OR of `enVarType` members).
      * \return size of returned inequality (let us denote it by 'sz'), or '0'
      * if no violated cut has been found.
      * \remark The returned inequality (cut) is given as
      *     'sum(i in 0..sz-1) m_dpArray[i]*x(m_ipArray[i]) <= rhs'.
      */
     int integerRounding(int ctrSize, double *dpVal, int *ipCol, double b,
-    		char *cpReversed, double tol, bool ctrLocal, double &rhs, int &type);
+    		char *cpReversed, double tol, bool ctrLocal, double &rhs, unsigned &type);
 
     /**
      * This procedure just calls `integerRounding()' (with 9 arguments) for
@@ -2837,11 +2882,12 @@ private:
      * \param[in] side if 'true' right part of constraint 'row` must be used;
      *   otherwise, left to be used;
      * \param[in] tol to be passed into `integerRounding()' (with 9 arguments);
-     * \param[out] rhs,type returned values from `integerRounding()' (with 9 arguments).
+     * \param[out] rhs,type returned values from `integerRounding()' (with 9 arguments);
+     * \param[out] type type of returned inequality (bitwise OR of `enVarType` members).
      * \return if `integerRounding()' (with 9 arguments) is called, its return value;
      * otherwise, '0'.
      */
-    int integerRounding(int row, bool side, double tol, double &rhs, int &type);
+    int integerRounding(int row, bool side, double tol, double &rhs, unsigned &type);
 
     /**
      * The procedure generates a _mixed-integer Gomory_ cut
@@ -2853,12 +2899,12 @@ private:
      * \param[in] ipCol list of `sz` variable indices;
      * \param[in] dpVal list of `sz` coefficients;
      * \param[out] rhs right hand side of returned inequality;
-     * \param[out] type type of returned inequality.
+     * \param[out] type type of returned inequality (bitwise OR of `enVarType` members).
      * \return size of generated cut, or '0' if not cut has been found.
      * \remark If we denote te returned value by 'sz', then the cut is given as
      *      'sum(i in 0..sz-1) m_dpArray[i]*x(m_ipArray[i]) <= rhs'.
      */
-    int GomoryCut(bool bDense, int sz, int *ipCol, double *dpVal, double &rhs, int &type);
+    int GomoryCut(bool bDense, int sz, int *ipCol, double *dpVal, double &rhs, unsigned &type);
 
     /**
      * The procedure generates a family of _mixed-integer Gomory_ cuts.

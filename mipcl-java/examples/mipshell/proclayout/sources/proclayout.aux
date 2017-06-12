@@ -1,0 +1,95 @@
+#line 1 "../sources/proclayout.mod"
+int Cproclayout::model()
+#line 2 "../sources/proclayout.mod"
+{
+#line 3 "../sources/proclayout.mod"
+	int i,j,s,r, n=m_iN, m=m_iM;
+#line 4 "../sources/proclayout.mod"
+	VAR_VECTOR x(this,"x",BIN,n,m), y(this,"y",BIN,n,n,m,m);
+#line 5 "../sources/proclayout.mod"
+
+#line 6 "../sources/proclayout.mod"
+	       #line 6
+getSum(0).reset();
+#line 6
+for (i=0; i < n; ++i)
+#line 6
+for (s=0; s < m; ++s) getSum(0)+=(p(i,s)*x(i,s));
+
+#line 7 "../sources/proclayout.mod"
+		            #line 7
+getSum(1).reset();
+#line 7
+for (i=0; i < n-1; ++i)
+#line 7
+for (j=i+1; j < n; ++j)
+#line 7
+for (s=0; s < m; ++s)
+#line 7
+for (r=0; r < m; ++r) getSum(1)+=(c(i,j,s,r)*y(i,j,s,r));
+minimize(getSum(0)+getSum(1));
+#line 8 "../sources/proclayout.mod"
+		 
+#line 9 "../sources/proclayout.mod"
+	  for (i=0; i < n; ++i)
+#line 10 "../sources/proclayout.mod"
+		    {
+#line 10
+getSum(2).reset();
+#line 10
+for (s=0; s < m; ++s) getSum(2)+=(x(i,s));
+ addCtr(getSum(2) == 1);
+}
+#line 11 "../sources/proclayout.mod"
+		
+#line 12 "../sources/proclayout.mod"
+	  for (s=0; s < m; ++s)
+#line 13 "../sources/proclayout.mod"
+		    {
+#line 13
+getSum(3).reset();
+#line 13
+for (i=0; i < n; ++i) getSum(3)+=(x(i,s));
+ addCtr(getSum(3) <= 1);
+}
+#line 14 "../sources/proclayout.mod"
+		
+#line 15 "../sources/proclayout.mod"
+	     for (i=0; i < n-1; ++i)
+#line 15
+for (j=i+1; j < n; ++j)
+#line 16 "../sources/proclayout.mod"
+		       {
+#line 16
+getSum(4).reset();
+#line 16
+for (s=0; s < m; ++s)
+#line 16
+for (r=0; r < m; ++r) getSum(4)+=(y(i,j,s,r));
+ addCtr(getSum(4) == 1);
+} 
+#line 17 "../sources/proclayout.mod"
+
+#line 18 "../sources/proclayout.mod"
+	           for (i=0; i < n-1; ++i)
+#line 18
+for (j=i+1; j < n; ++j)
+#line 18
+for (s=0; s < m; ++s)
+#line 18
+for (r=0; r < m; ++r)
+#line 19 "../sources/proclayout.mod"
+		      addCtr(2*y(i,j,s,r)-x(i,s)-x(j,r) <= 0);
+#line 20 "../sources/proclayout.mod"
+
+#line 21 "../sources/proclayout.mod"
+	optimize();
+#line 22 "../sources/proclayout.mod"
+	printSol(x);
+#line 23 "../sources/proclayout.mod"
+	return 0;
+#line 24 "../sources/proclayout.mod"
+} // end of Cproclayout::model
+#line 25 "../sources/proclayout.mod"
+
+#line 26 "../sources/proclayout.mod"

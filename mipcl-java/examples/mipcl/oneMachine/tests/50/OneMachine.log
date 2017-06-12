@@ -1,0 +1,65 @@
+CLP::ReallocMemForEntries: old size 1350, new size 2350
+Tree: Reallocate memory for buffer; old size 1000, new size 2000
+Tree: Reallocate memory for buffer; old size 2000, new size 3000
+Tree: Reallocate memory for buffer; old size 3000, new size 4000
+Tree: Reallocate memory for buffer; old size 4000, new size 5333
+Tree: Reallocate memory for buffer; old size 5333, new size 7110
+Tree: Reallocate memory for buffer; old size 7110, new size 9480
+Tree: Reallocate memory for buffer; old size 9480, new size 12640
+Tree: Reallocate memory for buffer; old size 12640, new size 16853
+Tree: Reallocate memory for nodes; old size 100, new size 150
+Tree: Reallocate memory for buffer; old size 16853, new size 22470
+Pool: Reallocate memory for buffer; old size 8990, new size 11988
+Tree: Reallocate memory for buffer; old size 22470, new size 29960
+Tree: Reallocate memory for nodes; old size 150, new size 200
+Tree: Reallocate memory for buffer; old size 29960, new size 39946
+Tree: Reallocate memory for nodes; old size 200, new size 266
+Pool: Reallocate memory for buffer; old size 11988, new size 16013
+CLU: Reallocate memory for matrix (2); old size = 149, new size = 198
+Pool: Reallocate memory for constraints; old size 1198, new size 1198
+Tree: Reallocate memory for buffer; old size 39946, new size 53261
+Tree: Reallocate memory for nodes; old size 266, new size 354
+Pool: Reallocate memory for buffer; old size 16013, new size 21374
+Tree: Reallocate memory for buffer; old size 53261, new size 71014
+Pool: Reallocate memory for constraints; old size 1597, new size 1597
+Tree: Reallocate memory for nodes; old size 354, new size 472
+CLU: Reallocate memory for matrix (2); old size = 149, new size = 198
+CLU: Reallocate memory for matrix (2); old size = 198, new size = 264
+CLU: Reallocate memory for matrix (2); old size = 264, new size = 352
+Pool: Reallocate memory for buffer; old size 21374, new size 28512
+CLU: Reallocate memory for matrix (2); old size = 198, new size = 264
+Tree: Reallocate memory for buffer; old size 71014, new size 94685
+Tree: Reallocate memory for nodes; old size 472, new size 629
+Pool: Reallocate memory for constraints; old size 2129, new size 2129
+Pool: Reallocate memory for buffer; old size 28512, new size 38025
+Tree: Reallocate memory for buffer; old size 94685, new size 126246
+Tree: Reallocate memory for nodes; old size 629, new size 838
+Pool: Reallocate memory for constraints; old size 2838, new size 2838
+Pool: Reallocate memory for buffer; old size 38025, new size 50705
+Tree: Reallocate memory for nodes; old size 838, new size 1117
+Tree: Reallocate memory for buffer; old size 126246, new size 168328
+Pool: Reallocate memory for constraints; old size 3784, new size 3784
+Tree: Reallocate memory for nodes; old size 1117, new size 1489
+Pool: Reallocate memory for buffer; old size 50705, new size 67657
+CLU: Reallocate memory for matrix (2); old size = 264, new size = 352
+Tree: Reallocate memory for buffer; old size 168328, new size 224437
+CLU: Reallocate memory for matrix (2); old size = 352, new size = 469
+Pool: Reallocate memory for constraints; old size 5045, new size 5045
+Tree: Reallocate memory for nodes; old size 1489, new size 1985
+Tree: Reallocate memory for buffer; old size 224437, new size 299249
+Pool: Reallocate memory for buffer; old size 67657, new size 90218
+Pool: Reallocate memory for constraints; old size 6726, new size 6726
+Tree: Reallocate memory for nodes; old size 1985, new size 2646
+Tree: Reallocate memory for buffer; old size 299249, new size 398998
+Pool: Reallocate memory for buffer; old size 90218, new size 120300
+Pool: Reallocate memory for constraints; old size 8968, new size 8968
+Tree: Reallocate memory for nodes; old size 2646, new size 3528
+Tree: Reallocate memory for buffer; old size 398998, new size 531997
+Pool: Reallocate memory for buffer; old size 120300, new size 160401
+Pool: Reallocate memory for constraints; old size 11957, new size 11957
+Tree: Reallocate memory for nodes; old size 3528, new size 4704
+Pool: Reallocate memory for buffer; old size 160401, new size 213888
+Tree: Reallocate memory for buffer; old size 531997, new size 709329
+Pool: Reallocate memory for constraints; old size 15942, new size 15942
+Tree: Reallocate memory for nodes; old size 4704, new size 6272
+Tree: Reallocate memory for buffer; old size 709329, new size 945772

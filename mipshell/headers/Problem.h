@@ -38,15 +38,6 @@
 #endif
 #else
 #ifndef MIPSHELL_API
-/// WINDOWS specifics.
-/**
- * The following ifdef block is the standard way of creating macros which make exporting
- * from a DLL simpler. All files within this DLL are compiled with the MIP_EXPORTS
- * symbol defined on the command line. This symbol should not be defined on any project
- * that uses this DLL. This way any other project whose source files include this file see
- * MIP_API functions as being imported from a DLL, whereas this DLL sees symbols
- * defined with this macro as being exported.
- */
 #define MIPSHELL_API
 #endif
 #endif
@@ -88,7 +79,7 @@ public:
 		\param[in] name name of the problem being solved.
 	 */
 	CProblem(const char* name);
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 	/**
 	 * The clone constructor and the clone function are used in multithreaded applications.
 	 * Their implementation is standard in all __MIPSHELL__ programs.
@@ -107,26 +98,26 @@ public:
 #endif
 	virtual ~CProblem(); ///< The destructor.
 
-	/// \cond NEWandDELoperators
-	/// The new operator.
-	/**
-	 * Initially, the new and delete operators were overloaded to overcome a WINDOWS bug.
-	 * When __MIPschell__ and __MIPCL__ libraries allocate memory in different heaps,
-	 * deleting in __MIPCL__ objects created by __MIPschell__ cased an ERROR.
-	 * \param[in] iSize size (in bytes) of required memory block.
-	 * \return pointer to allocated memory block.
-	 * \throws CMemoryException.
-	 * \sa `operator delete()`
-	 */
-	void* operator new(size_t iSize) throw(CMemoryException);
-
-	/// The delete operator.
-	/**
-	 * \param[in] pPtr pointer to memory block to bee freed.
-	 * \sa `operator new()`
-	 */
-	void operator delete(void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	/// The new operator.
+//	/**
+//	 * Initially, the new and delete operators were overloaded to overcome a WINDOWS bug.
+//	 * When __MIPschell__ and __MIPCL__ libraries allocate memory in different heaps,
+//	 * deleting in __MIPCL__ objects created by __MIPschell__ cased an ERROR.
+//	 * \param[in] iSize size (in bytes) of required memory block.
+//	 * \return pointer to allocated memory block.
+//	 * \throws CMemoryException.
+//	 * \sa `operator delete()`
+//	 */
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//
+//	/// The delete operator.
+//	/**
+//	 * \param[in] pPtr pointer to memory block to bee freed.
+//	 * \sa `operator new()`
+//	 */
+//	void operator delete(void* pPtr) throw();
+//	/// \endcond
 
 // operations
 	/**

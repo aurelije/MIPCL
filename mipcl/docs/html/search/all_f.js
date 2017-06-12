@@ -1,9 +1,9 @@
 var searchData=
 [
   ['scheduling_20one_20machine_20_28user_20branching_29',['Scheduling one machine (User Branching)',['../MSched.html',1,'']]],
-  ['safeaddcolumn',['safeAddColumn',['../classCLP.html#a79b5d7f1bfda3ef5ccd73dcdec9a84b5',1,'CLP']]],
-  ['safeaddcut',['safeAddCut',['../classCMIP.html#aa117af73d3030c3086a94f0eaa2048b6',1,'CMIP']]],
-  ['safeaddrow',['safeAddRow',['../classCLP.html#ab7cbf9859af259f97a5a6b8868807e8a',1,'CLP']]],
+  ['safeaddcolumn',['safeAddColumn',['../classCLP.html#a62386390656150763472f05e4419e82d',1,'CLP']]],
+  ['safeaddcut',['safeAddCut',['../classCMIP.html#a657eca92c7b8409105bf501334121d05',1,'CMIP']]],
+  ['safeaddrow',['safeAddRow',['../classCLP.html#ac7cfc7443dff945bc5a424fb161e5d5c',1,'CLP']]],
   ['safegetobjlowerbound',['safeGetObjLowerBound',['../classCMIP.html#a1c902f2a8553bd70f0465b9e3141005e',1,'CMIP']]],
   ['safegetsolnum',['safeGetSolNum',['../classCMIP.html#a5988aab7a8267c5735a51b3bc902cc95',1,'CMIP']]],
   ['savebasis',['saveBasis',['../classCLP.html#ab223b0873095d4b64a958e83c79438e4',1,'CLP']]],

@@ -53,35 +53,35 @@ CVar::~CVar()
 {
 }
 
-/// \cond NEWandDELoperators
-void* CVar::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CVar::operator new");
-	}
-	return p;
-}
-
-void CVar::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-void* CVar::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CVar::operator new[]");
-	}
-	return p;
-}
-
-void CVar::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CVar::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CVar::operator new");
+//	}
+//	return p;
+//}
+//
+//void CVar::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//void* CVar::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CVar::operator new[]");
+//	}
+//	return p;
+//}
+//
+//void CVar::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 #define GE   0x00010000
 #define LE   0x00020000
@@ -221,17 +221,17 @@ CCtr& CVar::operator==(CLinSum& lsum)
 //////////////////////////////////////////////
 // class CVarVector
 //////////////////////////////////////////////
-/// \cond NEWandDELoperators
-void* CVarVector::operator new(size_t iSize)
-{
-	return malloc(iSize);
-}
-
-void CVarVector::operator delete(void* pPtr)
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CVarVector::operator new(size_t iSize)
+//{
+//	return malloc(iSize);
+//}
+//
+//void CVarVector::operator delete(void* pPtr)
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 CVarVector::CVarVector()
 {

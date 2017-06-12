@@ -932,7 +932,7 @@ public:
      *  \param[in] name problem name.
      */
     CLP(const char* name);
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
     /// Clone constructor.
     /**
      * This constructor is used in multithreaded MIP applications.
@@ -984,8 +984,9 @@ public:
 	 * \param[in] lhs,rhs  respectively, left (LHS) and right (RHS) hand sides of constraint.
  	 * \return constraint index.
  	 * \throws CMemoryException lack of memory.
+     * \sa addRow(), safeAddRow().
      */
-    int addCtr(tagHANDLE hd, int type, double lhs, double rhs);
+    int addCtr(tagHANDLE hd, unsigned type, double lhs, double rhs);
 
     /**
      * This function is used to add a row (constraint) to the closed matrix.
@@ -997,9 +998,9 @@ public:
 	 * \param[in] bSort if `true`, row entries are sorted in increasing order of their column indices.
  	 * \return constraint index.
  	 * \throws CMemoryException lack of memory.
- 	 * \sa addRow(), safeAddRow(), getRow().
+ 	 * \sa addCtr(), safeAddRow(), getRow().
      */
-    int addRow(tagHANDLE hd, int type, double lhs, double rhs,int sz, double* dpVal, int* ipCol, bool bSort=true);
+    int addRow(tagHANDLE hd, unsigned type, double lhs, double rhs,int sz, double* dpVal, int* ipCol, bool bSort=true);
 
     /**
      * This function is a safer version of addRow().
@@ -1011,7 +1012,7 @@ public:
      * \throws CMemoryException lack of memory.
      * \sa addCtr(), addRow(), getRow().
     */
-    int safeAddRow(tagHANDLE hd, int type, double lhs, double rhs, int sz, double* &dpVal, int* &ipCol, bool bSort=true);
+    int safeAddRow(tagHANDLE hd, unsigned type, double lhs, double rhs, int sz, double* &dpVal, int* &ipCol, bool bSort=true);
 
     /**
      * The function adds a variable (empty column) to the matrix.
@@ -1023,7 +1024,7 @@ public:
      * \return index of added column (variable).
      * \throws CMemoryException lack of memory.
      */
-    int addVar(tagHANDLE hd, int type, double cost,double l, double u);
+    int addVar(tagHANDLE hd, unsigned type, double cost,double l, double u);
 
     /**
      * The function adds column to the matrix.
@@ -1038,7 +1039,7 @@ public:
      * \return index of added column (variable).
      * \throws CMemoryException lack of memory.
      */
-    int addColumn(tagHANDLE hd, int type, double cost,double l, double u,
+    int addColumn(tagHANDLE hd, unsigned type, double cost,double l, double u,
         int sz, double* dpVal, int* ipRow, bool bSort=true);
 
     /**
@@ -1051,7 +1052,7 @@ public:
      * \throws CMemoryException lack of memory.
      * \sa addVar(), addColumn(), getColumn().
     */
-    int safeAddColumn(tagHANDLE hd, int type, double cost,double l, double u,
+    int safeAddColumn(tagHANDLE hd, unsigned type, double cost,double l, double u,
         int sz, double* &dpVal, int* &ipRow, bool bSort=true);
 
     /**
@@ -1145,7 +1146,7 @@ protected:
      * \param[in] type is bitwise OR of members of `enVarType` and `CMIP::enVarType`.
      * \sa enVarType, CMIP::enVarType.
      */
-    virtual void extendVarType(int j, int type)
+    virtual void extendVarType(int j, unsigned type)
         {m_ipVarType[j]|=type;}
 
     /**
@@ -1155,7 +1156,7 @@ protected:
      * \param[in] type is bitwise OR of members of `enCtrType` and `CMIP::enCtrType`.
      * \sa enCtrType, CMIP::enCtrType.
      */
-    virtual void extendCtrType(int i, int type)
+    virtual void extendCtrType(int i, unsigned type)
         {m_ipCtrType[i]|=type;}
 
 //    /**
@@ -1393,7 +1394,12 @@ protected:
 // S C A L I N G
 private:
     void SCL_ShiftScaleFactors(); ///< The procedure is used only in `SCL_scaleMatrix()`.
-    int SCL_getMaxEntryExponent(); ///< The function computes the maximum exponent of matrix entries.
+
+    /**
+     * \param[out] minExp minimum exponent among matrix entries.
+     *  \return the maximum absolute value among exponents of matrix entries.
+     */
+    int SCL_getMaxEntryExponent(int &minExp);
     int SCL_HScaleRow(int row, bool GMflag);
     int SCL_HScaleColumn(int col, bool GMflag);
     void SCL_HScaleRows(bool GMflag);
@@ -1414,7 +1420,12 @@ private:
         int* ipNum, int* ipLevel, int* ipLowLink, int* ipStack, int* ipParent,
         int *ipCurRow, int* ipCurCol, int* ipCurNode,
         double *dpRowScale, double *dpColScale); ///< is used internally `SCL_IdealScaling()`.
-    void SCL_IdealScaling(); ///< ideal scaling.
+    /**
+     * The procedure implements the "ideal scaling".
+     *
+     * \param[in] maxExp maximum exponent among matrix entries.
+     */
+    void SCL_IdealScaling(int maxExp); ///< ideal scaling.
 
 
     /**
@@ -1427,8 +1438,10 @@ private:
      * The procedure implements min-max scaling, i.e.,
      * in each line (row or column) the mean value of the minimum and maximum absolute coefficient values are computed,
      * and then the line is multiplied by the power of 2 nearest to that mean value.
+
+     * \param[in] maxExp maximum exponent among matrix entries.
     */
-    void SCL_MinMaxScale();
+    void SCL_MinMaxScale(int maxExp);
 
 protected:
     void SCL_scaleObj(); ///<  Scales objective with previously computed column scale factors.
@@ -2146,7 +2159,7 @@ protected:
  	 * \attention The procedure adds the constraint to the matrix but not to the MIP pool.
  	 * \sa addRow(), getRow(), CMIP::genCut1(), CMIP::genCut2().
      */
-    int addNewRow(tagHANDLE hd, int type, double b1, double b2,
+    int addNewRow(tagHANDLE hd, unsigned type, double b1, double b2,
                   int sz, double* &dpVal, int* &ipCol,
                   bool bVarScaled=true, int factor=NOT_SCALED, int n=0,
                   bool toBasis=true);
@@ -2173,7 +2186,7 @@ protected:
      * \return index of newly created column (variable).
      * \throws CMemoryException lack of memory.
      */
-    int addNewColumn(tagHANDLE hd, int type, double cost, double l, double u,
+    int addNewColumn(tagHANDLE hd, unsigned type, double cost, double l, double u,
                       int sz, double* &dpVal, int* &ipRow, 
                       bool side, bool scaled=false, int factor=0, bool flag=false);
 
@@ -2232,7 +2245,7 @@ protected:
      * \sa addNewColumn().
      */
     virtual bool getColumn(tagHANDLE hd, int m, const tagHANDLE* ipHd,
-                int& type, double& cost, double& l, double& u,
+                unsigned& type, double& cost, double& l, double& u,
                 int& sz, double* dpVal, int* ipRow)
         {return false;}
 
@@ -2252,7 +2265,7 @@ protected:
      * \sa addNewRow().
      */
     virtual bool getRow(tagHANDLE hd, int n, const tagHANDLE* ipHd,
-                        int& type, double& lhs, double& rhs,
+                        unsigned& type, double& lhs, double& rhs,
                         int& sz, double* dpVal, int* ipCol, bool &scaled)
         {return false;}
 
@@ -2542,7 +2555,7 @@ public:
     int getSolution(double* &dpX, int* &ipHd);
 
     /**
-     * The function returns reduced costs of variables for the solved LP.
+     * The function returns _reduced costs_ of variables for the solved LP.
      * \param[out]  dpC,ipHd - arrays of size `n`, where `n` denotes return value;
      * `dpC[i]` is reduced cost of variable with handle `ipHd[i]`.
      * \return number of variables.
@@ -2552,6 +2565,7 @@ public:
     int getReducedCosts(double* &dpC, int* &ipHd);
 
     /**
+     * The function returns constraint _shadow prices_ (optimal values of dual variables).
      * \param[out] dpP,ipHd arrays of size `m`, where `m` is return value;
      *  `dpP[i]` is shadow price of constraint with handle `ipHd[i].
      * \return number of constraints.
@@ -2632,6 +2646,7 @@ public:
 	 * The user can overload this function to store solutions in an appropriate way.
 	 * \param[in] fileName name of the file to store solutions; if `fileName=`0`,
 	 * the solver makes up the file name by appending the extension ".sol" to the name of the problem being solved.
+	 * \throws CFileException.
 	 */
     virtual void printSolution(const char *fileName=0);
 

@@ -1,0 +1,57 @@
+#line 1 "../sources/IndexFund.mod"
+int CIndexFund::model()
+#line 2 "../sources/IndexFund.mod"
+{
+#line 3 "../sources/IndexFund.mod"
+	int i,j, q=m_iQ, n=rho.getSize(0);
+#line 4 "../sources/IndexFund.mod"
+	VAR_VECTOR y(this,"y",BIN,n), x(this,"x",BIN,n,n);
+#line 5 "../sources/IndexFund.mod"
+
+#line 6 "../sources/IndexFund.mod"
+	      #line 6
+getSum(0).reset();
+#line 6
+for (i=0; i < n; ++i)
+#line 6
+for (j=0; j < n; ++j) getSum(0)+=(rho(i,j)*x(i,j));
+maximize(getSum(0));
+#line 7 "../sources/IndexFund.mod"
+
+#line 8 "../sources/IndexFund.mod"
+	    {
+#line 8
+getSum(1).reset();
+#line 8
+for (j=0; j < n; ++j) getSum(1)+=(y(j));
+ addCtr(getSum(1) == q);
+}
+#line 9 "../sources/IndexFund.mod"
+	  for (i=0; i < n; ++i) {
+#line 10 "../sources/IndexFund.mod"
+		    {
+#line 10
+getSum(2).reset();
+#line 10
+for (j=0; j < n; ++j) getSum(2)+=(x(i,j));
+ addCtr(getSum(2) == 1);
+}
+#line 11 "../sources/IndexFund.mod"
+		  for (j=0; j < n; ++j)
+#line 12 "../sources/IndexFund.mod"
+			  addCtr(x(i,j) <= y(j));
+#line 13 "../sources/IndexFund.mod"
+	}
+#line 14 "../sources/IndexFund.mod"
+
+#line 15 "../sources/IndexFund.mod"
+	optimize();
+#line 16 "../sources/IndexFund.mod"
+	printSol(x,y);
+#line 17 "../sources/IndexFund.mod"
+	return 0;
+#line 18 "../sources/IndexFund.mod"
+} // end of CIndexFund::model
+#line 19 "../sources/IndexFund.mod"
+
+#line 20 "../sources/IndexFund.mod"

@@ -1,6 +1,6 @@
 CC=g++
 ARC=-m64 -mfpmath=sse -msse2
-CFLAGS=-c -O3 -I$(HRD_MIPCL) $(ARC) -minline-all-stringops
+CFLAGS=-c -std=c++17 -fno-rtti -O3 -I$(HRD_MIPCL) $(ARC) -minline-all-stringops
 INS=install
 MIP_DIR=$(MIPCLDIR)
 LDFLAGS= -L$(MIP_DIR)/lib -lmipcl

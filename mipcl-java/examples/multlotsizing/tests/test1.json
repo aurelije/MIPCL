@@ -1,0 +1,115 @@
+{
+    "l": [304, 304, 352, 352, 336, 336],
+    "machines" : [
+        {
+            "name": "Grinder",
+            "available": [6, 5, 4, 4, 3, 5],
+            "cost": [500, 500, 500, 500, 500, 500]
+        },
+        {
+            "name": "Vert. driller",
+            "available": [3, 2, 2, 2, 3, 3],
+            "cost": [450, 450, 450, 450, 450, 450]
+        },
+        {
+            "name": "Hor. driller",
+            "available": [5, 3, 3, 4, 4, 4],
+            "cost": [450, 450, 450, 450, 450, 450]
+        },
+        {
+            "name": "Borer",
+            "available": [2, 2, 2, 1, 2, 2],
+            "cost": [550, 550, 550, 550, 550, 550]
+        },
+        {
+            "name": "Planer",
+            "available": [2, 2, 2, 2, 1, 1],
+            "cost": [600, 600, 600, 600, 600, 600]
+        },
+        {
+            "name": "Packing dev.",
+            "available": [3, 3, 2, 2, 3, 2],
+            "cost": [400, 400, 400, 400, 400, 400]
+        }
+    ],
+    "products": [
+        {
+            "name": "0",
+            "initStock": 0,
+            "finalStock": 50,
+            "capacity": 100, 
+            "demands": [ 500, 600, 300, 200, 0, 500],
+            "costs": [17, 17, 17, 16, 16, 16],
+            "holdingCosts": [1, 1, 1, 1, 1, 1],
+            "procTimes": {"0": 0.5, "1": 0.1, "2": 0.2, "3": 0.05, "5": 0.1},
+            "resources": null
+       },
+        {
+            "name": "1",
+            "initStock": 0,
+            "finalStock": 50,
+            "capacity": 100, 
+            "demands": [1000, 700, 600, 300, 100, 500],
+            "costs": [19, 19, 19, 17, 17, 17],
+            "holdingCosts": [1, 1, 1, 1, 1, 1],
+            "procTimes": {"0": 0.7, "1": 0.2, "3": 0.03, "5": 0.1},
+            "resources": null
+        },
+        {
+            "name": "2",
+            "initStock": 0,
+            "finalStock": 50,
+            "capacity": 100, 
+            "demands": [300, 200,  0, 400, 500, 100],
+            "costs": [16, 16, 16, 15, 15, 15],
+            "holdingCosts": [1, 1, 1, 1, 1, 1],
+            "procTimes": {"2": 0.8, "4": 0.01, "5": 0.1},
+            "resources": null
+        },
+        {
+            "name": "3",
+            "initStock": 0,
+            "finalStock": 50,
+            "capacity": 100, 
+            "demands": [300, 0, 0, 500, 100, 300],
+            "costs": [8, 8, 8, 7, 7, 7],
+            "holdingCosts": [1, 1, 1, 1, 1, 1],
+            "procTimes": {"1": 0.3, "3": 0.07, "5": 0.1},
+            "resources": null
+        },
+        {
+            "name": "4",
+            "initStock": 0,
+            "finalStock": 50,
+            "capacity": 100, 
+            "demands": [800, 400, 500, 200, 1000, 1100],
+            "costs": [9, 9, 9, 8, 8, 8],
+            "holdingCosts": [1, 1, 1, 1, 1, 1],
+            "procTimes": {"0": 0.3, "3": 0.01, "4": 0.05, "5": 0.1},
+            "resources": {"0": 1, "2": 1}
+        },
+        {
+            "name": "5",
+            "initStock": 0,
+            "finalStock": 50,
+            "capacity": 100, 
+            "demands": [200, 300, 400, 0, 300, 500],
+            "costs": [16, 16, 16, 14, 14, 14],
+            "holdingCosts": [1, 1, 1, 1, 1, 1],
+            "procTimes": {"0": 0.2, "1": 0.6, "5": 0.1},
+            "resources": null
+        },
+        {
+            "name": "6",
+            "initStock": 0,
+            "finalStock": 50,
+            "capacity": 100,
+            "demands": [100, 150, 100, 100, 0, 60],
+            "costs": [25, 25, 25, 22, 22, 22],
+            "holdingCosts": [1, 1, 1, 1, 1, 1],
+            "procTimes": {"0": 0.5, "2": 0.6, "3": 0.08, "4": 0.05, "5": 0.15},
+            "resources": {"0": 1, "5": 2}
+        }
+    ]
+}
+

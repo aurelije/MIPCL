@@ -84,12 +84,12 @@ public:
 	CFunction(const int n);
 	virtual ~CFunction(); ///< The destructor.
 // operators
-	/// \cond NEWandDELoperators
-	void* operator new(size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	void* operator new[](size_t iSize) throw(CMemoryException);
-	void operator delete[](void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	void* operator new[](size_t iSize) throw(CMemoryException);
+//	void operator delete[](void* pPtr) throw();
+//	/// \endcond
 
 	/**
 	 * The operator reassigns the dependent variable.

@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Class Term &#8212; mipcl-py 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Class LinSum" href="linsum.html" />
+    <link rel="prev" title="Class Var" href="var.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="class-term">
+<h1>Class Term<a class="headerlink" href="#class-term" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mipcl_py.mipshell.mipshell.Term">
+<em class="property">class </em><code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">Term</code><span class="sig-paren">(</span><em>coeff</em>, <em>var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">Term</span></code> objects represent linear terms.</p>
+<p>A <em>linear term</em>, <code class="docutils literal"><span class="pre">a</span> <span class="pre">*</span> <span class="pre">var</span></code>, is the product of a constant <code class="docutils literal"><span class="pre">a</span></code> and
+a variable <code class="docutils literal"><span class="pre">var</span></code>, which is an object of class <code class="xref py py-class docutils literal"><span class="pre">Var</span></code>.
+In <strong>MIPCL-PY</strong> applications linear terms are always behind the scene.</p>
+<dl class="attribute">
+<dt id="Term.coeff">
+<code class="descname">coeff</code><a class="headerlink" href="#Term.coeff" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; numeric coefficient;</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Term.var">
+<code class="descname">var</code><a class="headerlink" href="#Term.var" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Var</em> &#8211; reference to a var object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>coeff</em>, <em>var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a newly created <code class="xref py py-class docutils literal"><span class="pre">Term</span></code> object to represent <code class="docutils literal"><span class="pre">coeff</span> <span class="pre">*</span> <span class="pre">var</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>coeff</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; numeric coefficient;</li>
+<li><strong>var</strong> (<a class="reference internal" href="var.html#mipcl_py.mipshell.mipshell.Var" title="mipcl_py.mipshell.mipshell.Var"><em>Var</em></a>) &#8211; reference to the created <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a string representation of the <code class="docutils literal"><span class="pre">self</span></code> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string representation of the <code class="docutils literal"><span class="pre">self</span></code> object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__neg__">
+<code class="descname">__neg__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__neg__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__neg__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the sign of the <code class="docutils literal"><span class="pre">self.coeff</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">reference to <code class="docutils literal"><span class="pre">self</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mipcl_py.mipshell.mipshell.Term" title="mipcl_py.mipshell.mipshell.Term">Term</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__pos__">
+<code class="descname">__pos__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__pos__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__pos__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do nothing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">reference to <code class="docutils literal"><span class="pre">self</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mipcl_py.mipshell.mipshell.Term" title="mipcl_py.mipshell.mipshell.Term">Term</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__rmul__">
+<code class="descname">__rmul__</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__rmul__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__rmul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplier <code class="docutils literal"><span class="pre">self.coeff</span></code> by <code class="docutils literal"><span class="pre">a</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; multiplier.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">reference to <code class="docutils literal"><span class="pre">self</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mipcl_py.mipshell.mipshell.Term" title="mipcl_py.mipshell.mipshell.Term">Term</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>lsum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the sum of an <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number with  the <code class="docutils literal"><span class="pre">self</span></code> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lsum</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">linear sum <code class="docutils literal"><span class="pre">lsum</span> <span class="pre">+</span> <span class="pre">self</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum">LinSum</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__radd__">
+<code class="descname">__radd__</code><span class="sig-paren">(</span><em>lsum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__radd__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__radd__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the sum of the <code class="docutils literal"><span class="pre">self</span></code> object with an <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lsum</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">linear sum <code class="docutils literal"><span class="pre">self</span> <span class="pre">+</span> <span class="pre">lsum</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum">LinSum</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__sub__">
+<code class="descname">__sub__</code><span class="sig-paren">(</span><em>lsum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__sub__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__sub__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the difference of the <code class="docutils literal"><span class="pre">self</span></code> object and <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lsum</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">linear sum <code class="docutils literal"><span class="pre">self</span> <span class="pre">-</span> <span class="pre">lsum</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum">LinSum</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__rsub__">
+<code class="descname">__rsub__</code><span class="sig-paren">(</span><em>lsum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__rsub__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__rsub__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the difference of an <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number and the <code class="docutils literal"><span class="pre">self</span></code> linear term.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lsum</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">linear sum <code class="docutils literal"><span class="pre">lsum</span> <span class="pre">-</span> <span class="pre">self</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum">LinSum</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__le__">
+<code class="descname">__le__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__le__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process the inequality <code class="docutils literal"><span class="pre">self</span> <span class="pre">&lt;=</span> <span class="pre">rhs</span></code>.</p>
+<p>If <code class="docutils literal"><span class="pre">rhs</span></code> is a number, the <em>upper</em> bound of the <code class="docutils literal"><span class="pre">self</span></code> variable is set to <code class="docutils literal"><span class="pre">rhs</span> <span class="pre">/</span> <span class="pre">self.coeff</span></code>;
+otherwise, a <code class="xref py py-class docutils literal"><span class="pre">Ctr</span></code> object is created that represents the inequality <code class="docutils literal"><span class="pre">self</span> <span class="pre">&lt;=</span> <span class="pre">rhs</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rhs</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">constraint <code class="docutils literal"><span class="pre">self</span> <span class="pre">&lt;=</span> <span class="pre">rhs</span></code> if <code class="docutils literal"><span class="pre">rhs</span></code> is not a number,
+or nothing, otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ctr.html#mipcl_py.mipshell.mipshell.Ctr" title="mipcl_py.mipshell.mipshell.Ctr">Ctr</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__ge__">
+<code class="descname">__ge__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__ge__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process the inequality <code class="docutils literal"><span class="pre">self</span> <span class="pre">&gt;=</span> <span class="pre">lhs</span></code>.</p>
+<p>If <code class="docutils literal"><span class="pre">lhs</span></code> is a number, the <em>lower</em> bound of the <code class="docutils literal"><span class="pre">self</span></code> variable is set to <code class="docutils literal"><span class="pre">lhs</span> <span class="pre">/</span> <span class="pre">self.coeff</span></code>;
+otherwise, a <code class="xref py py-class docutils literal"><span class="pre">Ctr</span></code> object is created that represents the inequality <code class="docutils literal"><span class="pre">self</span> <span class="pre">&gt;=</span> <span class="pre">lhs</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lhs</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">constraint <code class="docutils literal"><span class="pre">self</span> <span class="pre">&gt;=</span> <span class="pre">lhs</span></code> if <code class="docutils literal"><span class="pre">lhs</span></code> is not a number,
+or nothing, otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ctr.html#mipcl_py.mipshell.mipshell.Ctr" title="mipcl_py.mipshell.mipshell.Ctr">Ctr</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Term.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Term.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Term.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process the equality <code class="docutils literal"><span class="pre">self</span> <span class="pre">==</span> <span class="pre">rhs</span></code>.</p>
+<p>If <code class="docutils literal"><span class="pre">rhs</span></code> is a number, both <em>lower</em> and <em>upper</em> bounds of the <code class="docutils literal"><span class="pre">self</span></code> variable are set to <code class="docutils literal"><span class="pre">rhs</span> <span class="pre">/</span> <span class="pre">self.coeff</span></code>;
+otherwise, a <code class="xref py py-class docutils literal"><span class="pre">Ctr</span></code> object is created that represents the inequality <code class="docutils literal"><span class="pre">self</span> <span class="pre">==</span> <span class="pre">rhs</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rhs</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Term</span></code>, <code class="xref py py-class docutils literal"><span class="pre">Var</span></code> object, or a number.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">constraint <code class="docutils literal"><span class="pre">self</span> <span class="pre">==</span> <span class="pre">rhs</span></code> if <code class="docutils literal"><span class="pre">rhs</span></code> is not a number,
+or nothing, otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ctr.html#mipcl_py.mipshell.mipshell.Ctr" title="mipcl_py.mipshell.mipshell.Ctr">Ctr</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/MIPCLlogo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is MIPCL-PY</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="mipshell.html">Module mipshell</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="shglobals.html">Mipshell global membetrs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="var.html">Class Var</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Class Term</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linsum.html">Class LinSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctr.html">Class Ctr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function.html">Class Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="problem.html">Class Problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mipcl.html">Module mipcl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">List of example models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Example of usage</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Nicolai N. Pisaruk.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

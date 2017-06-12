@@ -49,33 +49,33 @@ CDvar::~CDvar()
 		delete m_pSet;
 }
 
-/// \cond NEWandDELoperators
-void* CDvar::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CDVar::operator new");
-	}
-	return p;
-}
-
-void CDvar::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-void* CDvar::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CDVar::operator new[]");
-	}
-	return p;
-}
-
-void CDvar::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CDvar::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CDVar::operator new");
+//	}
+//	return p;
+//}
+//
+//void CDvar::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//void* CDvar::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CDVar::operator new[]");
+//	}
+//	return p;
+//}
+//
+//void CDvar::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 

@@ -1,0 +1,77 @@
+#line 1 "../sources/ufl.mod"
+int Cufl::model()
+#line 2 "../sources/ufl.mod"
+{
+#line 3 "../sources/ufl.mod"
+	int i,j, m=c.getSize(0), n=c.getSize(1); 
+#line 4 "../sources/ufl.mod"
+	VAR_VECTOR y(this,"y",BIN,m), x(this,"x",BIN,m,n);
+#line 5 "../sources/ufl.mod"
+	
+#line 6 "../sources/ufl.mod"
+	    #line 6
+getSum(0).reset();
+#line 6
+for (i=0; i < m; ++i) getSum(0)+=(f(i)*y(i));
+       #line 6
+getSum(1).reset();
+#line 6
+for (i=0; i < m; ++i)
+#line 6
+for (j=0; j < n; ++j) getSum(1)+=(c(i,j)*x(i,j));
+minimize(getSum(0)+getSum(1));
+#line 7 "../sources/ufl.mod"
+	
+#line 8 "../sources/ufl.mod"
+	    {
+#line 8
+getSum(2).reset();
+#line 8
+for (i=0; i < m; ++i) getSum(2)+=(y(i));
+ addCtr(getSum(2) <= q);
+}
+#line 9 "../sources/ufl.mod"
+	
+#line 10 "../sources/ufl.mod"
+	  for (j=0; j < n; ++j)
+#line 11 "../sources/ufl.mod"
+		    {
+#line 11
+getSum(3).reset();
+#line 11
+for (i=0; i < m; ++i) getSum(3)+=(x(i,j));
+ addCtr(getSum(3) == 1);
+}
+#line 12 "../sources/ufl.mod"
+
+#line 13 "../sources/ufl.mod"
+	  for (i=0; i < m; ++i)
+#line 14 "../sources/ufl.mod"
+		    {
+#line 14
+getSum(4).reset();
+#line 14
+for (j=0; j < n; ++j) getSum(4)+=(x(i,j));
+ addCtr(getSum(4) <= b(i)*y(i));
+}
+#line 15 "../sources/ufl.mod"
+
+#line 16 "../sources/ufl.mod"
+	     for (i=0; i < m; ++i)
+#line 16
+for (j=0; j < n; ++j)
+#line 17 "../sources/ufl.mod"
+		  addCtr(x(i,j) <= y(i));
+#line 18 "../sources/ufl.mod"
+
+#line 19 "../sources/ufl.mod"
+	optimize();
+#line 20 "../sources/ufl.mod"
+	printsol();
+#line 21 "../sources/ufl.mod"
+	return 0;
+#line 22 "../sources/ufl.mod"
+} // end of Cufl::model
+#line 23 "../sources/ufl.mod"
+
+#line 24 "../sources/ufl.mod"

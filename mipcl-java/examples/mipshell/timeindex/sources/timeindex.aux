@@ -1,0 +1,97 @@
+#line 1 "../sources/timeindex.mod"
+#define r(j) m_ipRelease[j]
+#line 2 "../sources/timeindex.mod"
+#define d(j) m_ipDead[j]
+#line 3 "../sources/timeindex.mod"
+#define p(i,j) m_ipProcTime[i+j*m]
+#line 4 "../sources/timeindex.mod"
+#define w(j) m_dpWeight[j]
+#line 5 "../sources/timeindex.mod"
+
+#line 6 "../sources/timeindex.mod"
+int Ctimeindex::model()
+#line 7 "../sources/timeindex.mod"
+{
+#line 8 "../sources/timeindex.mod"
+	int i,j,t,tau,m=m_iMachineNum,n=m_iJobNum, 
+#line 9 "../sources/timeindex.mod"
+		Rmin=std::numeric_limits<int>::max(), Dmax=0;
+#line 10 "../sources/timeindex.mod"
+	INDEX_SET I;
+#line 11 "../sources/timeindex.mod"
+	for (i=0; i < m; ++i) { 
+#line 12 "../sources/timeindex.mod"
+		for (j=0; j < n; ++j) {
+#line 13 "../sources/timeindex.mod"
+			for (t=r(j); t <= d(j)-p(i,j); ++t)
+#line 14 "../sources/timeindex.mod"
+				I.add(INDEX(i,j,t));
+#line 15 "../sources/timeindex.mod"
+			if (Rmin > r(j)) Rmin=r(j);
+#line 16 "../sources/timeindex.mod"
+			if  (Dmax < d(j)) Dmax=d(j);
+#line 17 "../sources/timeindex.mod"
+		}
+#line 18 "../sources/timeindex.mod"
+	}
+#line 19 "../sources/timeindex.mod"
+//	
+#line 20 "../sources/timeindex.mod"
+	VAR_ARRAY x(this,"x",BIN,I);
+#line 21 "../sources/timeindex.mod"
+	
+#line 22 "../sources/timeindex.mod"
+	         #line 22
+getSum(0).reset();
+#line 22
+for (i=0; i < m; ++i)
+#line 22
+for (j=0; j < n; ++j)
+#line 22
+for (t=r(j); t <= d(j)-p(i,j); ++t) getSum(0)+=(w(j)*x(i,j,t));
+maximize(getSum(0));
+#line 23 "../sources/timeindex.mod"
+	
+#line 24 "../sources/timeindex.mod"
+	  for (j=0; j < n; ++j)
+#line 25 "../sources/timeindex.mod"
+		       {
+#line 25
+getSum(1).reset();
+#line 25
+for (i=0; i < m; ++i)
+#line 25
+for (t=r(j); t <= d(j)-p(i,j); ++t) getSum(1)+=(x(i,j,t));
+ addCtr(getSum(1) <= 1);
+}
+#line 26 "../sources/timeindex.mod"
+	
+#line 27 "../sources/timeindex.mod"
+	   for (i=0; i < m; ++i)	
+#line 28 "../sources/timeindex.mod"
+		  for (t=Rmin; t <= Dmax; ++t)			
+#line 29 "../sources/timeindex.mod"
+			              {
+#line 29
+getSum(2).reset();
+#line 29
+for (j=0; j < n; ++j)
+#line 29
+for (tau=t-p(i,j); tau < t; ++tau)
+#line 29
+	if (tau >= r(j) && tau <= d(j)-p(i,j)) getSum(2)+=(x(i,j,tau));
+ addCtr(getSum(2) <= 1);
+}
+#line 30 "../sources/timeindex.mod"
+		
+#line 31 "../sources/timeindex.mod"
+	optimize();
+#line 32 "../sources/timeindex.mod"
+	printSol(x);
+#line 33 "../sources/timeindex.mod"
+	return 0;
+#line 34 "../sources/timeindex.mod"
+} // end of Ctimeindex::model()
+#line 35 "../sources/timeindex.mod"
+
+#line 36 "../sources/timeindex.mod"

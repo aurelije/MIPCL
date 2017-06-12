@@ -1,0 +1,119 @@
+#line 1 "../sources/multiplexer.mod"
+#define beta(t)	m_ipCardCost[t]
+#line 2 "../sources/multiplexer.mod"
+#define c(t) m_ipCardCap[t]
+#line 3 "../sources/multiplexer.mod"
+#define d (*m_paDemand)
+#line 4 "../sources/multiplexer.mod"
+
+#line 5 "../sources/multiplexer.mod"
+int Cmultiplexer::model()
+#line 6 "../sources/multiplexer.mod"
+{
+#line 7 "../sources/multiplexer.mod"
+	INDEX e, end[2];
+#line 8 "../sources/multiplexer.mod"
+	int i,r,t,
+#line 9 "../sources/multiplexer.mod"
+		n=m_iNodeNum, R=m_iRingNum, RC=m_iRingCap,
+#line 10 "../sources/multiplexer.mod"
+		alpha=m_iMultCost, S=m_iSlotNum, T=m_iCardNum;
+#line 11 "../sources/multiplexer.mod"
+	RANGE NODE(1,n), RING(1,R), TCARD(0,T-1);
+#line 12 "../sources/multiplexer.mod"
+	VAR_ARRAY x(this,"x",BIN+2,NODE,RING), y(this,"y",BIN,d,RING), z(this,"z",INT_GE,NODE,RING,TCARD);
+#line 13 "../sources/multiplexer.mod"
+
+#line 14 "../sources/multiplexer.mod"
+	        #line 14
+getSum(0).reset();
+#line 14
+for ((RING).initIt(); (RING).getNext(r);)
+#line 14
+for ((NODE).initIt(); (NODE).getNext(i);) getSum(0)+=(alpha*x(i,r));
+ 
+#line 15 "../sources/multiplexer.mod"
+	                   #line 15
+getSum(1).reset();
+#line 15
+for ((RING).initIt(); (RING).getNext(r);)
+#line 15
+for ((NODE).initIt(); (NODE).getNext(i);)
+#line 15
+for ((TCARD).initIt(); (TCARD).getNext(t);) getSum(1)+=(beta(t)*z(i,r,t));
+minimize(getSum(0)+getSum(1));
+#line 16 "../sources/multiplexer.mod"
+
+#line 17 "../sources/multiplexer.mod"
+	  for ((d).initIt(); (d).getNext(e);)
+#line 18 "../sources/multiplexer.mod"
+		    {
+#line 18
+getSum(2).reset();
+#line 18
+for ((RING).initIt(); (RING).getNext(r);) getSum(2)+=(y(e,r));
+ addCtr(getSum(2) == 1);
+}
+#line 19 "../sources/multiplexer.mod"
+	
+#line 20 "../sources/multiplexer.mod"
+	  for ((RING).initIt(); (RING).getNext(r);) {
+#line 21 "../sources/multiplexer.mod"
+		    {
+#line 21
+getSum(3).reset();
+#line 21
+for ((d).initIt(); (d).getNext(e);) getSum(3)+=(d(e)*y(e,r));
+ addCtr(getSum(3) <= RC);
+}
+#line 22 "../sources/multiplexer.mod"
+		  for ((NODE).initIt(); (NODE).getNext(i);) {
+#line 23 "../sources/multiplexer.mod"
+			       {
+#line 23
+getSum(4).reset();
+#line 23
+for ((d).initIt(); (d).getNext(e);)
+#line 23
+	if (i%e) getSum(4)+=(d(e)*y(e,r));
+    #line 23
+getSum(5).reset();
+#line 23
+for ((TCARD).initIt(); (TCARD).getNext(t);) getSum(5)+=(c(t)*z(i,r,t));
+addCtr(getSum(4) <= getSum(5));
+}
+#line 24 "../sources/multiplexer.mod"
+			    {
+#line 24
+getSum(6).reset();
+#line 24
+for ((TCARD).initIt(); (TCARD).getNext(t);) getSum(6)+=(z(i,r,t));
+ addCtr(getSum(6) <= S*x(i,r));
+}
+#line 25 "../sources/multiplexer.mod"
+		}
+#line 26 "../sources/multiplexer.mod"
+		  for ((d).initIt(); (d).getNext(e);) {
+#line 27 "../sources/multiplexer.mod"
+			e.split(2,end);
+#line 28 "../sources/multiplexer.mod"
+			  addCtr(y(e,r) <= x(end[0],r));
+#line 29 "../sources/multiplexer.mod"
+			  addCtr(y(e,r) <= x(end[1],r));
+#line 30 "../sources/multiplexer.mod"
+		}
+#line 31 "../sources/multiplexer.mod"
+	}
+#line 32 "../sources/multiplexer.mod"
+
+#line 33 "../sources/multiplexer.mod"
+	optimize();
+#line 34 "../sources/multiplexer.mod"
+	printsol();
+#line 35 "../sources/multiplexer.mod"
+	return 0;
+#line 36 "../sources/multiplexer.mod"
+} // end of Cmultiplexer::model
+#line 37 "../sources/multiplexer.mod"
+
+#line 38 "../sources/multiplexer.mod"

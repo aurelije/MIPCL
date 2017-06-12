@@ -277,15 +277,15 @@ public:
 	////////////////////
 // new and delete
 /////////////////////////
-	void* operator new(size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	void* operator new[](size_t iSize) throw(CMemoryException);
-	void operator delete[](void* pPtr) throw();
-
-	void* operator new(size_t , void* pPtr)
-		{return pPtr;}
-
-	void operator delete(void* pPtr, void*) {}
-	/// @endcond
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	void* operator new[](size_t iSize) throw(CMemoryException);
+//	void operator delete[](void* pPtr) throw();
+//
+//	void* operator new(size_t , void* pPtr)
+//		{return pPtr;}
+//
+//	void operator delete(void* pPtr, void*) {}
+//	/// @endcond
 };
 #endif // #ifndef __INDEX__H

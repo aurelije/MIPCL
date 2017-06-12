@@ -1,0 +1,80 @@
+{
+  "name": "project0",
+  "horizon": 36,
+    "renRes": [
+        {"name": "1", "quantity": 6},
+        {"name": "2", "quantity": 7},
+        {"name": "3", "quantity": 6}
+    ],
+  "nonRenRes": [{"nane": "1", "quantity": 3}],
+  "jobs": [
+     {
+       "name": "0",
+       "modes": [
+           {"duration": 3, "renRes": {0: 3, 1: 2, 2: 1}, "nonRenRes": null},
+           {"duration": 2, "renRes": {0: 3, 1: 2, 2: 4}, "nonRenRes": {0: 1}}
+       ],
+       "prec": null
+     },
+     {
+       "name": "1",
+       "modes": [{"duration": 5, "renRes": {0: 2, 1: 4, 2: 2}, "nonRenRes": null}],
+       "prec": null
+     },
+     {
+       "name": "2",
+       "modes": [{"duration": 6, "renRes": {0: 3, 1: 1, 2: 2}, "nonRenRes": null}],
+       "prec": [0]
+     },
+     {
+       "name": "3",
+       "modes": [{"duration": 2, "renRes": {0: 4, 1: 3, 2: 1}, "nonRenRes": null}],
+       "prec": [0]
+     },
+     {
+       "name": "4",
+       "modes": [{"duration": 3, "renRes": {0: 2, 2: 3}, "nonRenRes": null}],
+       "prec": [3]
+     },
+     {
+       "name": "5",
+       "modes": [{"duration": 3, "renRes": {0: 1, 1: 1, 2: 1}, "nonRenRes": null}],
+       "prec": [3]
+     },
+     {
+       "name": "6",
+       "modes": [
+          {"duration": 4, "renRes": {0: 3, 1: 1, 2: 1}, "nonRenRes": null},
+          {"duration": 3, "renRes": {0: 3, 1: 2, 2: 1}, "nonRenRes": {0: 1}}
+       ],
+       "prec": [1]
+     },
+     {
+       "name": "7",
+       "modes": [
+		{"duration": 4, "renRes": {0: 3, 1: 2, 2: 3}, "nonRenRes": null},
+		{"duration": 2, "renRes": {0: 3, 1: 3, 2: 3}, "nonRenRes": {0: 1}}
+	],
+       "prec": [2]
+     },
+     {
+       "name": "8",
+       "modes": [{"duration": 2, "renRes": {0: 4, 1: 1}, "nonRenRes": null}],
+       "prec": [4,7]
+     },
+     {
+       "name": "9",
+       "modes": [
+		{"duration": 5, "renRes": {0: 2, 1: 2, 2: 2}, "nonRenRes": null},
+		{"duration": 3, "renRes": {0: 3, 1: 2, 2: 3}, "nonRenRes": {0: 1}}
+	],
+       "prec": [5,6]
+     },
+     {
+       "name": "10",
+       "modes": [{"duration": 3, "renRes": {0: 5, 1: 4, 2: 2}, "nonRenRes": null}],
+       "prec": [8]
+     }
+  ]
+}
+

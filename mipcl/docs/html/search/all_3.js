@@ -41,7 +41,6 @@ var searchData=
   ['ctr_5flb_5funbounded',['CTR_LB_UNBOUNDED',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faae91595a30db12719b37362eae12229fb',1,'CMIP']]],
   ['ctr_5fleft',['CTR_LEFT',['../classCLP.html#ac886bb1c9454ba327bc52b46b72f7ac5a4ee63b4bd702d2ace98cbed25c6cbad3',1,'CLP']]],
   ['ctr_5flocal',['CTR_LOCAL',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faa35908d1b46af1db5beac2afda8ab0443',1,'CMIP']]],
-  ['ctr_5flower_5fbound_5fchanged',['CTR_LOWER_BOUND_CHANGED',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faa3be60e7816587fe97c32263367e1d2f4',1,'CMIP']]],
   ['ctr_5fmir',['CTR_MIR',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faa6d9c88d15e4ad3471db9ba20646ff6b1',1,'CMIP']]],
   ['ctr_5fmx_5f01',['CTR_MX_01',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faa5de7f272abe121f28889c80c47899f49',1,'CMIP']]],
   ['ctr_5fmx_5fint',['CTR_MX_INT',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faa7d426fae269a3e39a06f0850edccaac6',1,'CMIP']]],
@@ -56,7 +55,6 @@ var searchData=
   ['ctr_5fsos1',['CTR_SOS1',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faad3fe8c4fc08dc8e88dba26b9d3616301',1,'CMIP']]],
   ['ctr_5fsos2',['CTR_SOS2',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faac75afc03827aa23fd4de17c4709ebb2d',1,'CMIP']]],
   ['ctr_5fub_5funbounded',['CTR_UB_UNBOUNDED',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faaccbede0c0280c6776777b5703e3f63f2',1,'CMIP']]],
-  ['ctr_5fupper_5fbound_5fchanged',['CTR_UPPER_BOUND_CHANGED',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faae6098fdcd0a74f9b9bc4dbc3b5581718',1,'CMIP']]],
   ['ctr_5fvar',['CTR_VAR',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faa7c534f91d259b798737681c8ffcce176',1,'CMIP']]],
   ['ctr_5fwith_5fdep_5fbins',['CTR_WITH_DEP_BINS',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faaa19ce6f174c3e604c53691da1cf96306',1,'CMIP']]],
   ['ctr_5fwith_5funique',['CTR_WITH_UNIQUE',['../classCMIP.html#af376f7257f718501639a17f9ac0e44faa119b93713f932e4e840f9013ad54a917',1,'CMIP']]],
@@ -66,5 +64,6 @@ var searchData=
   ['cuts_5fto_5fpool',['CUTS_TO_POOL',['../classCMIP.html#a811eee6c5be7e08f960b81b915903f51a2f7a5fe95afea24d320bd88f5de6acaa',1,'CMIP']]],
   ['cutstatistics',['cutStatistics',['../classCMIP.html#ad55ab22a22515545b2f13996904e0577',1,'CMIP']]],
   ['cutting_2dstock_20problem',['Cutting-stock problem',['../cutStock.html',1,'']]],
+  ['checking_20programming_20errors',['Checking programming errors',['../MIPCLerrorChecks.html',1,'']]],
   ['connected_20subgraphs',['Connected subgraphs',['../subgraph.html',1,'']]]
 ];

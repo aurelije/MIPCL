@@ -384,35 +384,35 @@ public:
 	 */
 	template<typename T> friend std::ostream& operator<<(std::ostream& out, CSet<T>& s);
 
-	/// \cond NEWandDELoperators
-	/**
-	 * The new operator allocates a memory block of a given size.
-	 * \param[in] iSize size of memory block(in bytes).
-	 * \return pointer to allocated memory block.
-	 * \throws CMemoryException.
-	 */
-	void* operator new(size_t iSize) throw(CMemoryException);
-
-	/**
-	 * The delete operator frees a memory block previously allocated by the new operator.
-	 * \param[pPtr] address of memory block to be freed.
-	 */
-	void operator delete(void* pPtr) throw();
-
-	/**
-	 * The new operator allocates a memory block for an array of some objects.
-	 * \param[in] iSize size of memory block(in bytes).
-	 * \return pointer to allocated memory block.
-	 * \throws CMemoryException.
-	 */
-	void* operator new[](size_t iSize) throw(CMemoryException);
-
-	/**
-	 * The delete operator frees a memory block previously allocated for an array of some objects by the new operator.
-	 * \param[pPtr] address of memory block to be freed.
-	 */
-	void operator delete[](void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	/**
+//	 * The new operator allocates a memory block of a given size.
+//	 * \param[in] iSize size of memory block(in bytes).
+//	 * \return pointer to allocated memory block.
+//	 * \throws CMemoryException.
+//	 */
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//
+//	/**
+//	 * The delete operator frees a memory block previously allocated by the new operator.
+//	 * \param[pPtr] address of memory block to be freed.
+//	 */
+//	void operator delete(void* pPtr) throw();
+//
+//	/**
+//	 * The new operator allocates a memory block for an array of some objects.
+//	 * \param[in] iSize size of memory block(in bytes).
+//	 * \return pointer to allocated memory block.
+//	 * \throws CMemoryException.
+//	 */
+//	void* operator new[](size_t iSize) throw(CMemoryException);
+//
+//	/**
+//	 * The delete operator frees a memory block previously allocated for an array of some objects by the new operator.
+//	 * \param[pPtr] address of memory block to be freed.
+//	 */
+//	void operator delete[](void* pPtr) throw();
+//	/// \endcond
 };
 
 #endif // #ifndef __SET__H

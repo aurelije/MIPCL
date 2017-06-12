@@ -572,10 +572,10 @@ public:
 	 */
 	MIPSHELL_API friend CCtr& operator==(double b, CLinSum& lsum);
 
-	/// \cond NEWandDELoperators
-	void* operator new(size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	/// \endcond
 
 // operations
 	/**
@@ -713,12 +713,12 @@ public:
 	 */
 	MIPSHELL_API friend CCtr& operator==(double b, CCtr& ctr);
 
-	/// \cond NEWandDELoperators
-	void* operator new(std::size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	void* operator new[](std::size_t iSize) throw(CMemoryException);
-	void operator delete[](void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(std::size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	void* operator new[](std::size_t iSize) throw(CMemoryException);
+//	void operator delete[](void* pPtr) throw();
+//	/// \endcond
 	
 // operations
 	const char* getName() const

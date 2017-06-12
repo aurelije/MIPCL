@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mipshell global membetrs &#8212; mipcl-py 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Class Var" href="var.html" />
+    <link rel="prev" title="Module mipshell" href="mipshell.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-mipcl_py.mipshell.mipshell">
+<span id="mipshell-global-membetrs"></span><h1>Mipshell global membetrs<a class="headerlink" href="#module-mipcl_py.mipshell.mipshell" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.REAL">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">REAL</code><em class="property"> = 0</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.REAL" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The type of real variables that may take any real value.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.INT">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">INT</code><em class="property"> = 4096</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.INT" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The type of integer variables that may take any integer value.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.BIN">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">BIN</code><em class="property"> = 8192</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.BIN" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The type binary variables that takes only two values, 0 or 1.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.PRIO_MIN">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">PRIO_MIN</code><em class="property"> = -50</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.PRIO_MIN" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Minimal priority of a variable.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.PRIO_MAX">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">PRIO_MAX</code><em class="property"> = 50</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.PRIO_MAX" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Maximal priority of a variable.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.INF">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">INF</code><em class="property"> = 1e+20</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.INF" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; &#8220;Infinity&#8221; value.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.VAR_INF">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">VAR_INF</code><em class="property"> = 1000000000000.0</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.VAR_INF" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; &#8220;Infinity&#8221; value for variables.</p>
+<p>If a variable is unbounded from above, its upper bound is set to <code class="docutils literal"><span class="pre">VAR_INF</span></code>.</p>
+<p>Similarly, If a variable is unbounded from below, its lower bound is set to <code class="docutils literal"><span class="pre">-VAR_INF</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mipcl_py.mipshell.mipshell.ZERO">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">ZERO</code><em class="property"> = 1e-12</em><a class="headerlink" href="#mipcl_py.mipshell.mipshell.ZERO" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Value of &#8220;zero&#8221;, i.e., cooefficients that less than <code class="docutils literal"><span class="pre">ZERO</span></code> are treated as zeroes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mipcl_py.mipshell.mipshell.getCurProblem">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">getCurProblem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#getCurProblem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.getCurProblem" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">currently active problem.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="problem.html#mipcl_py.mipshell.mipshell.Problem" title="mipcl_py.mipshell.mipshell.Problem">Problem</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mipcl_py.mipshell.mipshell.VarVector">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">VarVector</code><span class="sig-paren">(</span><em>sizes</em>, <em>name</em>, <em>type=0</em>, <em>lb=0.0</em>, <em>ub=1000000000000.0</em>, <em>priority=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#VarVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.VarVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a vector (list) of variables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sizes</strong> (<em>list</em><em> or </em><em>tuple of int</em>) &#8211; </li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; vector name that is used when the values of variables are printed;</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; type of vector variables (<a class="reference internal" href="#mipcl_py.mipshell.mipshell.REAL" title="mipcl_py.mipshell.mipshell.REAL"><code class="xref py py-data docutils literal"><span class="pre">REAL</span></code></a>, <a class="reference internal" href="#mipcl_py.mipshell.mipshell.INT" title="mipcl_py.mipshell.mipshell.INT"><code class="xref py py-data docutils literal"><span class="pre">INT</span></code></a>, or <a class="reference internal" href="#mipcl_py.mipshell.mipshell.BIN" title="mipcl_py.mipshell.mipshell.BIN"><code class="xref py py-data docutils literal"><span class="pre">BIN</span></code></a>),
+all vector variables are of the same type;</li>
+<li><strong>lb</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; common lower bound of all vector variables;</li>
+<li><strong>ub</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; common upper bound of all vector variables;</li>
+<li><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; common priority (<code class="docutils literal"><span class="pre">in</span> <span class="pre">range(-50,51)</span></code>) of all vector variables.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">reference to the created list of variables.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#mipcl_py.mipshell.mipshell.VarVector" title="mipcl_py.mipshell.mipshell.VarVector">VarVector</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Warning:</th><td class="field-body"><p class="first last">Maximal dimension of a vector is 4!</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example of usage</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">VarVector</span><span class="p">([</span><span class="n">n</span><span class="p">],</span><span class="s2">&quot;y&quot;</span><span class="p">)</span> <span class="c1"># 1-dimensional vector of size n of non-negative real variables</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">VarVector</span><span class="p">([</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">],</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="n">BIN</span><span class="p">,</span><span class="n">priority</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 2-dimensional matrix of size (m x n) of binary variables</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mipcl_py.mipshell.mipshell.VarArray">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">VarArray</code><span class="sig-paren">(</span><em>indices</em>, <em>name</em>, <em>type=0</em>, <em>lb=0.0</em>, <em>ub=1000000000000.0</em>, <em>priority=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#VarArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.VarArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an array (dictionary) of variables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indices</strong> (<em>list of any printable objects</em>) &#8211; list of keys;</li>
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; vector name that is used when the values of variables are printed;</li>
+<li><strong>type</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; type of vector variables (<a class="reference internal" href="#mipcl_py.mipshell.mipshell.REAL" title="mipcl_py.mipshell.mipshell.REAL"><code class="xref py py-data docutils literal"><span class="pre">REAL</span></code></a>, <a class="reference internal" href="#mipcl_py.mipshell.mipshell.INT" title="mipcl_py.mipshell.mipshell.INT"><code class="xref py py-data docutils literal"><span class="pre">INT</span></code></a>, or <a class="reference internal" href="#mipcl_py.mipshell.mipshell.BIN" title="mipcl_py.mipshell.mipshell.BIN"><code class="xref py py-data docutils literal"><span class="pre">BIN</span></code></a>), all vector variables are of the same type;</li>
+<li><strong>lb</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; common lower bound of all vector variables;</li>
+<li><strong>ub</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; common upper bound of all vector variables;</li>
+<li><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; common priority (<code class="docutils literal"><span class="pre">in</span> <span class="pre">range(-50,51)</span></code>) of all vector variables.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">reference to the created array of variables.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mipcl_py.mipshell.mipshell.VarArray" title="mipcl_py.mipshell.mipshell.VarArray">VarArray</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example of usage</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="s1">&#39;Minsk&#39;</span><span class="p">,</span><span class="s1">&#39;Bonn&#39;</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">VarArray</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="n">BIN</span><span class="p">,</span><span class="n">priority</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># array of binary variables</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="mipcl_py.mipshell.mipshell.sum_">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">sum_</code><span class="sig-paren">(</span><em>terms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#sum_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.sum_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main tool for writing linear expressions.</p>
+<p>The function is a substitution for the Python <code class="docutils literal"><span class="pre">sum</span></code> operator,
+which returns a numeric value. That is why we cannot use <code class="docutils literal"><span class="pre">sum</span></code>
+for writing linear expressions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">linear sum.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum">LinSum</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mipcl_py.mipshell.mipshell.function">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">function</code><span class="sig-paren">(</span><em>x</em>, <em>points</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alternative way for creating a <code class="docutils literal"><span class="pre">~mipshell.Function</span></code> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference internal" href="var.html#mipcl_py.mipshell.mipshell.Var" title="mipcl_py.mipshell.mipshell.Var"><em>Var</em></a>) &#8211; function argument;</li>
+<li><strong>points</strong> (<em>list of pairs</em><em> (</em><em>tuples</em><em>) </em><em>of float</em><em> or </em><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; function break points.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">piece-wise linear function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="function.html#mipcl_py.mipshell.mipshell.Function" title="mipcl_py.mipshell.mipshell.Function">Function</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mipcl_py.mipshell.mipshell.minimize">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">minimize</code><span class="sig-paren">(</span><em>lsum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#minimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call <code class="docutils literal"><span class="pre">minimize</span></code> for the currently active problem.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lsum</strong> (<a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum"><em>LinSum</em></a>) &#8211; linear expression to be set as the objective function.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mipcl_py.mipshell.mipshell.maximize">
+<code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">maximize</code><span class="sig-paren">(</span><em>lsum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.maximize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call <code class="docutils literal"><span class="pre">maximize</span></code> for the currently active problem.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lsum</strong> (<a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum"><em>LinSum</em></a>) &#8211; linear expression to be set as the objective function.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/MIPCLlogo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is MIPCL-PY</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="mipshell.html">Module mipshell</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Mipshell global membetrs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="var.html">Class Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="term.html">Class Term</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linsum.html">Class LinSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctr.html">Class Ctr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function.html">Class Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="problem.html">Class Problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mipcl.html">Module mipcl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">List of example models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Example of usage</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Nicolai N. Pisaruk.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

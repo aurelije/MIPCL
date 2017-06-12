@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+	<project name="Scheduling" basedir="." default="compile">
+	<property environment="env"/>
+	<property name="mipcl-java.dir" value="${env.MIPCLDIR}/mipcl-java"/>
+	<property name="gson.dir" value="${env.MIPCLDIR}/mipcl-java/examples"/>
+	<property name="src.dir" value="src/projectScheduling"/>
+	<property name="target.dir" value="."/>
+	<property name="bin.dir" value="bin"/>
+	<path id="jar-path">
+		<pathelement location="${mipcl-java.dir}/mipcl.jar"/>
+		<pathelement location="${gson.dir}/gson.jar"/>
+	</path>
+
+	<target name="compile" description="Compile java files in src/projectScheduling">
+		<mkdir dir="${bin.dir}"/>
+		<javac includeantruntime="false" destdir="${bin.dir}" source="1.8" target="1.8">
+			<src path="${src.dir}"/>
+			<classpath refid="jar-path"/>
+		</javac>
+	</target>
+
+	<manifestclasspath property="manifest.classpath" jarfile="${target.dir}/projectScheduling.jar">
+		<classpath refid="jar-path"/>
+	</manifestclasspath>
+	<target name="jar" depends="compile" description="Compile java files in src/projectScheduling and create projectScheduling.jar">
+		<jar destfile="${target.dir}/projectScheduling.jar" basedir="${bin.dir}">
+			<manifest>
+				<attribute name="Specification-Title" value="Project Scheduling application"/>
+				<attribute name="Specification-Version" value="1.0"/>
+				<attribute name="Main-Class" value="projectScheduling.testProjectSchedule"/>
+				<attribute name="Class-Path" value="${manifest.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run" description="Run project scheduling application">
+		<java fork="true" failonerror="yes" jar="${target.dir}/projectScheduling.jar">
+			<classpath refid="jar-path"/>
+			<arg value="${filename}"/>
+		</java>
+	</target>
+
+	<target name="clean" description="Clean output directories">
+		<delete>
+			<fileset dir="${bin.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+	</target>
+</project>

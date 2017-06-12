@@ -1,0 +1,75 @@
+#line 1 "../sources/flowshop.mod"
+int Cflowshop::model()
+#line 2 "../sources/flowshop.mod"
+{
+#line 3 "../sources/flowshop.mod"
+	int i,j,k, m,n, T=0;
+#line 4 "../sources/flowshop.mod"
+	n=p.getSize(0); m=p.getSize(1); T=p.Sum();
+#line 5 "../sources/flowshop.mod"
+
+#line 6 "../sources/flowshop.mod"
+	VAR_VECTOR start(this,"start",INT_GE,n,m);
+#line 7 "../sources/flowshop.mod"
+	VAR_VECTOR delta(this,"delta",BIN,n,n,m);
+#line 8 "../sources/flowshop.mod"
+	VAR tau(this,"tau",INT_GE);
+#line 9 "../sources/flowshop.mod"
+	
+#line 10 "../sources/flowshop.mod"
+	minimize(tau);
+#line 11 "../sources/flowshop.mod"
+	      for (k=1; k < m; ++k)
+#line 11
+for (i=0; i < n; ++i)
+#line 12 "../sources/flowshop.mod"
+		    addCtr(start(i,k-1)+p(i,k-1) <= start(i,k));
+#line 13 "../sources/flowshop.mod"
+	           for (k=0; k < m; ++k)
+#line 13
+for (i=0; i < n; ++i)
+#line 13
+for (j=0; j < n; ++j)
+#line 13
+	if (j != i) {
+#line 14 "../sources/flowshop.mod"
+		      addCtr(start(i,k)+p(i,k) <= start(j,k)+T*delta(j,i,k));
+#line 15 "../sources/flowshop.mod"
+		setpriority(delta(i,j,k),m-k);
+#line 16 "../sources/flowshop.mod"
+	}
+#line 17 "../sources/flowshop.mod"
+	        for (k=0; k < m; ++k)
+#line 17
+for (i=0; i < n; ++i)
+#line 17
+for (j=i+1; j < n; ++j)
+#line 18 "../sources/flowshop.mod"
+		    addCtr(delta(i,j,k)+delta(j,i,k) == 1);
+#line 19 "../sources/flowshop.mod"
+	k=m-1;
+#line 20 "../sources/flowshop.mod"
+	  for (i=0; i < n; ++i)
+#line 21 "../sources/flowshop.mod"
+		    addCtr(start(i,k)+p(i,k) <= tau);
+#line 22 "../sources/flowshop.mod"
+	        for (i=0; i < n; ++i)
+#line 22
+for (j=0; j < n; ++j)
+#line 22
+	if (i != j)
+#line 23 "../sources/flowshop.mod"
+		  addCtr(delta(i,j,k-1) == delta(i,j,k));
+#line 24 "../sources/flowshop.mod"
+
+#line 25 "../sources/flowshop.mod"
+	optimize();
+#line 26 "../sources/flowshop.mod"
+	printsol();
+#line 27 "../sources/flowshop.mod"
+	return 0;
+#line 28 "../sources/flowshop.mod"
+} // end of Cflowshop::model
+#line 29 "../sources/flowshop.mod"
+
+#line 30 "../sources/flowshop.mod"

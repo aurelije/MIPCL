@@ -299,34 +299,34 @@ MIPSHELL_API std::ostream& operator<<(std::ostream& out, const CIndex& ind)
 	return out;
 }
 
-/// \cond NEWandDELoperators
-////////////////////
-// new and delete
-void* CIndex::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CIndex::operator new");
-	}
-	return p;
-}
-
-void CIndex::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-void* CIndex::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CIndex::operator new[]");
-	}
-	return p;
-}
-
-void CIndex::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//////////////////////
+//// new and delete
+//void* CIndex::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CIndex::operator new");
+//	}
+//	return p;
+//}
+//
+//void CIndex::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//void* CIndex::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CIndex::operator new[]");
+//	}
+//	return p;
+//}
+//
+//void CIndex::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond

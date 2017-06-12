@@ -4,7 +4,7 @@ CFLAGS=-c -g -I$(HRD_MIPCL) $(ARC)
 INS=install
 #
 MIP_DIR=$(MIPCLDIR)
-LDFLAGS= -L$(MIP_DIR)/lib -lmipcl_dbg
+LDFLAGS= -L$(MIP_DIR)/lib -lmipcl
 CFLAGS+=-DMIP_API=
 TARGET=primer_dbg
 #

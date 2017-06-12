@@ -1,0 +1,1370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mipcl_py.mipshell.mipshell &#8212; mipcl-py 2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for mipcl_py.mipshell.mipshell</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">mipcl_py.mipshell</span> <span class="k">import</span> <span class="n">mipcl</span>
+
+<span class="sd">&quot;&quot;&quot;Python part of MIPCL-PY.&quot;&quot;&quot;</span>
+
+<span class="n">_license__</span> <span class="o">=</span> <span class="s2">&quot;GLPL&quot;</span>
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s1">&#39;reStructuredText&#39;</span>
+
+
+<span class="n">REAL</span>     <span class="o">=</span> <span class="mh">0x00000000</span>
+<span class="sd">&quot;&quot;&quot;int: The type of real variables that may take any real value.&quot;&quot;&quot;</span>
+
+<span class="n">INT</span>      <span class="o">=</span> <span class="mh">0x00001000</span>
+<span class="sd">&quot;&quot;&quot;int: The type of integer variables that may take any integer value.&quot;&quot;&quot;</span>
+
+<span class="n">BIN</span>      <span class="o">=</span> <span class="mh">0x00002000</span>
+<span class="sd">&quot;&quot;&quot;int: The type binary variables that takes only two values, 0 or 1.&quot;&quot;&quot;</span>
+
+<span class="n">PRIO_MIN</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span>
+<span class="sd">&quot;&quot;&quot;int: Minimal priority of a variable.&quot;&quot;&quot;</span>
+
+<span class="n">PRIO_MAX</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="sd">&quot;&quot;&quot;int: Maximal priority of a variable.&quot;&quot;&quot;</span>
+
+<span class="n">INF</span> <span class="o">=</span> <span class="mf">1.0e20</span>
+<span class="sd">&quot;&quot;&quot;float: \&quot;Infinity\&quot; value.&quot;&quot;&quot;</span>
+
+<span class="n">VAR_INF</span>  <span class="o">=</span> <span class="mf">1.0e+12</span>
+<span class="sd">&quot;&quot;&quot;float: \&quot;Infinity\&quot; value for variables.</span>
+
+<span class="sd">If a variable is unbounded from above, its upper bound is set to ``VAR_INF``.</span>
+
+<span class="sd">Similarly, If a variable is unbounded from below, its lower bound is set to ``-VAR_INF``.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">ZERO</span> <span class="o">=</span> <span class="mf">1.0e-12</span>
+<span class="sd">&quot;&quot;&quot;float: Value of \&quot;zero\&quot;, i.e., cooefficients that less than ``ZERO`` are treated as zeroes.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Var"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var">[docs]</a><span class="k">class</span> <span class="nc">Var</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;In MIPCL-PY models, objects of type ``Var`` represent variables.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): name, which is used when printing a solution;</span>
+<span class="sd">        lb (float): lower bound;</span>
+<span class="sd">        ub (float): upper bound;</span>
+<span class="sd">        val (float): value (it is computed only if a solution has been found);</span>
+<span class="sd">        hd (int): handle;</span>
+<span class="sd">        type (int): type.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Var.__init__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="n">REAL</span><span class="p">,</span><span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">ub</span><span class="o">=</span><span class="n">VAR_INF</span><span class="p">,</span><span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The constructor that creates a new variable, and adds that variable to a specified problem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): name, which is used when printing a solution;</span>
+<span class="sd">            type (int): type (:data:`REAL`, :data:`INT`, or :data:`BIN`) of variable being created;</span>
+<span class="sd">            lb (float): lower bound;</span>
+<span class="sd">            ub (float): upper bound;</span>
+<span class="sd">            priority (int): priority of variable.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">&amp;</span> <span class="n">BIN</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">=</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hd</span> <span class="o">=</span> <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__repr__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute a string representation of the ``self`` object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: string representation of the ``self`` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">&amp;</span> <span class="n">BIN</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot; in {0,1}&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ub</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">VAR_INF</span><span class="o">+</span><span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lb</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="s2">&quot;-inf&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">&lt;</span> <span class="n">VAR_INF</span><span class="o">-</span><span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ub</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="s2">&quot;inf&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">&amp;</span> <span class="n">INT</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="s2">&quot; &lt;= &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &lt;= &quot;</span> <span class="o">+</span> <span class="n">u</span> <span class="o">+</span> <span class="s2">&quot;: integer&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="s2">&quot; &lt;= &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &lt;= &quot;</span> <span class="o">+</span> <span class="n">u</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<span class="c1">######  Operators</span>
+<div class="viewcode-block" id="Var.__rmul__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__rmul__">[docs]</a>    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the product of the ``self`` variable and a constant. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    a (float): multiplier.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Term: linear term ``a * self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Term</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__add__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the sum of an :class:`~mipshell.LinSum` object and  the ``self`` variable. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: liner sum ``lsum + self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">lsum</span> <span class="o">+</span> <span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">)])</span> <span class="o">+</span> <span class="n">lsum</span>
+        <span class="k">return</span> <span class="n">ls</span></div>
+
+<div class="viewcode-block" id="Var.__radd__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__radd__">[docs]</a>    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the sum of the ``self`` variable and an :class:`~mipshell.LinSum` object. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``self + lsum``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">)])</span> <span class="o">+</span> <span class="n">lsum</span></div>
+
+<div class="viewcode-block" id="Var.__sub__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__sub__">[docs]</a>    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the difference of the ``self`` variable and an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``self - lsum``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">lsum</span><span class="o">.</span><span class="fm">__rsub__</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">)])</span> <span class="o">-</span> <span class="n">lsum</span>
+        <span class="k">return</span> <span class="n">ls</span></div>
+
+<div class="viewcode-block" id="Var.__rsub__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__rsub__">[docs]</a>    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the difference of an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number and the ``self`` variable. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``lsum - self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">Term</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">)])</span> <span class="o">+</span> <span class="n">lsum</span>
+        <span class="k">return</span> <span class="n">ls</span></div>
+
+<div class="viewcode-block" id="Var.__neg__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__neg__">[docs]</a>    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Negate the ``self`` variable. </span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Term: linear term ``-1.0*self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Term</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__pos__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__pos__">[docs]</a>    <span class="k">def</span> <span class="nf">__pos__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert the ``self`` variable into a :class:`~mipshell.Term` object. </span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Term: linear term ``1.0*self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Var.__le__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__le__">[docs]</a>    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the inequality ``self &lt;= rhs``.</span>
+
+<span class="sd">        If ``rhs`` is a number, the *upper* bound of the ``self`` variable is set to ``rhs``;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self &lt;= rhs``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self &lt;= rhs`` if ``rhs`` is not a number,</span>
+<span class="sd">            or nothing, otherwise. </span>
+
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="o">-</span><span class="n">INF</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># rhs is a number</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">&gt;</span> <span class="n">rhs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">=</span> <span class="n">rhs</span>
+        <span class="k">return</span> <span class="n">ctr</span></div>
+
+<div class="viewcode-block" id="Var.__ge__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__ge__">[docs]</a>    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the inequality ``self &gt;= lhs``.</span>
+
+<span class="sd">        If ``lhs`` is a number, the *lower* bound of the ``self`` variable is set to ``lhs``;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self &gt;= lhs``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self &gt;= lhs`` if ``lhs`` is not a number, or nothing, otherwise. </span>
+
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">INF</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">&lt;</span> <span class="n">rhs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">=</span> <span class="n">rhs</span>
+        <span class="k">return</span> <span class="n">ctr</span></div>
+
+<div class="viewcode-block" id="Var.__eq__"><a class="viewcode-back" href="../../../var.html#mipcl_py.mipshell.mipshell.Var.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the equality ``self == rhs``.</span>
+
+<span class="sd">        If ``rhs`` is a number, both *lower* and *upper* bounds of the ``self`` variable are set to ``rhs``;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self == rhs``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self == rhs`` if ``lhs`` is not a number, or nothing, otherwise. </span>
+
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Function</span><span class="p">):</span>
+            <span class="n">rhs</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">return</span> <span class="n">rhs</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">=</span> <span class="n">rhs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">=</span> <span class="n">rhs</span>
+        <span class="k">return</span> <span class="n">ctr</span></div></div>
+
+<span class="c1">#######################################################</span>
+<div class="viewcode-block" id="Term"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term">[docs]</a><span class="k">class</span> <span class="nc">Term</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;``Term`` objects represent linear terms.</span>
+
+<span class="sd">    A *linear term*, ``a * var``, is the product of a constant ``a`` and</span>
+<span class="sd">    a variable ``var``, which is an object of class :class:`~mipshell.Var`.</span>
+<span class="sd">    In **MIPCL-PY** applications linear terms are always behind the scene.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        coeff (float): numeric coefficient;</span>
+<span class="sd">        var (Var): reference to a var object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Term.__init__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">coeff</span><span class="p">,</span><span class="n">var</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a newly created :class:`~mipshell.Term` object to represent ``coeff * var``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           coeff (float): numeric coefficient;</span>
+<span class="sd">           var (Var): reference to the created :class:`~mipshell.Var` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="o">=</span><span class="n">coeff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">=</span><span class="n">var</span></div>
+
+<div class="viewcode-block" id="Term.__repr__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute a string representation of the ``self`` object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: string representation of the ``self`` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1">*</span><span class="si">{!r}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="Term.__neg__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__neg__">[docs]</a>    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change the sign of the ``self.coeff``. </span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Term: reference to ``self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Term.__pos__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__pos__">[docs]</a>    <span class="k">def</span> <span class="nf">__pos__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Do nothing. </span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Term: reference to ``self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Term.__rmul__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__rmul__">[docs]</a>    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Multiplier ``self.coeff`` by ``a``. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    a (float): multiplier.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Term: reference to ``self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span> <span class="o">*=</span> <span class="n">a</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Term.__add__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the sum of an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number with  the ``self`` object. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``lsum + self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">lsum</span><span class="p">)</span> <span class="ow">is</span> <span class="n">LinSum</span><span class="p">:</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">lsum</span> <span class="o">+</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="bp">self</span><span class="p">])</span> <span class="o">+</span> <span class="n">lsum</span>
+        <span class="k">return</span> <span class="n">ls</span></div>
+
+<div class="viewcode-block" id="Term.__radd__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__radd__">[docs]</a>    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the sum of the ``self`` object with an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``self + lsum``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LinSum</span><span class="p">([</span><span class="bp">self</span><span class="p">])</span> <span class="o">+</span> <span class="n">lsum</span></div>
+
+<div class="viewcode-block" id="Term.__sub__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__sub__">[docs]</a>    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the difference of the ``self`` object and :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``self - lsum``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">lsum</span><span class="o">.</span><span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ls</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="bp">self</span><span class="p">])</span> <span class="o">-</span> <span class="n">lsum</span>
+        <span class="k">return</span> <span class="n">ls</span></div>
+
+<div class="viewcode-block" id="Term.__rsub__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__rsub__">[docs]</a>    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the difference of an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number and the ``self`` linear term. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``lsum - self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LinSum</span><span class="p">([</span><span class="bp">self</span><span class="p">])</span> <span class="o">-</span> <span class="n">lsum</span></div>
+
+<div class="viewcode-block" id="Term.__le__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__le__">[docs]</a>    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the inequality ``self &lt;= rhs``.</span>
+
+<span class="sd">        If ``rhs`` is a number, the *upper* bound of the ``self`` variable is set to ``rhs / self.coeff``;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self &lt;= rhs``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self &lt;= rhs`` if ``rhs`` is not a number,</span>
+<span class="sd">            or nothing, otherwise. </span>
+
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="o">-</span><span class="n">INF</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># rhs is a number</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span> <span class="o">&gt;</span> <span class="mf">1.0e-9</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="fm">__le__</span><span class="p">(</span><span class="n">rhs</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0e-9</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="fm">__ge__</span><span class="p">(</span><span class="n">rhs</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctr</span></div>
+
+<div class="viewcode-block" id="Term.__ge__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__ge__">[docs]</a>    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the inequality ``self &gt;= lhs``.</span>
+
+<span class="sd">        If ``lhs`` is a number, the *lower* bound of the ``self`` variable is set to ``lhs / self.coeff``;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self &gt;= lhs``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self &gt;= lhs`` if ``lhs`` is not a number,</span>
+<span class="sd">            or nothing, otherwise. </span>
+
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">INF</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span> <span class="o">&gt;</span> <span class="mf">1.0e-9</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="fm">__ge__</span><span class="p">(</span><span class="n">rhs</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeff</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0e-9</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="fm">__le__</span><span class="p">(</span><span class="n">rhs</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctr</span></div>
+
+<div class="viewcode-block" id="Term.__eq__"><a class="viewcode-back" href="../../../term.html#mipcl_py.mipshell.mipshell.Term.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the equality ``self == rhs``.</span>
+
+<span class="sd">        If ``rhs`` is a number, both *lower* and *upper* bounds of the ``self`` variable are set to ``rhs / self.coeff``;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self == rhs``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self == rhs`` if ``rhs`` is not a number,</span>
+<span class="sd">            or nothing, otherwise. </span>
+
+<span class="sd">       &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0e-9</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">rhs</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctr</span></div></div>
+
+<div class="viewcode-block" id="LinSum"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum">[docs]</a><span class="k">class</span> <span class="nc">LinSum</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;``LinSum`` objects represent linear function.</span>
+
+<span class="sd">    Each ``~mipshell.LinSum`` object is just a list of :class:`~mipshell.Term` objects.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        terms (list of Term): linear sum.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LinSum.__init__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">terms</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a newly created ``~mipshell.LinSum`` object with a list of :class:`~mipshell.Term` objects.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           terms (list of Term): linear sum.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">term</span> <span class="o">=</span> <span class="n">terms</span></div>
+
+<div class="viewcode-block" id="LinSum.__repr__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute a string representation of the ``self`` object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: string representation of the ``self`` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">coeff</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;+&#39;</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="LinSum.__neg__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__neg__">[docs]</a>    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change the signs of coefficients in all terms the ``self`` linear sum. </span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: reference to ``self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">coeff</span> <span class="o">=</span> <span class="o">-</span><span class="n">t</span><span class="o">.</span><span class="n">coeff</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LinSum.__pos__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__pos__">[docs]</a>    <span class="k">def</span> <span class="nf">__pos__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Do nothing. </span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: reference to ``self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LinSum.__rmul__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__rmul__">[docs]</a>    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Multiplies the coefficients by ``a`` in all terms of the ``self`` object. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    a (float): multiplier.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: reference to ``self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">coeff</span> <span class="o">*=</span> <span class="n">a</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LinSum.__add__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the sum of :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number with the *self* object. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``lsum + self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lsum</span><span class="o">.</span><span class="n">term</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">lsum</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Term</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lsum</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">lsum</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span>     </div>
+
+<div class="viewcode-block" id="LinSum.__radd__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__radd__">[docs]</a>    <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the sum of the ``self`` object with an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``self + lsum``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Term</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lsum</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">lsum</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LinSum.__sub__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__sub__">[docs]</a>    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the difference of the ``self`` object and an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``self - lsum``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">lsum</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">coeff</span><span class="o">=-</span><span class="n">t</span><span class="o">.</span><span class="n">coeff</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">lsum</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Term</span><span class="p">):</span>
+            <span class="n">lsum</span><span class="o">.</span><span class="n">coeff</span><span class="o">=-</span><span class="n">lsum</span><span class="o">.</span><span class="n">coeff</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lsum</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">lsum</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="o">-</span><span class="n">lsum</span><span class="p">,</span><span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LinSum.__rsub__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__rsub__">[docs]</a>    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the difference of an :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`Var&#39; object, or a number and the ``self`` linear term. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lsum: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            LinSum: linear sum ``lsum - self``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+            <span class="n">t</span><span class="o">.</span><span class="n">coeff</span> <span class="o">=</span> <span class="o">-</span><span class="n">t</span><span class="o">.</span><span class="n">coeff</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Term</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lsum</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">lsum</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LinSum.__le__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__le__">[docs]</a>    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the inequality ``self &lt;= rhs``.</span>
+
+<span class="sd">        If ``rhs`` is a number, the constrait (:class:`~mipshell.Ctr` object) ``self &lt;= rhs`` is created;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self - rhs &lt;= 0``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self &lt;= rhs``. </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="o">-</span><span class="n">INF</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">-</span><span class="n">INF</span><span class="p">,</span><span class="n">rhs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctr</span></div>
+
+<div class="viewcode-block" id="LinSum.__ge__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__ge__">[docs]</a>    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the inequality ``self &gt;= lhs``.</span>
+
+<span class="sd">        If ``lhs`` is a number, the constrait (:class:`~mipshell.Ctr` object) ``self &gt;= lhs`` is created;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self - lhs &gt;= 0``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs: :class:`~mipshell.LinSum`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self &gt;= lhs``. </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">lhs</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">INF</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lhs</span><span class="p">,</span><span class="n">INF</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctr</span></div>
+
+<div class="viewcode-block" id="LinSum.__eq__"><a class="viewcode-back" href="../../../linsum.html#mipcl_py.mipshell.mipshell.LinSum.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process the equality ``self == rhs``.</span>
+
+<span class="sd">        If ``rhs`` is a number, the constrait (:class:`~mipshell.Ctr`` object) ``self == rhs`` is created;</span>
+<span class="sd">        otherwise, a :class:`~mipshell.Ctr` object is created that represents the inequality ``self - rhs == 0``.    </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs: :class:`LinSum:class:`, :class:`~mipshell.Term`, :class:`~mipshell.Var` object, or a number.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: constraint ``self == rhs``. </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">LinSum</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="o">-</span><span class="n">rhs</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ctr</span> <span class="o">=</span> <span class="n">Ctr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">,</span><span class="n">rhs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctr</span></div></div>
+
+<span class="c1">###########################################################</span>
+<div class="viewcode-block" id="Ctr"><a class="viewcode-back" href="../../../ctr.html#mipcl_py.mipshell.mipshell.Ctr">[docs]</a><span class="k">class</span> <span class="nc">Ctr</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A ``Ctr`` object is a linear sum (:class:`~mipshell.LinSum` object) with lower and upper bounds on its values.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        lsum (LinSum): linear sum (linear function);</span>
+<span class="sd">        lhs (float): left hand side;</span>
+<span class="sd">        rhs (float): right hand side;</span>
+<span class="sd">        hd (int): handle that uniquely identifies the constraint.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Ctr.__init__"><a class="viewcode-back" href="../../../ctr.html#mipcl_py.mipshell.mipshell.Ctr.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">,</span><span class="n">lhs</span><span class="o">=-</span><span class="n">INF</span><span class="p">,</span><span class="n">rhs</span><span class="o">=</span><span class="n">INF</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a newly created :class:`~mipshell.Ctr` object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           lsum (LinSum): linear sum (function);</span>
+<span class="sd">           lhs (float): left hand side;</span>
+<span class="sd">           rhs (float): right hand side.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lsum</span><span class="o">=</span><span class="n">lsum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="o">=</span><span class="n">lhs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">=</span><span class="n">rhs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hd</span> <span class="o">=</span> <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span><span class="o">.</span><span class="n">addCtr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute a string representation of the ``self`` object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           left (bool): if ``True``, the left hand side part of constraint ``self`` is represented by the return string;</span>
+<span class="sd">           right (bool): if ``True``, the right hand side part of constraint ``self`` is represented by the return string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: string representation of the ``self`` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span> <span class="o">&lt;</span> <span class="mf">1.0e-10</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lsum</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; == </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">left</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhs</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">INF</span><span class="o">+</span><span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> &lt;= &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">s</span><span class="o">+=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lsum</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">right</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span> <span class="o">&lt;</span> <span class="n">INF</span><span class="o">-</span><span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">s</span><span class="o">+=</span> <span class="s1">&#39; &lt;= </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span>
+    
+<div class="viewcode-block" id="Ctr.__repr__"><a class="viewcode-back" href="../../../ctr.html#mipcl_py.mipshell.mipshell.Ctr.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute a string representation of the ``self`` object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: string representation of the ``self`` object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repr</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Ctr.__le__"><a class="viewcode-back" href="../../../ctr.html#mipcl_py.mipshell.mipshell.Ctr.__le__">[docs]</a>    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change the right hand side of ``self`` constraint.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    rhs (float): new right hand side value.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: reference to ``self``. </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">=</span><span class="n">rhs</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Ctr.__ge__"><a class="viewcode-back" href="../../../ctr.html#mipcl_py.mipshell.mipshell.Ctr.__ge__">[docs]</a>    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lhs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change the left hand side of ``self`` constraint.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">	    lhs (float): new left hand side value.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Ctr: reference to ``self``. </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="o">=</span><span class="n">lhs</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+<div class="viewcode-block" id="Function"><a class="viewcode-back" href="../../../function.html#mipcl_py.mipshell.mipshell.Function">[docs]</a><span class="k">class</span> <span class="nc">Function</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The ``Function`` objects represent piece-wise linear functions *y = f(x)*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        x (Var): function argument;</span>
+<span class="sd">        y (Var): function value;</span>
+<span class="sd">        points (list of pairs (tuples) of float or int): function break points;</span>
+<span class="sd">        hd (int): handle that uniquely identifies the function constraint.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Function.__init__"><a class="viewcode-back" href="../../../function.html#mipcl_py.mipshell.mipshell.Function.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a :class:`~mipshell.Function` object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (Var): function argument;</span>
+<span class="sd">            points (list of pairs (tuples) of float or int): function break points.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This constructor initializes just a :class:`~mipshell.Function` object (not a function constraint).</span>
+<span class="sd">            A function constraint is set by the equality operator (see __eq__ below).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hd</span> <span class="o">=</span> <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span><span class="o">.</span><span class="n">addFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Function.__eq__"><a class="viewcode-back" href="../../../function.html#mipcl_py.mipshell.mipshell.Function.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a function constrain.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            y (Var): variable which value is equal to the value of the function represented by the ``self`` object.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">            Function: reference to ``self``.         </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Variable is required&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+<span class="c1">###########################################################</span>
+<div class="viewcode-block" id="Problem"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem">[docs]</a><span class="k">class</span> <span class="nc">Problem</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This class connects all components --- variables, constraints, objective --- together to build what is forms a (MIP) Problem.</span>
+<span class="sd">   </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">       curProb (Problem): current problem, this class attribute facilitates formulating MIPs;</span>
+<span class="sd">       sence (bool): if ``True``, the objective is maximized; otherwise, the objective is minimized; </span>
+<span class="sd">       obj (LinSum): reference to a ``~mipshell.LinSum`` object;</span>
+<span class="sd">       isPureLP (bool): if ``True``, the problem is a MIP; otherwise, it is an LP;</span>
+<span class="sd">       is_solution (bool): when the problem has been solved, this flag is set to ``True`` if a feasible solution has been found;</span>
+<span class="sd">            otherwise, the flag is set to ``False``;</span>
+<span class="sd">       is_solutionOptimal (bool): when the problem has been solved, this flag is set to ``True`` if an optimal solution has been found;</span>
+<span class="sd">            otherwise, the flag is set to ``False``;</span>
+<span class="sd">       is_infeasible (bool): when the problem has been solved, this flag is set to ``True`` if the problem is infeasible (has no solution);</span>
+<span class="sd">            otherwise, the flag is set to ``False``;</span>
+<span class="sd">       is_unbounded (bool): when the problem has been solved, this flag is set to ``True`` if the problem is unbounded</span>
+<span class="sd">            (its objective tends to (+/-)infinity);</span>
+<span class="sd">            otherwise, the flag is set to ``False``;</span>
+<span class="sd">       vars (list of Var): list of problem variables;</span>
+<span class="sd">       ctrs (list of Ctr): list of problem constraints;</span>
+<span class="sd">       funcs (list of Function): list of problem function constraints;</span>
+<span class="sd">       name (str): problem name.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">curProb</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="Problem.__init__"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize an empty (without variables, constraints, and objective) problem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): problem name.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sense</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_solutionOptimal</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_infeasible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_unbounded</span> <span class="o">=</span> <span class="kc">False</span>   
+        <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">funcs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
+
+<div class="viewcode-block" id="Problem.addVar"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.addVar">[docs]</a>    <span class="k">def</span> <span class="nf">addVar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a variable to the problem list of variables.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            var (Var): variable to be added.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: handle of added variable.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">type</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">INT</span><span class="o">|</span><span class="n">BIN</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Problem.addCtr"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.addCtr">[docs]</a>    <span class="k">def</span> <span class="nf">addCtr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ctr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a constraint to the problem list of constraints.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ctr (Ctr): constraint to be added.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: handle of added constraint.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ctr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Problem.addFunc"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.addFunc">[docs]</a>    <span class="k">def</span> <span class="nf">addFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a function constraint to the problem list of function constrsints.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            func (Function): function constraint to be added.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: handle of added function-constraint.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">funcs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">funcs</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Problem.activate"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.activate">[docs]</a>    <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the current problem to be the problem represented by the ``self`` object.&quot;&quot;&quot;</span>
+        <span class="n">curProb</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Problem.minimize"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.minimize">[docs]</a>    <span class="k">def</span> <span class="nf">minimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the objective to be minimized.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lsum (LinSum): linear function.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sense</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">lsum</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Term</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">lsum</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">lsum</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Problem.maximize"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.maximize">[docs]</a>    <span class="k">def</span> <span class="nf">maximize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">lsum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the objective to be maximized.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lsum (LinSum): linear function.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sense</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">lsum</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Term</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">lsum</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lsum</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">([</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">lsum</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">LinSum</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Problem.mipclModel"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.mipclModel">[docs]</a>    <span class="k">def</span> <span class="nf">mipclModel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">silent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The function initializes either a CLP-instance for the LP problem or a CMIP-instance for the MIP problem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           silent (bool): if set to ``True``, MIPCL-solver will not display any run-time messages.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">)</span>
+        <span class="n">nz</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ctr</span><span class="o">.</span><span class="n">lsum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">nz</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctr</span><span class="o">.</span><span class="n">lsum</span><span class="o">.</span><span class="n">term</span><span class="p">)</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">funcs</span><span class="p">)</span>
+        <span class="n">funcSize</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcs</span><span class="p">:</span>
+            <span class="n">funcSize</span><span class="o">+=</span><span class="nb">len</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span><span class="p">:</span>
+            <span class="n">mp</span> <span class="o">=</span> <span class="n">mipcl</span><span class="o">.</span><span class="n">CLP</span><span class="p">(</span><span class="s2">&quot;pythonLP&quot;</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">preprocOff</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mp</span> <span class="o">=</span> <span class="n">mipcl</span><span class="o">.</span><span class="n">CMIP</span><span class="p">(</span><span class="s2">&quot;pythonMIP&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mp</span> <span class="o">=</span> <span class="n">mp</span>
+        <span class="n">mp</span><span class="o">.</span><span class="n">beSilent</span><span class="p">(</span><span class="n">silent</span><span class="p">)</span>
+        <span class="n">mp</span><span class="o">.</span><span class="n">openMatrix</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">fn</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="n">funcSize</span><span class="p">,</span><span class="n">nz</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">funcSize</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">fn</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">):</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">hd</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">type</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">lb</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">ub</span><span class="p">)</span>
+            <span class="n">var</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># is used when adding constraints to handle terms with the same variables</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span>
+                    <span class="n">mp</span><span class="o">.</span><span class="n">setVarPriority</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
+        <span class="n">hd</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">points</span><span class="p">)):</span>
+                <span class="n">mp</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">hd</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+                <span class="n">hd</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sense</span> <span class="o">==</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">setObjSense</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">setObjSense</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">setObjCoeff</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">hd</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">coeff</span><span class="p">)</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ctr</span><span class="o">.</span><span class="n">lsum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ctr</span><span class="o">.</span><span class="n">lsum</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">v</span> <span class="o">+=</span> <span class="n">t</span><span class="o">.</span><span class="n">coeff</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">t</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">val</span> <span class="o">+=</span> <span class="n">t</span><span class="o">.</span><span class="n">coeff</span>
+                <span class="n">lhs</span> <span class="o">=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">lhs</span>
+                <span class="n">rhs</span> <span class="o">=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">rhs</span>
+                <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">ZERO</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">ZERO</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">lhs</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">INF</span><span class="o">+</span><span class="mf">1.0</span><span class="p">:</span>
+                        <span class="n">lhs</span> <span class="o">-=</span> <span class="n">v</span>
+                    <span class="k">if</span> <span class="n">rhs</span> <span class="o">&lt;</span> <span class="n">INF</span><span class="o">-</span><span class="mf">1.0</span><span class="p">:</span>
+                        <span class="n">rhs</span> <span class="o">-=</span> <span class="n">v</span>
+                <span class="n">mp</span><span class="o">.</span><span class="n">addCtr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">lhs</span><span class="p">,</span><span class="n">rhs</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ctr</span><span class="o">.</span><span class="n">lsum</span><span class="o">.</span><span class="n">term</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">ZERO</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">ZERO</span><span class="p">:</span>
+                            <span class="n">mp</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">val</span><span class="p">,</span><span class="n">row</span><span class="p">,</span><span class="n">t</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">hd</span><span class="p">)</span>
+                            <span class="n">t</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="c1"># model function constraints; each such constraint is represented by 3 equations</span>
+        <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcs</span><span class="p">:</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">addCtr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">row</span><span class="p">,</span><span class="n">func</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">hd</span><span class="p">)</span>
+            <span class="n">hd</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">func</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                <span class="n">mp</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">row</span><span class="p">,</span><span class="n">hd</span><span class="p">)</span>
+                <span class="n">hd</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">addCtr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">row</span><span class="p">,</span><span class="n">func</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">hd</span><span class="p">)</span>
+            <span class="n">hd</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">func</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                <span class="n">mp</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">row</span><span class="p">,</span><span class="n">hd</span><span class="p">)</span>
+                <span class="n">hd</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">addCtr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="mh">0x00010000</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># 0x00010000 is SOS2 flag in CMIP</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">hd</span><span class="p">):</span>
+                <span class="n">mp</span><span class="o">.</span><span class="n">addEntry</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">row</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">hd</span>
+            
+        <span class="n">mp</span><span class="o">.</span><span class="n">closeMatrix</span><span class="p">()</span></div>
+ 
+<div class="viewcode-block" id="Problem.optimize"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">timeLimit</span><span class="o">=</span><span class="mi">10000000</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start solving the problem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            silent (bool): if set to ``True``, no MIPCL info-messages are displayed;</span>
+<span class="sd">            timeLimit (int): time limit (in seconds) for the solver.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mipclModel</span><span class="p">(</span><span class="n">silent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">timeLimit</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">isSolution</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj_val</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">getObjVal</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">setSolution</span><span class="p">();</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+                <span class="n">var</span><span class="o">.</span><span class="n">val</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">getOptVarValue</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">hd</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_solutionOptimal</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">ind</span><span class="p">,</span><span class="n">ctr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">):</span>
+                    <span class="n">ctr</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">getShadowPrice</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+            	<span class="bp">self</span><span class="o">.</span><span class="n">is_solutionOptimal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">isSolutionOptimal</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">isLpInfesible</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">is_infeasible</span> <span class="o">=</span> <span class="n">true</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">setCertificate</span><span class="p">();</span>
+                    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+                        <span class="n">var</span><span class="o">.</span><span class="n">val</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">getOptVarValue</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">hd</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span><span class="n">ctr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">):</span>
+                        <span class="n">ctr</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">getShadowPrice</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">is_unbounded</span> <span class="o">=</span> <span class="n">true</span><span class="p">;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_infeasible</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mp</span><span class="o">.</span><span class="n">timeLimitStop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Problem.getObjVal"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.getObjVal">[docs]</a>    <span class="k">def</span> <span class="nf">getObjVal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the objective value.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: the objective value of the solution found.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj_val</span></div>
+
+    <span class="k">def</span> <span class="nf">_print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print the problem given by the ``self`` object.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">           The procedure is used only debugging.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sense</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ctr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Problem.printSolution"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.printSolution">[docs]</a>    <span class="k">def</span> <span class="nf">printSolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The procedure prints the solution.</span>
+
+<span class="sd">            When an LP has no feasible solution, the procudure prints a certificate of inconsistency.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal objective value is </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj_val</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{!r}</span><span class="s1"> = </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">val</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=== Constraint shadow prices (dual solution):&#39;</span><span class="p">)</span> 
+                    <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">:</span>
+                    	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> : </span><span class="si">{!r}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ctr</span><span class="o">.</span><span class="n">price</span><span class="p">,</span><span class="n">ctr</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span><span class="p">:</span> <span class="c1"># LP</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=== Problem constraints are contradictory.&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Proof of inconsistency:&#39;</span><span class="p">)</span>
+                    <span class="n">q</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">:</span>
+                        <span class="n">price</span> <span class="o">=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">price</span>
+                        <span class="k">if</span> <span class="n">price</span> <span class="o">&gt;</span> <span class="mf">1.0e-6</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{!s}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">price</span><span class="p">,</span><span class="n">ctr</span><span class="o">.</span><span class="n">_repr</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+                            <span class="n">q</span> <span class="o">+=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">rhs</span> <span class="o">*</span> <span class="n">price</span>
+                        <span class="k">elif</span> <span class="n">price</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0e-6</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{!s}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">price</span><span class="p">,</span><span class="n">ctr</span><span class="o">.</span><span class="n">_repr</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+                            <span class="n">q</span> <span class="o">+=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">lhs</span> <span class="o">*</span> <span class="n">price</span>
+
+                    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">val</span>
+                        <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mf">1.0e-6</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{!r}</span><span class="s1"> &lt;= </span><span class="si">{:.4f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">ub</span><span class="p">))</span>
+                            <span class="n">q</span> <span class="o">+=</span> <span class="n">var</span><span class="o">.</span><span class="n">ub</span> <span class="o">*</span> <span class="n">val</span>
+                        <span class="k">elif</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0e-6</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{:.4f}</span><span class="s1"> &lt;= </span><span class="si">{!r}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">lb</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                            <span class="n">q</span> <span class="o">+=</span> <span class="n">var</span><span class="o">.</span><span class="n">lb</span> <span class="o">*</span> <span class="n">val</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;= (0 &lt;= </span><span class="si">{:.4f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># MIP</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal solution has not been found&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please call optimize() first&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Problem.writeSolution"><a class="viewcode-back" href="../../../problem.html#mipcl_py.mipshell.mipshell.Problem.writeSolution">[docs]</a>    <span class="k">def</span> <span class="nf">writeSolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">solfile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The procedure writes the solution to a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           solfile (str): file name. </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">solfile</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_solution</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Optimal objective value is </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj_val</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{!r}</span><span class="s1"> = </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">val</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;=== Constraint shadow prices (dual solution):&#39;</span><span class="p">)</span> 
+                        <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">:</span>
+                    	    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> : </span><span class="si">{!r}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ctr</span><span class="o">.</span><span class="n">price</span><span class="p">,</span><span class="n">ctr</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isPureLP</span><span class="p">:</span> <span class="c1"># LP</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;=== Problem constraints are contradictory.&#39;</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Proof of inconsistency:&#39;</span><span class="p">)</span>
+                        <span class="n">q</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrs</span><span class="p">:</span>
+                            <span class="n">price</span> <span class="o">=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">price</span> 
+                            <span class="k">if</span> <span class="n">price</span> <span class="o">&gt;</span> <span class="mf">1.0e-6</span><span class="p">:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{!s}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">price</span><span class="p">,</span><span class="n">ctr</span><span class="o">.</span><span class="n">_repr</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+                                <span class="n">q</span> <span class="o">+=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">rhs</span> <span class="o">*</span> <span class="n">price</span>
+                            <span class="k">elif</span> <span class="n">price</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0e-6</span><span class="p">:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{!s}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">price</span><span class="p">,</span><span class="n">ctr</span><span class="o">.</span><span class="n">_repr</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
+                                <span class="n">q</span> <span class="o">+=</span> <span class="n">ctr</span><span class="o">.</span><span class="n">lhs</span> <span class="o">*</span> <span class="n">price</span>
+
+                        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+                            <span class="n">val</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">val</span>
+                            <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mf">1.0e-6</span><span class="p">:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{!r}</span><span class="s1"> &lt;= </span><span class="si">{:.4f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">ub</span><span class="p">))</span>
+                                <span class="n">q</span> <span class="o">+=</span> <span class="n">var</span><span class="o">.</span><span class="n">ub</span> <span class="o">*</span> <span class="n">var</span><span class="o">.</span><span class="n">val</span>
+                            <span class="k">elif</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0e-6</span><span class="p">:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1"> x (</span><span class="si">{:.4f}</span><span class="s1"> &lt;= </span><span class="si">{!r}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">lb</span><span class="p">,</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                                <span class="n">q</span> <span class="o">+=</span> <span class="n">var</span><span class="o">.</span><span class="n">lb</span> <span class="o">*</span> <span class="n">val</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;= (0 &lt;= </span><span class="si">{:.4f}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span> <span class="c1"># MIP</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Optimal solution has not been found&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please call optimize() first&#39;</span><span class="p">)</span></div></div>
+
+<span class="c1">##################### Global functions  ###################</span>
+
+<div class="viewcode-block" id="getCurProblem"><a class="viewcode-back" href="../../../shglobals.html#mipcl_py.mipshell.mipshell.getCurProblem">[docs]</a><span class="k">def</span> <span class="nf">getCurProblem</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Problem: currently active problem.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="k">return</span> <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span></div>
+
+<div class="viewcode-block" id="VarVector"><a class="viewcode-back" href="../../../shglobals.html#mipcl_py.mipshell.mipshell.VarVector">[docs]</a><span class="k">def</span> <span class="nf">VarVector</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">REAL</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">VAR_INF</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a vector (list) of variables.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">       sizes (list or tuple of int):</span>
+<span class="sd">       name (str): vector name that is used when the values of variables are printed;</span>
+<span class="sd">       type (int): type of vector variables (:data:`REAL`, :data:`INT`, or :data:`BIN`),</span>
+<span class="sd">                   all vector variables are of the same type;</span>
+<span class="sd">       lb (float): common lower bound of all vector variables;</span>
+<span class="sd">       ub (float): common upper bound of all vector variables;</span>
+<span class="sd">       priority (int): common priority (``in range(-50,51)``) of all vector variables.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">       VarVector: reference to the created list of variables.</span>
+
+<span class="sd">    :warning: Maximal dimension of a vector is 4!</span>
+
+<span class="sd">    **Example of usage**::</span>
+
+<span class="sd">        y = VarVector([n],&quot;y&quot;) # 1-dimensional vector of size n of non-negative real variables</span>
+<span class="sd">        x = VarVector([n,m],&quot;x&quot;,BIN,priority=2) # 2-dimensional matrix of size (m x n) of binary variables </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="p">[</span><span class="n">Var</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;(&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,</span><span class="n">priority</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Var</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;(&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,</span><span class="n">priority</span><span class="p">)</span>\
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">Var</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;(&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,</span><span class="n">priority</span><span class="p">)</span>\
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>\
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="p">[[[[</span><span class="n">Var</span><span class="p">(</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;(&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;,&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="nb">type</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,</span><span class="n">priority</span><span class="p">)</span>\
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>\
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;Vectors of dimension greater than 4 are not allowed&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vec</span></div>
+       
+<div class="viewcode-block" id="VarArray"><a class="viewcode-back" href="../../../shglobals.html#mipcl_py.mipshell.mipshell.VarArray">[docs]</a><span class="k">def</span> <span class="nf">VarArray</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">REAL</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">VAR_INF</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create an array (dictionary) of variables.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">       indices (list of any printable objects): list of keys;</span>
+<span class="sd">       name (str): vector name that is used when the values of variables are printed;</span>
+<span class="sd">       type (int): type of vector variables (:data:`REAL`, :data:`INT`, or :data:`BIN`), all vector variables are of the same type;</span>
+<span class="sd">       lb (float): common lower bound of all vector variables;</span>
+<span class="sd">       ub (float): common upper bound of all vector variables;</span>
+<span class="sd">       priority (int): common priority (``in range(-50,51)``) of all vector variables.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        VarArray: reference to the created array of variables.</span>
+
+<span class="sd">    **Example of usage**::</span>
+
+<span class="sd">        I = [(1,2,3),&#39;Minsk&#39;,&#39;Bonn&#39;,(3,2,1)]</span>
+<span class="sd">        x = VarArray(I,&quot;x&quot;,BIN,priority=2) # array of binary variables </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ar</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+        <span class="n">ar</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">Var</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span><span class="nb">type</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,</span><span class="n">priority</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ar</span></div>
+
+<div class="viewcode-block" id="sum_"><a class="viewcode-back" href="../../../shglobals.html#mipcl_py.mipshell.mipshell.sum_">[docs]</a><span class="k">def</span> <span class="nf">sum_</span><span class="p">(</span><span class="n">terms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main tool for writing linear expressions.</span>
+
+<span class="sd">    The function is a substitution for the Python ``sum`` operator,</span>
+<span class="sd">    which returns a numeric value. That is why we cannot use ``sum``</span>
+<span class="sd">    for writing linear expressions. </span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        LinSum: linear sum.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_terms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">LinSum</span><span class="p">):</span>
+            <span class="n">_terms</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">term</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">t</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">Term</span><span class="p">):</span>
+            <span class="n">_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">Var</span><span class="p">):</span>
+                <span class="n">_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">t</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="kc">None</span><span class="p">))</span>
+    <span class="k">del</span> <span class="n">terms</span>
+    <span class="k">return</span> <span class="n">LinSum</span><span class="p">(</span><span class="n">_terms</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="function"><a class="viewcode-back" href="../../../shglobals.html#mipcl_py.mipshell.mipshell.function">[docs]</a><span class="k">def</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Alternative way for creating a ``~mipshell.Function`` object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">       x (Var): function argument;</span>
+<span class="sd">       points (list of pairs (tuples) of float or int): function break points.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">       Function: piece-wise linear function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">points</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="minimize"><a class="viewcode-back" href="../../../shglobals.html#mipcl_py.mipshell.mipshell.minimize">[docs]</a><span class="k">def</span> <span class="nf">minimize</span><span class="p">(</span><span class="n">lsum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Call ``minimize`` for the currently active problem.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lsum (LinSum): linear expression to be set as the objective function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">lsum</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="maximize"><a class="viewcode-back" href="../../../shglobals.html#mipcl_py.mipshell.mipshell.maximize">[docs]</a><span class="k">def</span> <span class="nf">maximize</span><span class="p">(</span><span class="n">lsum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Call ``maximize`` for the currently active problem.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lsum (LinSum): linear expression to be set as the objective function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span><span class="n">lsum</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">timeLimit</span><span class="o">=</span><span class="mi">10000000</span><span class="p">):</span>
+    <span class="n">Problem</span><span class="o">.</span><span class="n">curProb</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">silent</span><span class="p">,</span><span class="n">timeLimit</span><span class="p">)</span>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/MIPCLlogo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">What is MIPCL-PY</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mipshell.html">Module mipshell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mipcl.html">Module mipcl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../models.html">List of example models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Example of usage</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Nicolai N. Pisaruk.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Class Ctr &#8212; mipcl-py 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Class Function" href="function.html" />
+    <link rel="prev" title="Class LinSum" href="linsum.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="class-ctr">
+<h1>Class Ctr<a class="headerlink" href="#class-ctr" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mipcl_py.mipshell.mipshell.Ctr">
+<em class="property">class </em><code class="descclassname">mipcl_py.mipshell.mipshell.</code><code class="descname">Ctr</code><span class="sig-paren">(</span><em>lsum</em>, <em>lhs=-1e+20</em>, <em>rhs=1e+20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Ctr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Ctr" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal"><span class="pre">Ctr</span></code> object is a linear sum (<code class="xref py py-class docutils literal"><span class="pre">LinSum</span></code> object) with lower and upper bounds on its values.</p>
+<dl class="attribute">
+<dt id="Ctr.lsum">
+<code class="descname">lsum</code><a class="headerlink" href="#Ctr.lsum" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>LinSum</em> &#8211; linear sum (linear function);</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Ctr.lhs">
+<code class="descname">lhs</code><a class="headerlink" href="#Ctr.lhs" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; left hand side;</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Ctr.rhs">
+<code class="descname">rhs</code><a class="headerlink" href="#Ctr.rhs" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; right hand side;</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Ctr.hd">
+<code class="descname">hd</code><a class="headerlink" href="#Ctr.hd" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; handle that uniquely identifies the constraint.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Ctr.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>lsum</em>, <em>lhs=-1e+20</em>, <em>rhs=1e+20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Ctr.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Ctr.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a newly created <code class="xref py py-class docutils literal"><span class="pre">Ctr</span></code> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>lsum</strong> (<a class="reference internal" href="linsum.html#mipcl_py.mipshell.mipshell.LinSum" title="mipcl_py.mipshell.mipshell.LinSum"><em>LinSum</em></a>) &#8211; linear sum (function);</li>
+<li><strong>lhs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; left hand side;</li>
+<li><strong>rhs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; right hand side.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Ctr.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Ctr.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Ctr.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a string representation of the <code class="docutils literal"><span class="pre">self</span></code> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">string representation of the <code class="docutils literal"><span class="pre">self</span></code> object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Ctr.__le__">
+<code class="descname">__le__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Ctr.__le__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Ctr.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the right hand side of <code class="docutils literal"><span class="pre">self</span></code> constraint.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rhs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; new right hand side value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">reference to <code class="docutils literal"><span class="pre">self</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mipcl_py.mipshell.mipshell.Ctr" title="mipcl_py.mipshell.mipshell.Ctr">Ctr</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="mipcl_py.mipshell.mipshell.Ctr.__ge__">
+<code class="descname">__ge__</code><span class="sig-paren">(</span><em>lhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mipcl_py/mipshell/mipshell.html#Ctr.__ge__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mipcl_py.mipshell.mipshell.Ctr.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the left hand side of <code class="docutils literal"><span class="pre">self</span></code> constraint.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lhs</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; new left hand side value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">reference to <code class="docutils literal"><span class="pre">self</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#mipcl_py.mipshell.mipshell.Ctr" title="mipcl_py.mipshell.mipshell.Ctr">Ctr</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/MIPCLlogo.png" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">What is MIPCL-PY</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="mipshell.html">Module mipshell</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="shglobals.html">Mipshell global membetrs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="var.html">Class Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="term.html">Class Term</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linsum.html">Class LinSum</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Class Ctr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function.html">Class Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="problem.html">Class Problem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mipcl.html">Module mipcl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">List of example models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Example of usage</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Nicolai N. Pisaruk.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

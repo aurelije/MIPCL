@@ -34,39 +34,39 @@ char* getStrInd(int ind, int dim, int* ipSize, int iTotSize, char* str)
 ////////////////////////////////////////////////
 // CVector
 ////////////////////////////////////////////////
-/// \cond NEWandDELoperators
-template <typename Tell>
-void* CVector<Tell>::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CVector<Tell>::operator new");
-	}
-	return p;
-}
-
-template <typename Tell>
-void CVector<Tell>::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-template <typename Tell>
-void* CVector<Tell>::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CVector<Tell>::operator new[]");
-	}
-	return p;
-}
-
-template <typename Tell>
-void CVector<Tell>::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//template <typename Tell>
+//void* CVector<Tell>::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CVector<Tell>::operator new");
+//	}
+//	return p;
+//}
+//
+//template <typename Tell>
+//void CVector<Tell>::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//template <typename Tell>
+//void* CVector<Tell>::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CVector<Tell>::operator new[]");
+//	}
+//	return p;
+//}
+//
+//template <typename Tell>
+//void CVector<Tell>::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 template <typename Tell>
 void CVector<Tell>::reallocMem(int size, int newSize)

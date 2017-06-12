@@ -66,39 +66,39 @@ CArray<Tell>::~CArray()
 }
 ////////////////////////////
 
-/// \cond NEWandDELoperators
-template <typename Tell>
-void* CArray<Tell>::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CArray<Tell>::operator new");
-	}
-	return p;
-}
-
-template <typename Tell>
-void CArray<Tell>::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-template <typename Tell>
-void* CArray<Tell>::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CArray<Tell>::operator new[]");
-	}
-	return p;
-}
-
-template <typename Tell>
-void CArray<Tell>::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//template <typename Tell>
+//void* CArray<Tell>::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CArray<Tell>::operator new");
+//	}
+//	return p;
+//}
+//
+//template <typename Tell>
+//void CArray<Tell>::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//template <typename Tell>
+//void* CArray<Tell>::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CArray<Tell>::operator new[]");
+//	}
+//	return p;
+//}
+//
+//template <typename Tell>
+//void CArray<Tell>::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 template <typename Tell>
 Tell& CArray<Tell>::getZero()
@@ -337,31 +337,31 @@ std::ostream& operator<<(std::ostream& out, CArray<Tell>& arr)
 	return out;
 }
 
-template<typename Tell>
-Tell& CArray<Tell>::max()
-{
-	typename std::map<CIndex,Tell>::iterator imax, i,e;
-	imax=i=m_Map.begin();
-	e=m_Map.end();
-	for (++i; i != e; ++i) {
-		if ((*imax).second < (*i).second)
-			imax=i;
-	}
-	return (*imax).second;
-}
-
-template<typename Tell>
-Tell& CArray<Tell>::min()
-{
-	typename std::map<CIndex,Tell>::iterator imin, i,e;
-	imin=i=m_Map.begin();
-	e=m_Map.end();
-	for (++i; i != e; ++i) {
-		if ((*imin).second < (*i).second)
-			imin=i;
-	}
-	return (*imin).second;
-}
+//template<typename Tell>
+//Tell& CArray<Tell>::max()
+//{
+//	typename std::map<CIndex,Tell>::iterator imax, i,e;
+//	imax=i=m_Map.begin();
+//	e=m_Map.end();
+//	for (++i; i != e; ++i) {
+//		if ((*imax).second < (*i).second)
+//			imax=i;
+//	}
+//	return (*imax).second;
+//}
+//
+//template<typename Tell>
+//Tell& CArray<Tell>::min()
+//{
+//	typename std::map<CIndex,Tell>::iterator imin, i,e;
+//	imin=i=m_Map.begin();
+//	e=m_Map.end();
+//	for (++i; i != e; ++i) {
+//		if ((*imin).second < (*i).second)
+//			imin=i;
+//	}
+//	return (*imin).second;
+//}
 ////////////////////////////////////////////////
 // CArray<void*> implementation
 
@@ -380,28 +380,28 @@ CArray<void*>::~CArray()
 {
 }
 
-/// \cond NEWandDELoperators
+///// \cond NEWandDELoperators
 ////////////////////////////
-void* CArray<void*>::operator new(size_t iSize)
-{
-	return malloc(iSize);
-}
-
-void CArray<void*>::operator delete(void* pPtr)
-{
-	free(pPtr);
-}
-
-void* CArray<void*>::operator new[](size_t iSize)
-{
-	return malloc(iSize);
-}
-
-void CArray<void*>::operator delete[](void* pPtr)
-{
-	free(pPtr);
-}
-/// \endcond
+//void* CArray<void*>::operator new(size_t iSize)
+//{
+//	return malloc(iSize);
+//}
+//
+//void CArray<void*>::operator delete(void* pPtr)
+//{
+//	free(pPtr);
+//}
+//
+//void* CArray<void*>::operator new[](size_t iSize)
+//{
+//	return malloc(iSize);
+//}
+//
+//void CArray<void*>::operator delete[](void* pPtr)
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 int CArray<void*>::getSize()
 {
@@ -550,31 +550,31 @@ Tell& CArray<Tell*>::getZero()
 	return m_Zero;
 }
 
-/// \cond NEWandDELoperators
-template <typename Tell>
-void* CArray<Tell*>::operator new(size_t iSize)
-{
-	return malloc(iSize);
-}
-
-template <typename Tell>
-void CArray<Tell*>::operator delete(void* pPtr)
-{
-	free(pPtr);
-}
-
-template <typename Tell>
-void* CArray<Tell*>::operator new[](size_t iSize)
-{
-	return malloc(iSize);
-}
-
-template <typename Tell>
-void CArray<Tell*>::operator delete[](void* pPtr)
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//t=emplate <typename Tell>
+//void* CArray<Tell*>::operator new(size_t iSize)
+//{
+//	return malloc(iSize);
+//}
+//
+//template <typename Tell>
+//void CArray<Tell*>::operator delete(void* pPtr)
+//{
+//	free(pPtr);
+//}
+//
+//template <typename Tell>
+//void* CArray<Tell*>::operator new[](size_t iSize)
+//{
+//	return malloc(iSize);
+//}
+//
+//template <typename Tell>
+//void CArray<Tell*>::operator delete[](void* pPtr)
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 ////////////////////////////////////////////
 // assinment

@@ -95,7 +95,7 @@ CSet<Tell>::~CSet()
 template <typename Tell>
 int CSet<Tell>::getSize()
 {
-	return m_Set.size();
+	return static_cast<int>(m_Set.size());
 }
 
 template <typename Tell>
@@ -419,40 +419,40 @@ bool CSet<Tell>::operator<(const CSet<Tell>& s)
 	return std::lexicographical_compare(m_Set.begin(),m_Set.end(),s.m_Set.begin(),s.m_Set.end());
 }
 
-/// \cond NEWandDELoperators
-/////////////////////////////////////////////////////
-template <typename Tell>
-void* CSet<Tell>::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CSet<Tell>::operator new");
-	}
-	return p;
-}
-
-template <typename Tell>
-void CSet<Tell>::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-template <typename Tell>
-void* CSet<Tell>::operator new[](size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CSet<Tell>::operator new[]");
-	}
-	return p;
-}
-
-template <typename Tell>
-void CSet<Tell>::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+///////////////////////////////////////////////////////
+//template <typename Tell>
+//void* CSet<Tell>::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CSet<Tell>::operator new");
+//	}
+//	return p;
+//}
+//
+//template <typename Tell>
+//void CSet<Tell>::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//template <typename Tell>
+//void* CSet<Tell>::operator new[](size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CSet<Tell>::operator new[]");
+//	}
+//	return p;
+//}
+//
+//template <typename Tell>
+//void CSet<Tell>::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 ////////////////////////////////
 // CSet Instantiations

@@ -1,0 +1,105 @@
+\form#0:\[ \max\{c^T x: Ax \le b,\; x\in\mathbb{Z}^n_+\}\]
+\form#1:$c\in\mathbb{R}^n,\; b\in\mathbb{R}^m$
+\form#2:\begin{align*} 100 x_0 + 64 x_1 &\to \max,\\ 50 x_0 + 31 x_1 &\le 250,\\ -3 x_0 + 2 x_1 &\le 4,\\ x_0,\:x_1 &\in \mathbb{Z}_+. \end{align*}
+\form#3:$G=(V,E)$
+\form#4:$v\in V$
+\form#5:$d_v$
+\form#6:$\sum_{v\in V} d_v = 0$
+\form#7:$e\in E\text{ is } u_e > 0$
+\form#8:$x_e > 0$
+\form#9:$f_e + c_e x_e$
+\form#10:$x_e=0$
+\form#11:$e=(i,j)$
+\form#12:$e_1=(i,j)\text{ and } e_2=(j,i)$
+\form#13:$u_e=3$
+\form#14:$f_e=1$
+\form#15:$c_e=0$
+\form#16:$u_e=4$
+\form#17:$f_e=2$
+\form#18:$x_e$
+\form#19:$e\in E$
+\form#20:$y_e=1,\text{ if product is shipped } (x_e > 0)\text{ through arc } e,\text{ and } y_e=0\text{ otherwise}$
+\form#21:\begin{align} \sum_{e\in E} (f_e y_e + c_e x_e) \to \min,& \tag{1.a} \\ \sum_{e\in E(V,v)} x_e - \sum_{e\in E(v,V)} x_e = d_v,&\quad v\in V,\tag{1.b}\\ 0\le x_e \le u_e y_e,&\quad e\in E,\tag{1.c}\\ y_e \in \{0,1\},&\quad e\in E.\tag{1.d} \end{align}
+\form#22:$y_e=0$
+\form#23:$y_e$
+\form#24:$-u_e$
+\form#25:\begin{equation}\tag{1} \begin{array}{*{3}{r@{\:}c@{\:}}l} 2x_0 &+& 5x_1 &+& x_2 &\le& 5,\\ x_0 &+& 2x_1 & & &\ge& 3,\\ x_0 && && &\ge& 0,\\ && x_1 && &\ge& 0,\\ &&&& x_2 &\ge& 0. \end{array} \end{equation}
+\form#26:$0\le -1$
+\form#27:$Ax\le b$
+\form#28:$y\ge 0\text{ such that } y^TA=0,\text{ and } y^Tb < 0$
+\form#29:\[ \max\{c^Tx:\; Ax\le b\} \]
+\form#30:$x^0,\;v\text{ such that } Ax^0\le b,\; Av\le 0,\text{ and } c^T v > 0$
+\form#31:\[ \{x(\lambda)=x^0 +\lambda v:\; \lambda\ge 0\} \]
+\form#32:$Ax(\lambda)\le b\;\forall\; \lambda\ge 0$
+\form#33:$c^Tx(\lambda)$
+\form#34:$\lambda$
+\form#35:$(x^0,v)$
+\form#36:$4x_0 + x_1 + 2x_2$
+\form#37:$\mathcal{M}_j\subseteq \mathcal{P}=\{1,\dots,m\}$
+\form#38:$j\in\mathcal{J}=\{1,\dots,n\}$
+\form#39:$w_j$
+\form#40:$r_j,d_j$
+\form#41:$[r_j,d_j]$
+\form#42:$p_{ji}$
+\form#43:$i\in \mathcal{M}_j$
+\form#44:$G=(\mathcal{J},E)$
+\form#45:$(j_1,j_2)\in \mathcal{J}$
+\form#46:$j_2$
+\form#47:$j_1$
+\form#48:$R_{\min}=\min_{1\le j\le n}{r_j}$
+\form#49:$D_{\max}=\max_{1\le j\le n}{d_j}$
+\form#50:$\{x_{jit}\}$
+\form#51:$x_{jit}$
+\form#52:$x_{jit}=0$
+\form#53:$y_j=1$
+\form#54:$y_j=0$
+\form#55:$s_j$
+\form#56:$p^t_j$
+\form#57:\begin{align} &\sum_{j=1}^n w_j y_j \to \max, \tag{1.a}\\ &\sum_{\stackrel{1\le j\le n:}{r_j\le t\le d_j-p_{ji}}} \sum_{\tau=\max\{t-p_{ji},r_j\}}^{\min\{t,d_j-p_{ji}\}} x_{ji\tau} \le 1,\quad t=R_{\min},\dots,D_{\max};\; i=1,\dots,m, \tag{1.b}\\ &y_j = \sum_{i\in\mathcal{M}_j} \sum_{t=r_j}^{d_j-p_{ji}} x_{jit},\quad j=1,\dots,n,\tag{1.c}\\ &s_j = \sum_{i\in\mathcal{M}_j} \sum_{t=r_j}^{d_j-p_{ji}} t\cdot x_{jit},\quad j=1,\dots,n,\tag{1.d}\\ &p^t_j = \sum_{i\in\mathcal{M}_j} \sum_{t=r_j}^{d_j-p_{ji}} p_{ji}\cdot x_{jit},\quad j=1,\dots,n,\tag{1.e}\\ &y_{j_1} - y_{j_2} \ge 0,\quad (j_1,j_2)\in E,\tag{1.f}\\ &s_{j_2} - s_{j_1} \ge p^t_{j_1},\quad (j_1,j_2)\in E, \tag{1.g}\\ &x_{jit} \in\{0,1\},\quad i\in\mathcal{M}_j;\;t=r_j,\dots,d_j-p_{ji};\; j=1,\dots,n, \tag{1.h}\\ &y_j \in \{0,1\},\quad j=1,\dots,n. \tag{1.i} \end{align}
+\form#58:$y_j,\; s_j,\text{ and }p^t_j$
+\form#59:$(j_1,j_2)\in E$
+\form#60:$j_1\text{ and }j_2$
+\form#61:$y_j=1\text{ for all }j$
+\form#62:\[ \sum_{j=1}^n \sum_{i\in\mathcal{M}_j} \sum_{t=l_j}^{u_j-p_{ji}} (t+p_{ji}) x_{jit} \to \max, \]
+\form#63:$m|r_j,d_j|\sum w_jC_j$
+\form#64:$x,\; y,\; s,\text{ and } p^t$
+\form#65:$q^r$
+\form#66:$R^r_i$
+\form#67:$q^n$
+\form#68:$R^n_i$
+\form#69:$m=1,\dots,M_j$
+\form#70:$p^m_j$
+\form#71:$\rho^r_{jmi}$
+\form#72:$i=1,\dots,q^r$
+\form#73:$\rho^n_{jmi}$
+\form#74:$i=1,\dots,q^n$
+\form#75:$G=(\{1,\dots,n\},\mathcal{R})$
+\form#76:$(j_1,j_2)\in \mathcal{R}$
+\form#77:$ef_j$
+\form#78:$lf_j$
+\form#79:$x_{jmt}=1$
+\form#80:$x_{jmt}=0$
+\form#81:$d_j\in\mathbb{R}$
+\form#82:$d_j$
+\form#83:$e_j\in\mathbb{R}$
+\form#84:\begin{align} T \to \min,& \tag{1.a}\\ \sum_{m=1}^{M_j}\sum_{t=ef_j}^{lf_j} x_{jmt} = 1,\quad &j=1,\dots,n,\tag{1.b}\\ e_j = \sum_{m=1}^{M_j}\sum_{t=ef_j}^{lf_j} t x_{jmt},\quad &j=1,\dots,n,\tag{1.c}\\ d_j = \sum_{m=1}^{M_j}\sum_{t=ef_j}^{lf_j} p^m_j x_{jmt},\quad &j=1,\dots,n,\tag{1.d}\\ T \ge e_j,\quad &j=1,\dots,n,\tag{1.e}\\ \sum_{j=1}^n\sum_{m=1}^{M_j}\sum_{t=\max(\tau,ef_j)}^{\min(\tau+p^m_j,lf_j)} \rho^r_{jmi} x_{jmt} \le R^r_i, \quad i=1,\dots,q^r,\; &\tau=1,\dots,H,\tag{1.f}\\ \sum_{j=1}^n\sum_{m=1}^{M_j}\sum_{t=ef_j}^{lf_j} \rho^n_{jmi} x_{jmt} \le R^n_i, \quad &i=1,\dots,q^n,\tag{1.g}\\ e_{j_2} - e_{j_1} \ge d_{j_2},\quad &(j_1,j_2)\in \mathcal{R},\tag{1.h}\\ e_j \ge d_j,\quad & j=1,\dots,n,\label{1.i}\\ x_{jmt}\in \{0,1\},\quad t=0,\dots,H,\; m=1,\dots,M_j,\; &j=1,\dots,n,\tag{1.j}\\ d_j, e_j \in\mathbb{R},\quad &j=1,\dots,n.\tag{1.k} \end{align}
+\form#85:$x_{jmt}$
+\form#86:$l_t$
+\form#87:$m_{it}$
+\form#88:$f_{it}$
+\form#89:$T^{\mathrm{min}}_{i}, T^{\mathrm{max}}_{i}$
+\form#90:$c_{jt}$
+\form#91:$h_{jt}$
+\form#92:$d_{jt}$
+\form#93:$\rho_{jk}$
+\form#94:$\tau_{ij}$
+\form#95:$s^i_j$
+\form#96:$s^f_j$
+\form#97:$x_{jt}$
+\form#98:$s_{jt}$
+\form#99:$y_{it}$
+\form#100:\begin{align} & \sum_{t=1}^T\sum_{j=1}^n \left(h_{jt}\, s_{jt} + c_{jt}\, x_{jt}\right) + \sum_{t=1}^T\sum_{i=1}^m f_{it}\, y_{it} \to \min, \tag{1.a}\\ & s^i_j + x_{j1} = d_{j1} + s_{j1} + \sum_{k=1}^n \rho_{jk}\, x_{k,1},\quad j=1,\dots,n, \tag{1.b}\\ & s_{j,t-1} + x_{jt} = d_{jt} + s_{jt} + \sum_{k=1}^n \rho_{jk}\, x_{k,t}, \notag \\ & \phantom{xxxxxxxxxxxxxxxxxxxxx} j=1,\dots,n;\; t=2,\dots,T, \tag{1.c}\\ & \sum_{j=1}^n \tau_{ij}\, x_{jt} \le l_t y_{it},\quad i=1,\dots,m;\; t=1,\dots,T, \tag{1.d}\\ & s_{jT} = s^f_j,\quad j=1,\dots,n,\tag{1.e}\\ & 0\le s_{jt}\le u_j,\; x_{jt}\ge 0,\quad j=1,\dots,n;\; t=1,\dots,T, \tag{1.f}\\ & 0\le y_{it}\le m_{it},\; y_{it} \in \mathbb{Z},\quad i=1,\dots,m;\; t=1,\dots,T. \tag{1.g} \end{align}
+\form#101:$y_{it}=0$
+\form#102:$x_{jt}=0$
+\form#103:\begin{align*} & c^Tx \to \max,\\ & b_1 \le Ax \le b_2,\\ & l \le x \le u, \end{align*}
+\form#104:\begin{align*} & c^Tx \to \max,\\ & b_1 \le Ax \le b_2,\\ & l \le x \le u,\\ & x_i\in\mathbb{Z}\quad\forall\; i\in I, \end{align*}

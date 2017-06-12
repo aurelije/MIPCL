@@ -331,12 +331,12 @@ public:
 	 */
 	CCtr& operator==(CLinSum& lsum);
 
-	/// \cond NEWandDELoperators
-	void* operator new(size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	void* operator new[](size_t iSize) throw(CMemoryException);
-	void operator delete[](void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	void* operator new[](size_t iSize) throw(CMemoryException);
+//	void operator delete[](void* pPtr) throw();
+//	/// \endcond
 
 // operations
 	const char* getName() const
@@ -501,10 +501,10 @@ public:
 	CVar& operator()(int ind0, int ind1, int ind2, int ind3)
 	{return m_pVars[((ind0*m_ipSize[1]+ind1)*m_ipSize[2]+ind2)*m_ipSize[3]+ind3];}
 
-	/// \cond NEWandDELoperators
-	void* operator new(size_t iSize);
-	void operator delete(void* pPtr);
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(size_t iSize);
+//	void operator delete(void* pPtr);
+//	/// \endcond
 
 // attributes
 	const char* getName() const

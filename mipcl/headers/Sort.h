@@ -58,14 +58,14 @@
  *   - or \f$a_{i_1}\le a_{i_2}\le\dots\le a_{i_n}\f$.
  */
 namespace SORT {	
-	MIP_API void incSortInt(int n, int* ipInd, int* ipVal); ///< lists indices `ipInd[i]` in non-decreasing order of values `ipVal[ipInd[i]]`.
-	MIP_API void decSortInt(int n, int* ipInd, int* ipVal); ///< lists indices `ipInd[i]` in non-increasing order of values `ipVal[ipInd[i]]`.
-	MIP_API void incSortDouble(int n, int* ipInd, double* dpVal); ///< lists indices `ipInd[i]` in non-decreasing order of values `dpVal[ipInd[i]]`.
-	MIP_API void decSortDouble(int n, int* ipInd, double* dpVal); ///< lists indices `ipInd[i]` in non-increasing order of values `dpVal[ipInd[i]]`.
-	MIP_API void incSortPairs(int n, int* ipInd, int* ipVal); ///< lists indices `ipInd[i]` in non-increasing lexicographic order of pair-values `(ipVal[ipInd[i]<<1],ipVal[(ipInd[i]<<1)+1])`.
+	MIP_API void incSortInt(int n, int* ipInd, const int* ipVal); ///< lists indices `ipInd[i]` in non-decreasing order of values `ipVal[ipInd[i]]`.
+	MIP_API void decSortInt(int n, int* ipInd, const int* ipVal); ///< lists indices `ipInd[i]` in non-increasing order of values `ipVal[ipInd[i]]`.
+	MIP_API void incSortDouble(int n, int* ipInd, const double* dpVal); ///< lists indices `ipInd[i]` in non-decreasing order of values `dpVal[ipInd[i]]`.
+	MIP_API void decSortDouble(int n, int* ipInd, const double* dpVal); ///< lists indices `ipInd[i]` in non-increasing order of values `dpVal[ipInd[i]]`.
+	MIP_API void incSortPairs(int n, int* ipInd, const int* ipVal); ///< lists indices `ipInd[i]` in non-increasing lexicographic order of pair-values `(ipVal[ipInd[i]<<1],ipVal[(ipInd[i]<<1)+1])`.
 	MIP_API void incSortPairs(int n, double* dpVal); ///< lists indices `ipInd[i]` in non-increasing lexicographic order of pair-values `(dpVal[ipInd[i]<<1],dpVal[(ipInd[i]<<1)+1])`.
-	MIP_API void minK(int k, int n, int* ipInd, double* dpVal); ///< lists indices `ipInd[i]` so that each of the first `k` values `dpVal[ipInd[i]]` is not greater than any other value.
-	MIP_API void maxK(int k, int n, int* ipInd, double* dpVal); ///< lists indices `ipInd[i]` so that each of the first `k` values `dpVal[ipInd[i]]` is not greater than any other values.
+	MIP_API void minK(int k, int n, int* ipInd, const double* dpVal); ///< lists indices `ipInd[i]` so that each of the first `k` values `dpVal[ipInd[i]]` is not greater than any other value.
+	MIP_API void maxK(int k, int n, int* ipInd, const double* dpVal); ///< lists indices `ipInd[i]` so that each of the first `k` values `dpVal[ipInd[i]]` is not greater than any other values.
 } // end of namespace SORT
 
 #endif // #ifndef __SORT__H

@@ -96,12 +96,12 @@ public:
 	virtual ~CDvar(); ///< the destructor.
 // operations
 	///////////////////////////////////
-	/// \cond NEWandDELoperators
-	void* operator new(size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	void* operator new[](size_t iSize) throw(CMemoryException);
-	void operator delete[](void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	void* operator new[](size_t iSize) throw(CMemoryException);
+//	void operator delete[](void* pPtr) throw();
+//	/// \endcond
 
 	/**
 	 * The procedure creates a new `CDvar` object to represent a discrete variable given by the parameters.

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+	<project name="mipcl-java" basedir="." default="compile">
+	<property name="mipcl.src.dir" value="sources/by/bsu/JVmipcl"/>
+	<property name="mipshell.src.dir" value="sources/by/bsu/JVmipshell"/>
+	<property name="target.dir" value="."/>
+	<property name="bin.dir" value="classes"/>
+	<property name="mipcl.bin.dir" value="classes"/>
+	<path id="mipcl-classpath">
+		<pathelement path="${bin.dir}"/>
+	</path>
+
+	<target name="compile-mipcl" description="Compile java files in JVmipcl">
+		<mkdir dir="${bin.dir}"/>
+		<javac includeantruntime="false" destdir="${bin.dir}" source="1.8" target="1.8">
+			<src path="${mipcl.src.dir}"/>
+			<classpath refid="mipcl-classpath"/>
+		</javac>
+	</target>
+
+	<target name="compile" depends="compile-mipcl" description="Compile java files in JVmipshell">
+		<mkdir dir="${bin.dir}"/>
+		<javac includeantruntime="false" destdir="${bin.dir}" source="1.8" target="1.8">
+			<src path="${mipshell.src.dir}"/>
+			<classpath refid="mipcl-classpath"/>
+		</javac>
+	</target>
+
+	<target name="build-jar" depends="compile" description="Compile java files in JVmipshell and create mipcl.jar">
+		<jar destfile="${target.dir}/mipcl.jar" basedir="${bin.dir}">
+			<manifest>
+				<attribute name="Specification-Title" value="Java interface to MIPCL"/>
+				<attribute name="Specification-Version" value="1.0"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean" description="Clean output directories">
+		<delete>
+			<fileset dir="${bin.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+	</target>
+</project>

@@ -1,9 +1,0 @@
-CLU: Reallocate memory for matrix (2); old size = 11, new size = 21
-CLU: Reallocate memory for partition (2); old size = 11, new size = 14
-CLU: Reallocate memory for partition (2); old size = 14, new size = 18
-CLU: Reallocate memory for partition (2); old size = 18, new size = 24
-CLP::ReallocMemForEntries: old size 100, new size 1100
-CLU: Reallocate memory for matrix (2); old size = 21, new size = 31
-CLU: Reallocate memory for matrix (2); old size = 31, new size = 41
-CLU: Reallocate memory for partition (2); old size = 24, new size = 32
-CLU: Reallocate memory for partition (2); old size = 32, new size = 42

@@ -1,6 +1,6 @@
 CC=g++
 ARC=-mfpmath=sse -msse2
-CFLAGS=-c -g $(ARC) -I$(HDR_MIPSHELL) -I$(HDR_MIPCL) -D__THREADS_=
+CFLAGS=-c -std=c++17 -fno-rtti -g $(ARC) -I$(HDR_MIPSHELL) -I$(HDR_MIPCL)
 LDFLAGS=-shared-libgcc
 #
 RM=rm -f
@@ -8,7 +8,7 @@ INS=install
 MIP_DIR=$(MIPCLDIR)
 INSDIR=../bin
 CFLAGS+=-DMIPSHELL_API="" -DMIP_API=""
-LDFLAGS+= -L$(MIP_DIR)/lib -lmipcl -lmipshell_dbg
+LDFLAGS+= -L$(MIP_DIR)/lib -lmipcl -lmipshell
 TARGET=ufl_dbg
 #
 HDR_MIPCL=$(MIP_DIR)/mipcl/headers

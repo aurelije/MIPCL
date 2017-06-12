@@ -144,12 +144,12 @@ public:
 	 */
 	template<class T> friend std::ostream& operator<<(std::ostream& out, CVector<T>& v);
 
-	/// \cond NEWandDELoperators
-	void* operator new(size_t iSize) throw(CMemoryException);
-	void operator delete(void* pPtr) throw();
-	void* operator new[](size_t iSize) throw(CMemoryException);
-	void operator delete[](void* pPtr) throw();
-	/// \endcond
+//	/// \cond NEWandDELoperators
+//	void* operator new(size_t iSize) throw(CMemoryException);
+//	void operator delete(void* pPtr) throw();
+//	void* operator new[](size_t iSize) throw(CMemoryException);
+//	void operator delete[](void* pPtr) throw();
+//	/// \endcond
 
 // attributes
 	int getDim()

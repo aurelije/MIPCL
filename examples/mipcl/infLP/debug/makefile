@@ -1,6 +1,6 @@
 CC=g++
 ARC=-m64 -mfpmath=sse -msse2
-CFLAGS=-c -g -I$(HRD_MIPCL) $(ARC)
+CFLAGS=-c -std=c++17 -fno-rtti -g -I$(HRD_MIPCL) $(ARC)
 INS=install
 MIP_DIR=$(MIPCLDIR)
 LDFLAGS= -L$(MIP_DIR)/lib -lmipcl_dbg

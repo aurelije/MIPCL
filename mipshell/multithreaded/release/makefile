@@ -1,6 +1,6 @@
 CC=g++
 ARC=-m64 -mfpmath=sse -msse2
-CFLAGS=-c -O3 -I$(HDR_PATH) -I$(HDR_MIPCL)  $(ARC) -minline-all-stringops -D__THREADS_
+CFLAGS=-c -std=c++17 -fno-rtti -O3 -I$(HDR_PATH) -I$(HDR_MIPCL)  $(ARC) -minline-all-stringops
 LDFLAGS=-shared -shared-libgcc
 #
 INS=install
@@ -9,7 +9,7 @@ MIP_DIR=$(MIPCLDIR)
 LDFLAGS+= -L$(MIP_DIR)/lib -lmipcl
 CFLAGS+= -fpic
 LINK_TARGET=libmipshell.so
-TARGET=$(LINK_TARGET).$(MIPSHELL_VERSION)
+TARGET=$(LINK_TARGET).$(MIPCL_VERSION)
 #####
 PRJ_DIR=$(MIP_DIR)/mipshell
 INSDIR=$(MIP_DIR)/lib

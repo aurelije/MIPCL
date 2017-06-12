@@ -216,32 +216,32 @@ CVar& CVarArray::operator()(const CIndex& ind0, const CIndex& ind1, const CIndex
 	return *((*it).second);
 }
 
-/// \cond NEWandDELoperators
-void* CVarArray::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CVarArray::operator new");
-	}
-	return p;
-}
-
-void CVarArray::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-
-void* CVarArray::operator new[](size_t iSize)  throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CVarArray::operator new[]");
-	}
-	return p;
-}
-
-void CVarArray::operator delete[](void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CVarArray::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CVarArray::operator new");
+//	}
+//	return p;
+//}
+//
+//void CVarArray::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+//
+//void* CVarArray::operator new[](size_t iSize)  throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CVarArray::operator new[]");
+//	}
+//	return p;
+//}
+//
+//void CVarArray::operator delete[](void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond

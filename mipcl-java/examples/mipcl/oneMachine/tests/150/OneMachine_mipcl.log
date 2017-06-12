@@ -1,0 +1,20 @@
+Tree: Reallocate memory for nodes; old size 1000, new size 8000
+Pool: Reallocate memory for buffer; old size 94950, new size 380236
+Tree: Reallocate memory for nodes; old size 8000, new size 32000
+CLP::reallocMemForEntries: old size 11550, new size 17335
+CLP::reallocMemForEntries: old size 11550, new size 17337
+CLP::reallocMemForEntries: old size 11550, new size 17475
+CLP::reallocMemForEntries: old size 11550, new size 17364
+CLP::reallocMemForEntries: old size 11550, new size 17346
+Tree: Reallocate memory for nodes; old size 32000, new size 64000
+CLP::reallocMemForEntries: old size 11550, new size 17409
+CLP::reallocMemForEntries: old size 11550, new size 17386
+CLP::reallocMemForEntries: old size 11550, new size 17427
+Tree: Reallocate memory for nodes; old size 64000, new size 128000
+CLP::reallocMemForEntries: old size 17364, new size 26122
+CLP::reallocMemForEntries: old size 17337, new size 26110
+CLP::reallocMemForEntries: old size 17346, new size 26082
+CLP::reallocMemForEntries: old size 17409, new size 26226
+CLP::reallocMemForEntries: old size 17386, new size 26139
+CLP::reallocMemForEntries: old size 17475, new size 26236
+CLP::reallocMemForEntries: old size 17335, new size 26041

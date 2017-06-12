@@ -1,0 +1,147 @@
+#line 1 "../sources/batch.mod"
+int Cbatch::model()
+#line 2 "../sources/batch.mod"
+{
+#line 3 "../sources/batch.mod"
+	INDEX state, tsk, tsk1, unit;
+#line 4 "../sources/batch.mod"
+	int t,tau, M=H*TASKS.getSize();
+#line 5 "../sources/batch.mod"
+	RANGE HORIZON(0,H-1), HORIZON1(0,H);
+#line 6 "../sources/batch.mod"
+	VAR_ARRAY x(this,"x",BIN,TASKS,UNITS,HORIZON), 
+#line 7 "../sources/batch.mod"
+	          y(this,"y",REAL_GE,TASKS,UNITS,HORIZON), 
+#line 8 "../sources/batch.mod"
+			  z(this,"z",REAL_GE,STATES,HORIZON1);
+#line 9 "../sources/batch.mod"
+
+#line 10 "../sources/batch.mod"
+	    
+#line 11 "../sources/batch.mod"
+	   #line 11
+getSum(0).reset();
+#line 11
+for ((STATES).initIt(); (STATES).getNext(state);) getSum(0)+=(cp(state)*z(state,H));
+       #line 11
+getSum(1).reset();
+#line 11
+for ((STATES).initIt(); (STATES).getNext(state);)
+#line 11
+for (t=0; t < H; ++t) getSum(1)+=(cs(state)*z(state,t));
+maximize(getSum(0)-getSum(1));
+#line 12 "../sources/batch.mod"
+
+#line 13 "../sources/batch.mod"
+	     for (t=0; t < H; ++t)
+#line 13
+for ((UNITS).initIt(); (UNITS).getNext(unit);)
+#line 14 "../sources/batch.mod"
+		    {
+#line 14
+getSum(2).reset();
+#line 14
+for ((I(unit)).initIt(); (I(unit)).getNext(tsk);) getSum(2)+=(x(tsk,unit,t));
+ addCtr(getSum(2) <= 1);
+}
+#line 15 "../sources/batch.mod"
+	        for ((UNITS).initIt(); (UNITS).getNext(unit);)
+#line 15
+for ((I(unit)).initIt(); (I(unit)).getNext(tsk);)
+#line 15
+for (t=0; t < H; ++t)
+#line 16 "../sources/batch.mod"
+		          {
+#line 16
+getSum(3).reset();
+#line 16
+for ((I(unit)).initIt(); (I(unit)).getNext(tsk1);)
+#line 16
+for (tau=t; tau < t+dur(tsk); ++tau)
+#line 16
+	if (tau < H) getSum(3)+=(x(tsk1,unit,tau));
+   addCtr(getSum(3) <= 1+M*(1-x(tsk,unit,t)));
+}
+#line 17 "../sources/batch.mod"
+	        for ((UNITS).initIt(); (UNITS).getNext(unit);)
+#line 17
+for ((I(unit)).initIt(); (I(unit)).getNext(tsk);)
+#line 17
+for (t=0; t < H; ++t) {
+#line 18 "../sources/batch.mod"
+		  addCtr(Vmin(unit)*x(tsk,unit,t) <= y(tsk,unit,t));
+#line 19 "../sources/batch.mod"
+		  addCtr(y(tsk,unit,t) <= Vmax(unit)*x(tsk,unit,t));
+#line 20 "../sources/batch.mod"
+		   if (t+dur(tsk) > H)
+#line 21 "../sources/batch.mod"
+			  addCtr(x(tsk,unit,t) == 0);
+#line 22 "../sources/batch.mod"
+	}
+#line 23 "../sources/batch.mod"
+	     for ((STATES).initIt(); (STATES).getNext(state);)
+#line 23
+for (t=0; t < H; ++t) 
+#line 24 "../sources/batch.mod"
+		  addCtr(z(state,t) <= u(state));
+#line 25 "../sources/batch.mod"
+	  for ((STATES).initIt(); (STATES).getNext(state);)
+#line 26 "../sources/batch.mod"
+		          {
+#line 26
+getSum(4).reset();
+#line 26
+for ((Tout(state)).initIt(); (Tout(state)).getNext(tsk);)
+#line 26
+for ((K(tsk)).initIt(); (K(tsk)).getNext(unit);) getSum(4)+=(rho(state,tsk)*y(tsk,unit,0));
+addCtr(z0(state) == z(state,0)+getSum(4));
+}
+#line 27 "../sources/batch.mod"
+	     for ((STATES).initIt(); (STATES).getNext(state);)
+#line 27
+for (t=1; t < H; ++t)
+#line 28 "../sources/batch.mod"
+		            {
+#line 28
+getSum(5).reset();
+#line 28
+for ((Tin(state)).initIt(); (Tin(state)).getNext(tsk);)
+#line 28
+for ((K(tsk)).initIt(); (K(tsk)).getNext(unit);)
+#line 28
+	if (t >= p(tsk,state)) getSum(5)+=(rho(tsk,state)*y(tsk,unit,t-p(tsk,state)));
+
+#line 29 "../sources/batch.mod"
+		        #line 29
+getSum(6).reset();
+#line 29
+for ((Tout(state)).initIt(); (Tout(state)).getNext(tsk);)
+#line 29
+for ((K(tsk)).initIt(); (K(tsk)).getNext(unit);) getSum(6)+=(rho(state,tsk)*y(tsk,unit,t));
+addCtr(z(state,t-1)+getSum(5) == z(state,t)+getSum(6));
+}
+#line 30 "../sources/batch.mod"
+	  for ((STATES).initIt(); (STATES).getNext(state);)
+#line 31 "../sources/batch.mod"
+		             {
+#line 31
+getSum(7).reset();
+#line 31
+for ((Tin(state)).initIt(); (Tin(state)).getNext(tsk);)
+#line 31
+for ((K(tsk)).initIt(); (K(tsk)).getNext(unit);)
+#line 31
+	if (H >= p(tsk,state)) getSum(7)+=(rho(tsk,state)*y(tsk,unit,H-p(tsk,state)));
+addCtr(z(state,H) == z(state,H-1)+getSum(7));
+}
+#line 32 "../sources/batch.mod"
+
+#line 33 "../sources/batch.mod"
+	optimize();
+#line 34 "../sources/batch.mod"
+	printSolution(y,z);
+#line 35 "../sources/batch.mod"
+	return 0;
+#line 36 "../sources/batch.mod"
+} // end of Cbatch::model
+#line 37 "../sources/batch.mod"

@@ -12,7 +12,7 @@ mkdir bin
 cat >./debug/makefile <<DONE
 CC=g++
 ARC=-m64 -mfpmath=sse -msse2
-CFLAGS=-c -g \$(ARC) -I\$(HDR_MIPSHELL) -I\$(HDR_MIPCL) -D__THREADS_=
+CFLAGS=-c -g \$(ARC) -I\$(HDR_MIPSHELL) -I\$(HDR_MIPCL)
 LDFLAGS=-shared-libgcc
 #
 RM=rm -f
@@ -57,7 +57,7 @@ DONE
 cat >./release/makefile <<DONE
 CC=g++
 ARC=-m64 -mfpmath=sse -msse2
-CFLAGS=-c -O3 \$(ARC) -I\$(HDR_MIPSHELL) -I\$(HDR_MIPCL) -D__THREADS_=
+CFLAGS=-c -O3 \$(ARC) -I\$(HDR_MIPSHELL) -I\$(HDR_MIPCL)
 LDFLAGS=-shared-libgcc
 INSDIR=../bin
 #
@@ -127,7 +127,7 @@ C$1::C$1(const char* name): CProblem(name)
 // TODO: Create your model
 }
 
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 C$1::C$1(const C$1 &other, int thread): CProblem(other,thread)
 {
 // TODO: write your code here
@@ -141,11 +141,11 @@ CMIP* C$1::clone(const CMIP *pMip, int thread)
 
 C$1::~C$1()
 {
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 	if (!m_iThread) {
 #endif
 // TODO: delete shared members 
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 	}
 #endif
 // TODO: delete not-shared members 
@@ -176,7 +176,7 @@ class C$1: public CProblem
 // TODO: declare MIPshell variables
 public:
 	C$1(const char* name);
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 	C$1(const C$1 &other, int thread);
 	CMIP* clone(const CMIP *pMip, int thread);
 #endif

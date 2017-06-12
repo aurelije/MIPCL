@@ -41,23 +41,23 @@ void CProblem::init()
 	m_pSum = new CLinSum[10];
 	for (int i=0; i < 10; ++i)
 		m_pSum[i].makePermanent();
-} // end of CProblem::init
+} // end of CProblem::init()
 
-/// \cond NEWandDELoperators
-void* CProblem::operator new(size_t iSize) throw(CMemoryException)
-{
-	void *p=malloc(iSize);
-	if (!p) {
-		throw new CMemoryException("CProblem::operator new");
-	}
-	return p;
-}
-
-void CProblem::operator delete(void* pPtr) throw()
-{
-	free(pPtr);
-}
-/// \endcond
+///// \cond NEWandDELoperators
+//void* CProblem::operator new(size_t iSize) throw(CMemoryException)
+//{
+//	void *p=malloc(iSize);
+//	if (!p) {
+//		throw new CMemoryException("CProblem::operator new");
+//	}
+//	return p;
+//}
+//
+//void CProblem::operator delete(void* pPtr) throw()
+//{
+//	free(pPtr);
+//}
+///// \endcond
 
 CProblem::CProblem()
 {
@@ -70,7 +70,7 @@ CProblem::CProblem(const char* name): CMIP(name)
 	init();
 }
 
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 CProblem::CProblem(const CProblem &other, int thread): CMIP(other,thread)
 {
 	m_iVarNum=other.m_iVarNum;
@@ -98,7 +98,7 @@ CMIP* CProblem::clone(const CMIP *pMip, int thread)
 
 CProblem::~CProblem()
 {
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 	if (!m_iThread) {
 #endif	
 	if (m_pObj)
@@ -116,7 +116,7 @@ CProblem::~CProblem()
 		pDvar1=pDvar->getPrev();
 		delete pDvar;
 	}
-#ifdef __THREADS_
+#ifndef __ONE_THREAD_
 	}
 #endif
 	if (m_pSum)

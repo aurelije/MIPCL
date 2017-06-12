@@ -1,0 +1,133 @@
+#line 1 "../sources/shtermfin.mod"
+#define cs(i,t) m_dpSaleCost[i*(T+1)+t]
+#line 2 "../sources/shtermfin.mod"
+#define cb(i,t) m_dpPurchaseCost[i*T+t]
+#line 3 "../sources/shtermfin.mod"
+#define f(l,t) m_dpLoanCost[l*T+t]
+#line 4 "../sources/shtermfin.mod"
+#define k(i) m_ipInitPortfolio[i]
+#line 5 "../sources/shtermfin.mod"
+#define d(t) m_dpDemand[t]
+#line 6 "../sources/shtermfin.mod"
+#define q(t) m_dpMinCash[t]
+#line 7 "../sources/shtermfin.mod"
+#define u(l) m_dpLineCapacity[l]
+#line 8 "../sources/shtermfin.mod"
+#define q0 m_dInitCash
+#line 9 "../sources/shtermfin.mod"
+
+#line 10 "../sources/shtermfin.mod"
+int Cshtermfin::model()
+#line 11 "../sources/shtermfin.mod"
+{
+#line 12 "../sources/shtermfin.mod"
+	int i,l,t, 
+#line 13 "../sources/shtermfin.mod"
+		T=m_iT, n=m_iSecurityNum, m=m_iCreditLineNum;
+#line 14 "../sources/shtermfin.mod"
+	VAR_VECTOR x(this,"x",INT_GE,n,T), xb(this,"xb",INT_GE,n,T), xs(this,"xs",INT_GE,n,T);
+#line 15 "../sources/shtermfin.mod"
+	VAR_VECTOR y(this,"y",REAL_GE,T);
+#line 16 "../sources/shtermfin.mod"
+	VAR_VECTOR z(this,"z",REAL_GE,m,T);
+#line 17 "../sources/shtermfin.mod"
+
+#line 18 "../sources/shtermfin.mod"
+	      #line 18
+getSum(0).reset();
+#line 18
+for (i=0; i < n; ++i) getSum(0)+=(cs(i,T)*x(i,T-1));
+       #line 18
+getSum(1).reset();
+#line 18
+for (l=0; l < m; ++l)
+#line 18
+for (t=0; t < T; ++t) getSum(1)+=((1+f(l,t))*z(l,t));
+maximize(y(T-1)+getSum(0)-getSum(1));
+#line 19 "../sources/shtermfin.mod"
+ 
+#line 20 "../sources/shtermfin.mod"
+            {
+#line 20
+getSum(2).reset();
+#line 20
+for (i=0; i < n; ++i) getSum(2)+=(cs(i,0)*xs(i,0));
+     #line 20
+getSum(3).reset();
+#line 20
+for (l=0; l < m; ++l) getSum(3)+=(z(l,0));
+
+#line 21 "../sources/shtermfin.mod"
+	     #line 21
+getSum(4).reset();
+#line 21
+for (i=0; i < n; ++i) getSum(4)+=(cb(i,0)*xb(i,0));
+addCtr(d(0)+q0+getSum(2)+getSum(3) == y(0)+getSum(4));
+}
+#line 22 "../sources/shtermfin.mod"
+ 
+#line 23 "../sources/shtermfin.mod"
+	  for (t=1; t < T; ++t)
+#line 24 "../sources/shtermfin.mod"
+		        {
+#line 24
+getSum(5).reset();
+#line 24
+for (i=0; i < n; ++i) getSum(5)+=(cs(i,t)*xs(i,t));
+     #line 24
+getSum(6).reset();
+#line 24
+for (l=0; l < m; ++l) getSum(6)+=(z(l,t));
+
+#line 25 "../sources/shtermfin.mod"
+		     #line 25
+getSum(7).reset();
+#line 25
+for (i=0; i < n; ++i) getSum(7)+=(cb(i,t)*xb(i,t));
+addCtr(d(t)+y(t-1)+getSum(5)+getSum(6) == y(t)+getSum(7));
+}
+#line 26 "../sources/shtermfin.mod"
+  
+#line 27 "../sources/shtermfin.mod"
+	  for (i=0; i < n; ++i)
+#line 28 "../sources/shtermfin.mod"
+		      addCtr(k(i)+xb(i,0) == x(i,0)+xs(i,0));
+#line 29 "../sources/shtermfin.mod"
+
+#line 30 "../sources/shtermfin.mod"
+	     for (t=1; t < T; ++t)
+#line 30
+for (i=0; i < n; ++i)
+#line 31 "../sources/shtermfin.mod"
+		      addCtr(x(i,t-1)+xb(i,t) == x(i,t)+xs(i,t));
+#line 32 "../sources/shtermfin.mod"
+	
+#line 33 "../sources/shtermfin.mod"
+	  for (l=0; l < m; ++l)
+#line 34 "../sources/shtermfin.mod"
+		    {
+#line 34
+getSum(8).reset();
+#line 34
+for (t=0; t < T; ++t) getSum(8)+=(z(l,t));
+ addCtr(getSum(8) <= u(l));
+}
+#line 35 "../sources/shtermfin.mod"
+ 
+#line 36 "../sources/shtermfin.mod"
+	  for (t=0; t < T; ++t)
+#line 37 "../sources/shtermfin.mod"
+		  addCtr(y(t) >= q(t));
+#line 38 "../sources/shtermfin.mod"
+
+#line 39 "../sources/shtermfin.mod"
+	optimize();
+#line 40 "../sources/shtermfin.mod"
+	printSol(x,xs,xb,y,z);
+#line 41 "../sources/shtermfin.mod"
+	return 0;
+#line 42 "../sources/shtermfin.mod"
+} // end of Cshtermfin::model
+#line 43 "../sources/shtermfin.mod"
+
+#line 44 "../sources/shtermfin.mod"
